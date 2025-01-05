@@ -1,0 +1,13 @@
+../Core/Src/6811.c:13:6:Wakeup_Idle	16	static
+../Core/Src/6811.c:23:6:Wakeup_Sleep	16	static
+../Core/Src/6811.c:34:23:Read_Cell_Volt	64	dynamic
+../Core/Src/6811.c:88:6:LTC6811_WRPWM	32	static
+../Core/Src/6811.c:133:6:LTC6811_WRCFG	24	static
+../Core/Src/6811.c:179:6:LTC_WRCOMM	32	static
+../Core/Src/6811.c:220:6:LTC_STCOMM	32	static
+../Core/Src/6811.c:240:23:Read_Cell_Temps	64	dynamic
+../Core/Src/6811.c:294:6:LTC_ADCV	24	static
+../Core/Src/6811.c:316:6:LTC_ADAX	24	static
+../Core/Src/6811.c:343:9:LTC_POLLADC	24	static
+../Core/Src/6811.c:374:5:Calc_Pack_Voltage	24	static
+../Core/Src/6811.c:419:10:LTC_Pec15_Calc	24	static
