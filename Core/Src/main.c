@@ -228,7 +228,7 @@ int main(void)
 								&safetyWarnings, &safetyStates, &low_volt_hysteresis,
 								&high_volt_hysteresis, &cell_imbalance_hysteresis);
 
-//			Cell_Summary_Temperature(&modPackInfo, &safetyFaults,&safetyWarnings);
+			Cell_Summary_Temperature(&modPackInfo, &safetyFaults,&safetyWarnings);
 
 			//checking for faults
 //			Fault_Warning_State(&modPackInfo, &safetyFaults,
