@@ -38,7 +38,7 @@ extern "C" {
 /* USER CODE BEGIN ET */
 
 /* USER CODE BEGIN Private defines */
-#define NUM_DEVICES				8	//1 slave board
+#define NUM_DEVICES				1	//1 slave board
 #define NUM_CELL_SERIES_GROUP	12	//1 slave board
 #define NUM_CELLS				NUM_DEVICES*NUM_CELL_SERIES_GROUP	//multiple slave board
 #define NUM_THERM_PER_MOD		12
