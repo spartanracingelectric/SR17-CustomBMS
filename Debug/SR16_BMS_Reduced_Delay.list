@@ -27,25 +27,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000029  00000000  00000000  000080c8  2**0
                   CONTENTS, READONLY
- 12 .debug_info   00011598  00000000  00000000  000080f1  2**0
+ 12 .debug_info   00011599  00000000  00000000  000080f1  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 000030c6  00000000  00000000  00019689  2**0
+ 13 .debug_abbrev 000030b4  00000000  00000000  0001968a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 000011c0  00000000  00000000  0001c750  2**3
+ 14 .debug_aranges 000011c0  00000000  00000000  0001c740  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_rnglists 00000dbf  00000000  00000000  0001d910  2**0
+ 15 .debug_rnglists 00000dbf  00000000  00000000  0001d900  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  00020f73  00000000  00000000  0001e6cf  2**0
+ 16 .debug_macro  00020f73  00000000  00000000  0001e6bf  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   000169f8  00000000  00000000  0003f642  2**0
+ 17 .debug_line   000169f8  00000000  00000000  0003f632  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000bd1a8  00000000  00000000  0005603a  2**0
+ 18 .debug_str    000bd1a8  00000000  00000000  0005602a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  001131e2  2**0
+ 19 .comment      00000043  00000000  00000000  001131d2  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00004e20  00000000  00000000  00113228  2**2
+ 20 .debug_frame  00004e20  00000000  00000000  00113218  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000077  00000000  00000000  00118048  2**0
+ 21 .debug_line_str 00000077  00000000  00000000  00118038  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -5225,11 +5225,9 @@ void Cell_Summary_Temperature(struct batteryModule *batt, uint8_t *fault,
  8002ae6:	697b      	ldr	r3, [r7, #20]
  8002ae8:	2b5f      	cmp	r3, #95	@ 0x5f
  8002aea:	ddac      	ble.n	8002a46 <Cell_Summary_Temperature+0x2a>
+				}
 		}
-
-
 	}
-
 }
  8002aec:	bf00      	nop
  8002aee:	bf00      	nop
