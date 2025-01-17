@@ -1,0 +1,21 @@
+#include "hv.h"
+#include "adc.h"
+
+float ReadHVInput(void) {
+    uint32_t adcValue = 0;
+
+    // ADC開始
+    HAL_ADC_Start(&hadc1);
+    if (HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY) == HAL_OK) {
+        adcValue = HAL_ADC_GetValue(&hadc1);
+    }
+    HAL_ADC_Stop(&hadc1);
+
+    // 電圧計算
+    float adcVoltage = (adcValue / ADC_RESOLUTION) * V_REF;
+    float amcOutput = adcVoltage / GAIN_TLV9001;
+    float amcInput = amcOutput / GAIN_AMC1100;
+    float hvInput = amcInput * DIVIDER_RATIO;
+
+    return hvInput;
+}
