@@ -95,7 +95,7 @@ int main(void)
 	GpioTimePacket tp_led_heartbeat;
 	TimerPacket timerpacket_ltc;
 
-	struct batteryModule modPackInfo;
+	batteryModule modPackInfo;
 	struct CANMessage msg;
 	uint8_t safetyFaults = 0;
 	uint8_t safetyWarnings = 0;
@@ -201,26 +201,26 @@ int main(void)
 
 			//reading cell temperatures
 			Wakeup_Sleep();
-//			for (uint8_t i = tempindex; i < indexpause; i++) {
-//				Wakeup_Idle();
-//				Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
-//				HAL_Delay(3);
-//			}
-//			if (indexpause == 8) {
-//				Wakeup_Idle();
-//				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[0]);
-//				Wakeup_Idle();
-//				LTC_STCOMM(2);
-//				tempindex = 8;
-//				indexpause = NUM_THERM_PER_MOD;
-//			} else if (indexpause == NUM_THERM_PER_MOD) {
-//				Wakeup_Idle();
-//				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[1]);
-//				Wakeup_Idle();
-//				LTC_STCOMM(2);
-//				indexpause = 8;
-//				tempindex = 0;
-//			}
+			for (uint8_t i = tempindex; i < indexpause; i++) {
+				Wakeup_Idle();
+				Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
+				HAL_Delay(3);
+			}
+			if (indexpause == 8) {
+				Wakeup_Idle();
+				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[0]);
+				Wakeup_Idle();
+				LTC_STCOMM(2);
+				tempindex = 8;
+				indexpause = NUM_THERM_PER_MOD;
+			} else if (indexpause == NUM_THERM_PER_MOD) {
+				Wakeup_Idle();
+				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[1]);
+				Wakeup_Idle();
+				LTC_STCOMM(2);
+				indexpause = 8;
+				tempindex = 0;
+			}
 			//print(NUM_THERM_TOTAL, (uint16_t*) modPackInfo.cell_temp);
 
 			//getting the summary of all cells in the pack

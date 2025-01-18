@@ -12,7 +12,7 @@
 #define R2 1000     		//1 kΩ
 #define DIVIDER_RATIO 1 + R1 / R2
 
-float ReadHVInput(void);
+void ReadHVInput(uint32_t *read_volt_HV);
 
 void State_of_Charge(struct batteryModule *batt, uint8_t *fault,
 		uint8_t *warnings);

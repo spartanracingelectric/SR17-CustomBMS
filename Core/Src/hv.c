@@ -1,7 +1,8 @@
 #include "hv.h"
 #include "adc.h"
+#include "main.h"
 
-float ReadHVInput(void) {
+void ReadHVInput(uint32_t *read_volt_HV) {
     uint32_t adcValue = 0;
 
     // ADC開始
@@ -17,5 +18,5 @@ float ReadHVInput(void) {
     float amcInput = amcOutput / GAIN_AMC1100;
     float hvInput = amcInput * DIVIDER_RATIO;
 
-    return hvInput;
+    *read_volt_HV = (uint32_t)hvInput;
 }

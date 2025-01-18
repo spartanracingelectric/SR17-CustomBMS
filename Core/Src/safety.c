@@ -3,8 +3,8 @@
 // ! Fault Thresholds
 
 // Refer to TODO on Line 61
-//#define PACK_HIGH_VOLT_FAULT	    410000
-//#define PACK_LOW_VOLT_FAULT         288000
+#define PACK_HIGH_VOLT_FAULT	    4100000
+#define PACK_LOW_VOLT_FAULT         2880000
 
 #define CELL_HIGH_VOLT_FAULT	    42000
 #define CELL_LOW_VOLT_FAULT		    25000
@@ -12,8 +12,8 @@
 #define CELL_HIGH_TEMP_FAULT		60
 
 // ! Warnings Thresholds
-//#define PACK_HIGH_VOLT_WARNING	    408500
-//#define PACK_LOW_VOLT_WARNING       300000
+#define PACK_HIGH_VOLT_WARNING	    4085000
+#define PACK_LOW_VOLT_WARNING       3000000
 
 #define CELL_HIGH_VOLT_WARNING	    40000
 #define CELL_LOW_VOLT_WARNING	    27000
@@ -96,26 +96,39 @@ void Cell_Summary_Voltage(struct batteryModule *batt, uint8_t *fault,
 				*states |= 0b10000000;
 			}
 
+		uint32_t sum_voltage = 0; // uint32_t型に変更
 
-		batt->pack_voltage += (uint32_t) batt->cell_volt[i];
+		for (int i = 0; i < NUM_CELLS; i++) {
+			 sum_voltage += (uint32_t)batt->cell_volt[i]; // 累積和を計算
+		}
 
-//		if (batt->pack_voltage >= PACK_HIGH_VOLT_WARNING) {
-	//		*warnings |= 0b10000000;
-	//	}
-	//
-	//	if (batt->pack_voltage <= PACK_LOW_VOLT_WARNING) {
-	//		*warnings |= 0b01000000;
-	//	}
+		if (sum_voltage - batt->pack_voltage ){
 
-	//	if (batt->pack_voltage >= PACK_HIGH_VOLT_FAULT) {
-	//		*fault |= 0b10000000;
-//			HAL_GPIO_WritePin(Fault_GPIO_Port, Fault_Pin, GPIO_PIN_SET);
-	//	}
-	//
-	//	if (batt->pack_voltage <= PACK_LOW_VOLT_FAULT) {
-	//		*fault |= 0b01000000;
-//			HAL_GPIO_WritePin(Fault_GPIO_Port, Fault_Pin, GPIO_PIN_SET);
-	//	}
+		}
+		if (batt->pack_voltage >= PACK_HIGH_VOLT_WARNING) {
+			*warnings |= 0b10000000;
+		}
+		if (batt->pack_voltage <= PACK_LOW_VOLT_WARNING) {
+			*warnings |= 0b01000000;
+		}
+		if (batt->pack_voltage >= PACK_HIGH_VOLT_FAULT) {
+			*fault |= 0b10000000;
+			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
+		}
+		if (batt->pack_voltage <= PACK_LOW_VOLT_FAULT) {
+			*fault |= 0b01000000;
+			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
+		}
+
+
+		if ((batt->cell_volt_highest - batt->cell_volt_lowest)
+				>= CELL_VOLT_IMBALANCE_WARNING) {
+			*warnings |= 0b00000010;
+		}
+		if (BALANCE) {
+			*states |= 0b10000000;
+		}
+
 	}
 }
 
@@ -148,98 +161,6 @@ void Cell_Summary_Temperature(struct batteryModule *batt, uint8_t *fault,
 		}
 	}
 }
-
-//This function is combined in the cell summary
-//void Fault_Warning_State(struct batteryModule *batt, uint8_t *fault,
-//		uint8_t *warnings, uint8_t *states, uint8_t *low_volt_hysteresis,
-//		uint8_t *high_volt_hysteresis, uint8_t *cell_imbalance_hysteresis) {
-////	TODO: 2024-2025 Season: Used Sum of Cell Voltages, thus just used MCU DC Bus Voltage, future addition could be nice
-////	if (batt->pack_voltage >= PACK_HIGH_VOLT_FAULT) {
-////		*fault |= 0b10000000;
-////	}
-////
-////	if (batt->pack_voltage <= PACK_LOW_VOLT_FAULT) {
-////		*fault |= 0b01000000;
-////	}
-//
-//	//low cell volt fault
-//	if ((batt->cell_volt_lowest <= CELL_LOW_VOLT_FAULT)
-//			&& ((*low_volt_hysteresis) > 0)) {
-//		*fault |= 0b00100000;
-//	} else if (batt->cell_volt_lowest <= CELL_LOW_VOLT_FAULT) {
-//		*low_volt_hysteresis = 1;
-//	} else {
-//		*low_volt_hysteresis = 0;
-//	}
-//	//end of low cell volt fault
-//
-//	//high cell volt fault
-//	if ((batt->cell_volt_highest >= CELL_HIGH_VOLT_FAULT)
-//			&& ((*high_volt_hysteresis) > 0)) {
-//		*fault |= 0b00010000;
-//	} else if (batt->cell_volt_highest >= CELL_HIGH_VOLT_FAULT) {
-//		*high_volt_hysteresis = 1;
-//	} else {
-//		*high_volt_hysteresis = 0;
-//	}
-//	//end of high cell volt fault
-//
-//	//highest cell temp fault
-//	if (batt->cell_temp_highest >= CELL_HIGH_TEMP_FAULT) {
-//		*fault |= 0b00001000;
-//	}
-//
-//	//cell volt imbalance fault
-//	if (((batt->cell_volt_highest - batt->cell_volt_lowest)
-//			>= CELL_VOLT_IMBALANCE_FAULT)
-//			&& ((*cell_imbalance_hysteresis) > 0)) {
-//		*fault |= 0b00000100;
-//	} else if ((batt->cell_volt_highest - batt->cell_volt_lowest)
-//			>= CELL_VOLT_IMBALANCE_FAULT) {
-//		*cell_imbalance_hysteresis = 1;
-//	} else {
-//		*cell_imbalance_hysteresis = 0;
-//	}
-//	//end of cell volt imbalance fault
-//
-////	if (batt->pack_voltage >= PACK_HIGH_VOLT_WARNING) {
-////		*warnings |= 0b10000000;
-////	}
-////
-////	if (batt->pack_voltage <= PACK_LOW_VOLT_WARNING) {
-////		*warnings |= 0b01000000;
-////	}
-//
-//	if (batt->cell_volt_lowest <= CELL_LOW_VOLT_WARNING) {
-//		*warnings |= 0b00100000;
-//	}
-//
-//	if (batt->cell_volt_highest >= CELL_HIGH_VOLT_WARNING) {
-//		*warnings |= 0b00010000;
-//	}
-//
-//	if (batt->cell_temp_highest >= CELL_HIGH_TEMP_WARNING) {
-//		*warnings |= 0b00001000;
-//	}
-//
-//	if (batt->cell_temp_lowest <= CELL_LOW_TEMP_WARNING) {
-//		*warnings |= 0b00000100;
-//	}
-//
-//	if ((batt->cell_volt_highest - batt->cell_volt_lowest)
-//			>= CELL_VOLT_IMBALANCE_WARNING) {
-//		*warnings |= 0b00000010;
-//	}
-//
-//	if (BALANCE) {
-//		*states |= 0b10000000;
-//	}
-//}
-
-
-
-
-
 
 
 
