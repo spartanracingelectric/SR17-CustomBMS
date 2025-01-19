@@ -33,7 +33,8 @@
 #include "module.h"
 #include "safety.h"
 #include "hv.h"
-
+#include "hv.h"
+#include "stdio.h"
 //#include "usbd_cdc_if.h"
 #include "balance.h"
 
@@ -84,6 +85,11 @@ uint8_t TimerPacket_FixedPulse(TimerPacket *tp);
 /* USER CODE BEGIN 0 */
 static uint8_t BMS_MUX_PAUSE[2][6] = { { 0x69, 0x28, 0x0F, 0x09, 0x7F, 0xF9 }, {
 		0x69, 0x08, 0x0F, 0x09, 0x7F, 0xF9 } };
+
+int _write(int file, char *ptr, int len) {
+    HAL_UART_Transmit(&huart1, (uint8_t *)ptr, len, HAL_MAX_DELAY);
+    return len;
+}
 /* USER CODE END 0 */
 
 /**
@@ -187,6 +193,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
+		printf("Hello");
 		if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
 			//calling all CAN realated methods
 			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,

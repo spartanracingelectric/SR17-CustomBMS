@@ -13,10 +13,10 @@
 		HAL_ADC_Stop(&hadc1);
 
 		// 電圧計算
-		float adcVoltage = ((float)adcValue / ADC_RESOLUTION) * V_REF *10000.0;
-	//    uint32_t amcOutput = adcVoltage / GAIN_TLV9001;
-		float amcInput = adcVoltage / GAIN_AMC1300;
+		float adcVoltage = ((float)adcValue / ADC_RESOLUTION) * V_REF;
+		float amcOutput = adcVoltage / GAIN_TLV9001;
+		float amcInput = amcOutput / GAIN_AMC1300;
 		float hvInput = amcInput * DIVIDER_RATIO;
 
-		*read_volt_HV = (uint32_t)hvInput;
+		*read_volt_HV = (uint32_t)(hvInput * 10000);
 	}
