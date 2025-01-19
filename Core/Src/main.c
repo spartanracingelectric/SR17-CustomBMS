@@ -32,6 +32,8 @@
 #include "print.h"
 #include "module.h"
 #include "safety.h"
+#include "hv.h"
+
 //#include "usbd_cdc_if.h"
 #include "balance.h"
 
@@ -192,35 +194,35 @@ int main(void)
 			CAN_Send_Cell_Summary(&msg, &modPackInfo);
 			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
-
-
 			//reading cell voltages
 			Wakeup_Sleep();
 			Read_Volt(modPackInfo.cell_volt);
 			//print(NUM_CELLS, (uint16_t*) modPackInfo.cell_volt);
 
 			//reading cell temperatures
-			Wakeup_Sleep();
+//			Wakeup_Sleep();
 			for (uint8_t i = tempindex; i < indexpause; i++) {
-				Wakeup_Idle();
+//				Wakeup_Idle();
 				Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
-				HAL_Delay(3);
+//				HAL_Delay(5);
 			}
 			if (indexpause == 8) {
-				Wakeup_Idle();
+//				Wakeup_Idle();
 				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[0]);
-				Wakeup_Idle();
+//				Wakeup_Idle();
 				LTC_STCOMM(2);
 				tempindex = 8;
 				indexpause = NUM_THERM_PER_MOD;
 			} else if (indexpause == NUM_THERM_PER_MOD) {
-				Wakeup_Idle();
+//				Wakeup_Idle();
 				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[1]);
-				Wakeup_Idle();
+//				Wakeup_Idle();
 				LTC_STCOMM(2);
 				indexpause = 8;
 				tempindex = 0;
 			}
+
+			ReadHVInput(&modPackInfo.pack_voltage);
 			//print(NUM_THERM_TOTAL, (uint16_t*) modPackInfo.cell_temp);
 
 			//getting the summary of all cells in the pack
@@ -230,6 +232,8 @@ int main(void)
 
 			Cell_Summary_Temperature(&modPackInfo, &safetyFaults,&safetyWarnings);
 
+
+
 			//checking for faults
 //			Fault_Warning_State(&modPackInfo, &safetyFaults,
 //					&safetyWarnings, &safetyStates, &low_volt_hysteresis,
@@ -238,7 +242,7 @@ int main(void)
 //				HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
 //			}
 //
-//			//Passive balancing is called unless a fault has occurred
+			//Passive balancing is called unless a fault has occurred
 //			if (safetyFaults == 0 && BALANCE
 //					&& ((modPackInfo.cell_volt_highest
 //							- modPackInfo.cell_volt_lowest) > 50)) {

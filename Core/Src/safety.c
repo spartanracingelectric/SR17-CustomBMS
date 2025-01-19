@@ -29,7 +29,6 @@ void Cell_Summary_Voltage(struct batteryModule *batt, uint8_t *fault,
 		uint8_t *high_volt_hysteresis, uint8_t *cell_imbalance_hysteresis) {
 	batt->cell_volt_highest = batt->cell_volt[0];
 	batt->cell_volt_lowest = batt->cell_volt[0];
-	batt->pack_voltage = (uint32_t) batt->cell_volt[0];
 
 	for (int i = 1; i < NUM_CELLS; i++) {
 
@@ -96,15 +95,15 @@ void Cell_Summary_Voltage(struct batteryModule *batt, uint8_t *fault,
 				*states |= 0b10000000;
 			}
 
-		uint32_t sum_voltage = 0; // uint32_t型に変更
+//		uint32_t sum_voltage = 0; // uint32_t型に変更
+//
+//		for (int i = 0; i < NUM_CELLS; i++) {
+//			 sum_voltage += (uint32_t)batt->cell_volt[i]; // 累積和を計算
+//		}
+//
+//		if (sum_voltage - batt->pack_voltage ){
 
-		for (int i = 0; i < NUM_CELLS; i++) {
-			 sum_voltage += (uint32_t)batt->cell_volt[i]; // 累積和を計算
-		}
-
-		if (sum_voltage - batt->pack_voltage ){
-
-		}
+//		}
 		if (batt->pack_voltage >= PACK_HIGH_VOLT_WARNING) {
 			*warnings |= 0b10000000;
 		}
@@ -128,7 +127,6 @@ void Cell_Summary_Voltage(struct batteryModule *batt, uint8_t *fault,
 		if (BALANCE) {
 			*states |= 0b10000000;
 		}
-
 	}
 }
 
