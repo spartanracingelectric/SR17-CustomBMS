@@ -249,7 +249,7 @@ int main(void)
 //				HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
 //			}
 //
-			//Passive balancing is called unless a fault has occurred
+//			Passive balancing is called unless a fault has occurred
 //			if (safetyFaults == 0 && BALANCE
 //					&& ((modPackInfo.cell_volt_highest
 //							- modPackInfo.cell_volt_lowest) > 50)) {

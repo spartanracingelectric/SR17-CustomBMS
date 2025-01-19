@@ -47,7 +47,7 @@ extern "C" {
 #define NUM_AUXES				NUM_DEVICES*NUM_AUX_GROUP
 #define LTC_DELAY				1000 //500ms update delay
 #define LED_HEARTBEAT_DELAY_MS	500  //500ms update delay
-#define BALANCE 				0 //FALSE
+uint8_t BALANCE = 0; //FALSE
 /* USER CODE END Private defines */
 
 typedef struct batteryModule {
