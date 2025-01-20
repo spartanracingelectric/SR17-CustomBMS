@@ -28,7 +28,7 @@ Core/Src/balance.o: ../Core/Src/balance.c ../Core/Inc/balance.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
- ../Core/Inc/6811.h ../Core/Inc/spi.h
+ ../Core/Inc/6811.h ../Core/Inc/spi.h ../Core/Inc/can.h
 ../Core/Inc/balance.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
@@ -62,3 +62,4 @@ Core/Src/balance.o: ../Core/Src/balance.c ../Core/Inc/balance.h \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
 ../Core/Inc/6811.h:
 ../Core/Inc/spi.h:
+../Core/Inc/can.h:

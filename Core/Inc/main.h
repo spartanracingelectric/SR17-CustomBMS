@@ -47,7 +47,7 @@ extern "C" {
 #define NUM_AUXES				NUM_DEVICES*NUM_AUX_GROUP
 #define LTC_DELAY				1000 //500ms update delay
 #define LED_HEARTBEAT_DELAY_MS	500  //500ms update delay
-uint8_t BALANCE = 0; //FALSE
+//uint8_t BALANCE = 0; //FALSE
 /* USER CODE END Private defines */
 
 typedef struct batteryModule {
@@ -112,7 +112,11 @@ void Error_Handler(void);
 #define NUM_AUXES				NUM_DEVICES*NUM_AUX_GROUP
 #define LTC_DELAY				1000 //500ms update delay
 #define LED_HEARTBEAT_DELAY_MS	500  //500ms update delay
+<<<<<<< HEAD
 uint8_t BALANCE = 0; //FALSE
+=======
+#define BALANCE 				1//FALSE
+>>>>>>> 0c1f7afcc7aca555c9f6aaed6f443b448bb5f619
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
