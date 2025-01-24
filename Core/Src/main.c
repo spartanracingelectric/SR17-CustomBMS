@@ -174,17 +174,7 @@ int main(void)
 	Wakeup_Idle();
 	LTC_STCOMM(2);
 
-	Wakeup_Sleep();
-	for (uint8_t i = indexpause; i < NUM_THERM_PER_MOD; i++) {
-		Wakeup_Idle();
-		Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
-		HAL_Delay(3);
-	}
-	Wakeup_Idle();
-	LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[1]);
-	Wakeup_Idle();
-	LTC_STCOMM(2);
-
+	ReadHVInput(&modPackInfo.pack_voltage);
 
   /* USER CODE END 2 */
 
@@ -195,6 +185,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
+//		printf("Hello");
 		if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
 			//calling all CAN realated methods
 			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
@@ -203,7 +194,7 @@ int main(void)
 			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
 			//reading cell voltages
-			Wakeup_Sleep();
+//			Wakeup_Sleep();
 			Read_Volt(modPackInfo.cell_volt);
 //			printf("Cell voltages:\n");
 //			for (int i = 0; i < NUM_CELLS; i++) {
@@ -253,7 +244,7 @@ int main(void)
 //							- modPackInfo.cell_volt_lowest) > 50)) {
 //				Start_Balance((uint16_t*) modPackInfo.cell_volt,
 //				NUM_DEVICES, modPackInfo.cell_volt_lowest);
-//
+
 //			} else if (BALANCE) {
 //				End_Balance(&safetyFaults);
 //			}

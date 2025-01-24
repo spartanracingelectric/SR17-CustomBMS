@@ -20,6 +20,7 @@ CAN1.CalculateTimeBit=2000
 CAN1.CalculateTimeQuantum=250.0
 CAN1.IPParameters=CalculateTimeQuantum,CalculateTimeBit,CalculateBaudRate,Prescaler,BS1,BS2
 CAN1.Prescaler=9
+<<<<<<< HEAD
 Dma.ADC1.0.Direction=DMA_PERIPH_TO_MEMORY
 Dma.ADC1.0.Instance=DMA1_Channel1
 Dma.ADC1.0.MemDataAlignment=DMA_MDATAALIGN_HALFWORD
@@ -71,6 +72,49 @@ Dma.USART1_TX.4.PeriphDataAlignment=DMA_PDATAALIGN_BYTE
 Dma.USART1_TX.4.PeriphInc=DMA_PINC_DISABLE
 Dma.USART1_TX.4.Priority=DMA_PRIORITY_LOW
 Dma.USART1_TX.4.RequestParameters=Instance,Direction,PeriphInc,MemInc,PeriphDataAlignment,MemDataAlignment,Mode,Priority
+=======
+Dma.ADC1.2.Direction=DMA_PERIPH_TO_MEMORY
+Dma.ADC1.2.Instance=DMA1_Channel1
+Dma.ADC1.2.MemDataAlignment=DMA_MDATAALIGN_HALFWORD
+Dma.ADC1.2.MemInc=DMA_MINC_ENABLE
+Dma.ADC1.2.Mode=DMA_NORMAL
+Dma.ADC1.2.PeriphDataAlignment=DMA_PDATAALIGN_HALFWORD
+Dma.ADC1.2.PeriphInc=DMA_PINC_DISABLE
+Dma.ADC1.2.Priority=DMA_PRIORITY_LOW
+Dma.ADC1.2.RequestParameters=Instance,Direction,PeriphInc,MemInc,PeriphDataAlignment,MemDataAlignment,Mode,Priority
+Dma.Request0=SPI1_RX
+Dma.Request1=SPI1_TX
+Dma.Request2=ADC1
+Dma.Request3=USART1_TX
+Dma.RequestsNb=4
+Dma.SPI1_RX.0.Direction=DMA_PERIPH_TO_MEMORY
+Dma.SPI1_RX.0.Instance=DMA1_Channel2
+Dma.SPI1_RX.0.MemDataAlignment=DMA_MDATAALIGN_HALFWORD
+Dma.SPI1_RX.0.MemInc=DMA_MINC_ENABLE
+Dma.SPI1_RX.0.Mode=DMA_NORMAL
+Dma.SPI1_RX.0.PeriphDataAlignment=DMA_PDATAALIGN_HALFWORD
+Dma.SPI1_RX.0.PeriphInc=DMA_PINC_DISABLE
+Dma.SPI1_RX.0.Priority=DMA_PRIORITY_LOW
+Dma.SPI1_RX.0.RequestParameters=Instance,Direction,PeriphInc,MemInc,PeriphDataAlignment,MemDataAlignment,Mode,Priority
+Dma.SPI1_TX.1.Direction=DMA_MEMORY_TO_PERIPH
+Dma.SPI1_TX.1.Instance=DMA1_Channel3
+Dma.SPI1_TX.1.MemDataAlignment=DMA_MDATAALIGN_BYTE
+Dma.SPI1_TX.1.MemInc=DMA_MINC_ENABLE
+Dma.SPI1_TX.1.Mode=DMA_NORMAL
+Dma.SPI1_TX.1.PeriphDataAlignment=DMA_PDATAALIGN_BYTE
+Dma.SPI1_TX.1.PeriphInc=DMA_PINC_DISABLE
+Dma.SPI1_TX.1.Priority=DMA_PRIORITY_LOW
+Dma.SPI1_TX.1.RequestParameters=Instance,Direction,PeriphInc,MemInc,PeriphDataAlignment,MemDataAlignment,Mode,Priority
+Dma.USART1_TX.3.Direction=DMA_MEMORY_TO_PERIPH
+Dma.USART1_TX.3.Instance=DMA1_Channel4
+Dma.USART1_TX.3.MemDataAlignment=DMA_MDATAALIGN_BYTE
+Dma.USART1_TX.3.MemInc=DMA_MINC_ENABLE
+Dma.USART1_TX.3.Mode=DMA_NORMAL
+Dma.USART1_TX.3.PeriphDataAlignment=DMA_PDATAALIGN_BYTE
+Dma.USART1_TX.3.PeriphInc=DMA_PINC_DISABLE
+Dma.USART1_TX.3.Priority=DMA_PRIORITY_LOW
+Dma.USART1_TX.3.RequestParameters=Instance,Direction,PeriphInc,MemInc,PeriphDataAlignment,MemDataAlignment,Mode,Priority
+>>>>>>> f4468bfacfee563f36ab7a8748ecdd98968165c9
 File.Version=6
 GPIO.groupedBy=Group By Peripherals
 KeepUserPlacement=false
@@ -132,6 +176,7 @@ MxCube.Version=6.13.0
 MxDb.Version=DB.6.0.130
 NVIC.ADC1_2_IRQn=true\:2\:0\:true\:false\:true\:true\:true\:true
 NVIC.BusFault_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
+<<<<<<< HEAD
 NVIC.CAN1_RX0_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
 NVIC.CAN1_RX1_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
 NVIC.CAN1_TX_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
@@ -140,6 +185,12 @@ NVIC.DMA1_Channel2_IRQn=true\:3\:0\:true\:false\:true\:false\:true\:true
 NVIC.DMA1_Channel3_IRQn=true\:3\:0\:true\:false\:true\:false\:true\:true
 NVIC.DMA1_Channel4_IRQn=true\:1\:0\:true\:false\:true\:false\:true\:true
 NVIC.DMA1_Channel5_IRQn=true\:1\:0\:true\:false\:true\:false\:true\:true
+=======
+NVIC.DMA1_Channel1_IRQn=true\:1\:0\:true\:false\:true\:false\:true\:true
+NVIC.DMA1_Channel2_IRQn=true\:3\:0\:true\:false\:true\:false\:true\:true
+NVIC.DMA1_Channel3_IRQn=true\:3\:0\:true\:false\:true\:false\:true\:true
+NVIC.DMA1_Channel4_IRQn=true\:2\:0\:true\:false\:true\:false\:true\:true
+>>>>>>> f4468bfacfee563f36ab7a8748ecdd98968165c9
 NVIC.DebugMonitor_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
 NVIC.ForceEnableDMAVector=true
 NVIC.HardFault_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
@@ -150,7 +201,10 @@ NVIC.PriorityGroup=NVIC_PRIORITYGROUP_4
 NVIC.SPI1_IRQn=true\:3\:0\:true\:false\:true\:true\:true\:true
 NVIC.SVCall_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
 NVIC.SysTick_IRQn=true\:15\:0\:false\:false\:true\:false\:true\:false
+<<<<<<< HEAD
 NVIC.TIM7_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
+=======
+>>>>>>> f4468bfacfee563f36ab7a8748ecdd98968165c9
 NVIC.USART1_IRQn=true\:1\:0\:true\:false\:true\:true\:true\:true
 NVIC.UsageFault_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
 PA0-WKUP.GPIOParameters=GPIO_Label
