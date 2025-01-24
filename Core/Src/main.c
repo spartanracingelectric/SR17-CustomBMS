@@ -20,6 +20,7 @@
 #include "main.h"
 #include "adc.h"
 #include "can.h"
+#include "dma.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
@@ -129,6 +130,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_ADC1_Init();
   MX_ADC2_Init();
   MX_TIM7_Init();
@@ -172,17 +174,7 @@ int main(void)
 	Wakeup_Idle();
 	LTC_STCOMM(2);
 
-	Wakeup_Sleep();
-	for (uint8_t i = indexpause; i < NUM_THERM_PER_MOD; i++) {
-		Wakeup_Idle();
-		Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
-		HAL_Delay(3);
-	}
-	Wakeup_Idle();
-	LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[1]);
-	Wakeup_Idle();
-	LTC_STCOMM(2);
-
+	ReadHVInput(&modPackInfo.pack_voltage);
 
   /* USER CODE END 2 */
 
@@ -193,7 +185,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
-		printf("Hello");
+//		printf("Hello");
 		if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
 			//calling all CAN realated methods
 			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
@@ -202,7 +194,7 @@ int main(void)
 			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
 			//reading cell voltages
-			Wakeup_Sleep();
+//			Wakeup_Sleep();
 			Read_Volt(modPackInfo.cell_volt);
 			//print(NUM_CELLS, (uint16_t*) modPackInfo.cell_volt);
 
@@ -250,15 +242,15 @@ int main(void)
 //			}
 //
 //			Passive balancing is called unless a fault has occurred
-			if (safetyFaults == 0 && BALANCE
-					&& ((modPackInfo.cell_volt_highest
-							- modPackInfo.cell_volt_lowest) > 50)) {
-				Start_Balance((uint16_t*) modPackInfo.cell_volt,
-				NUM_DEVICES, modPackInfo.cell_volt_lowest);
-////
-			} else if (BALANCE) {
-				End_Balance(&safetyFaults);
-			}
+//			if (safetyFaults == 0 && BALANCE
+//					&& ((modPackInfo.cell_volt_highest
+//							- modPackInfo.cell_volt_lowest) > 50)) {
+//				Start_Balance((uint16_t*) modPackInfo.cell_volt,
+//				NUM_DEVICES, modPackInfo.cell_volt_lowest);
+//////
+//			} else if (BALANCE) {
+//				End_Balance(&safetyFaults);
+//			}
 
 
 		}

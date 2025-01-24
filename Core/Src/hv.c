@@ -15,8 +15,7 @@
 		// 電圧計算
 		float adcVoltage = ((float)adcValue / ADC_RESOLUTION) * V_REF;
 		float amcOutput = adcVoltage / GAIN_TLV9001;
-		float amcInput = amcOutput / GAIN_AMC1300;
-		float hvInput = amcInput * DIVIDER_RATIO;
+		float hvInput = amcOutput * DIVIDER_RATIO;
 
-		*read_volt_HV = (uint32_t)(hvInput * 10000);
+		*read_volt_HV = (uint32_t)(hvInput);
 	}
