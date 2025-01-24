@@ -12,7 +12,7 @@
 #define R2 1000     // 1 kΩ
 #define DIVIDER_RATIO (R1 / (float)R2)
 
-#define MAX_SHUNT_AMPAGE 1000
+#define MAX_SHUNT_AMPAGE 500
 #define MAX_SHUNT_VOLTAGE 3.3f
 
 void ReadHVInput(uint32_t *read_volt_HV);

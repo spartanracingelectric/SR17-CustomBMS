@@ -24,6 +24,6 @@ void State_of_Charge(struct batteryModule *batt, float elapsed_time, int *fault,
     float voltage = ((float)adcValue / ADC_RESOLUTION) * V_REF;
     float current = (voltage / MAX_SHUNT_VOLTAGE) * MAX_SHUNT_AMPAGE;
     batt->soc = (uint32_t)((float)batt->soc -
-                           current * (1 / (MAX_CELL_CAPACITY * NUM_CELLS)) *
+                           current * (1 / (NUM_DEVICES)) *
                                (elapsed_time / 3600));
 }
