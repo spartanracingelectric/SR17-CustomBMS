@@ -1,4 +1,5 @@
 #include "safety.h"
+#include "main.h"
 
 // ! Fault Thresholds
 
@@ -91,9 +92,9 @@ void Cell_Summary_Voltage(struct batteryModule *batt, uint8_t *fault,
 				*warnings |= 0b00000010;
 			}
 
-			if (BALANCE) {
-				*states |= 0b10000000;
-			}
+//			if (BALANCE) {
+//				*states |= 0b10000000;
+//			}
 
 //		uint32_t sum_voltage = 0; // uint32_t型に変更
 //
@@ -124,9 +125,9 @@ void Cell_Summary_Voltage(struct batteryModule *batt, uint8_t *fault,
 				>= CELL_VOLT_IMBALANCE_WARNING) {
 			*warnings |= 0b00000010;
 		}
-		if (BALANCE) {
-			*states |= 0b10000000;
-		}
+//		if (BALANCE) {
+//			*states |= 0b10000000;
+//		}
 	}
 }
 

@@ -99,11 +99,8 @@ void Error_Handler(void);
 #define MCU_SHUTDOWN_SIGNAL_GPIO_Port GPIOB
 #define MCU_HEARTBEAT_LED_Pin GPIO_PIN_6
 #define MCU_HEARTBEAT_LED_GPIO_Port GPIOC
-#define MCU_HV_SENSE_ENABLE_Pin GPIO_PIN_7
-#define MCU_HV_SENSE_ENABLE_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
