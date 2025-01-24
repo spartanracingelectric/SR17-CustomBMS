@@ -221,6 +221,7 @@ void CAN_Send_Safety_Checker(struct CANMessage *ptr, struct batteryModule *batt,
 		uint8_t *warnings, uint8_t *states) {
 	uint16_t CAN_ID = 0x600;
 	Set_CAN_Id(ptr, CAN_ID);
+
 	ptr->data[0] = *faults;
 	ptr->data[1] = *warnings;
 	ptr->data[2] = *states;
@@ -228,6 +229,7 @@ void CAN_Send_Safety_Checker(struct CANMessage *ptr, struct batteryModule *batt,
 	ptr->data[4] = (batt->pack_voltage) >> 8;
 	ptr->data[5] = (batt->pack_voltage) >> 16;
 	ptr->data[6] = (batt->pack_voltage) >> 24;
+
 	HAL_Delay(1);
 	CAN_Send(ptr);
 }
@@ -235,10 +237,15 @@ void CAN_Send_Safety_Checker(struct CANMessage *ptr, struct batteryModule *batt,
 void CAN_Send_SOC(struct CANMessage *ptr, struct batteryModule *batt) {
     uint16_t CAN_ID = 0x601;
 	Set_CAN_Id(ptr, CAN_ID);
+
 	ptr->data[0] = batt->soc; 
 	ptr->data[1] = batt->soc >> 8; 
 	ptr->data[2] = batt->soc >> 16; 
 	ptr->data[3] = batt->soc >> 24; 
+
+    uint8_t percent = (uint8_t)(batt->soc / MAX_BATTERY_CAPACITY); 
+	ptr->data[4] = percent; 
+
 	HAL_Delay(1);
 	CAN_Send(ptr);
 }

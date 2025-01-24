@@ -20,7 +20,7 @@ void ReadHVInput(uint32_t *read_volt_HV) {
 void State_of_Charge(struct batteryModule *batt, float elapsed_time, int *fault,
                      int *warnings) {
     uint32_t adcValue =
-        MX_ADC_GetValue(&hadc1, GPIO_SOC_ADC_CHANNEL, HAL_MAX_DELAY);
+        MX_ADC_GetValue(&hadc2, GPIO_SHUNT_ADC_CHANNEL, HAL_MAX_DELAY);
     float voltage = ((float)adcValue / ADC_RESOLUTION) * V_REF;
     float current = (voltage / MAX_SHUNT_VOLTAGE) * MAX_SHUNT_AMPAGE;
     batt->soc = (uint32_t)((float)batt->soc -

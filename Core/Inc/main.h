@@ -38,36 +38,37 @@ extern "C" {
 /* USER CODE BEGIN ET */
 
 /* USER CODE BEGIN Private defines */
-#define NUM_DEVICES				8	//1 slave board
-#define NUM_CELL_SERIES_GROUP	12	//1 slave board
-#define NUM_CELLS				NUM_DEVICES*NUM_CELL_SERIES_GROUP	//multiple slave board
-#define NUM_THERM_PER_MOD		12
-#define NUM_THERM_TOTAL			NUM_DEVICES*NUM_THERM_PER_MOD
-#define NUM_AUX_GROUP			6
-#define NUM_AUXES				NUM_DEVICES*NUM_AUX_GROUP
-#define LTC_DELAY				1000 //500ms update delay
-#define LED_HEARTBEAT_DELAY_MS	500  //500ms update delay
-#define BALANCE 				0 //FALSE
-#define MAX_CELL_CAPACITY       3.0f
+#define NUM_DEVICES 8                                 // 1 slave board
+#define NUM_CELL_SERIES_GROUP 12                      // 1 slave board
+#define NUM_CELLS NUM_DEVICES* NUM_CELL_SERIES_GROUP  // multiple slave board
+#define NUM_THERM_PER_MOD 12
+#define NUM_THERM_TOTAL NUM_DEVICES* NUM_THERM_PER_MOD
+#define NUM_AUX_GROUP 6
+#define NUM_AUXES NUM_DEVICES* NUM_AUX_GROUP
+#define LTC_DELAY 1000              // 500ms update delay
+#define LED_HEARTBEAT_DELAY_MS 500  // 500ms update delay
+#define BALANCE 0                   // FALSE
+#define MAX_CELL_CAPACITY 3.0f
+#define MAX_BATTERY_CAPACITY NUM_DEVICES* MAX_CELL_CAPACITY
 /* USER CODE END Private defines */
 
 typedef struct batteryModule {
-	uint16_t cell_volt[NUM_CELLS];
-	uint16_t cell_temp[NUM_THERM_TOTAL];
-	uint16_t module_averages[NUM_DEVICES];
-	uint16_t cell_volt_lowest;
-	uint16_t cell_volt_highest;
-	uint16_t cell_temp_lowest;
-	uint16_t cell_temp_highest;
-	uint32_t pack_voltage;
-	uint16_t read_auxreg[NUM_AUXES];
+    uint16_t cell_volt[NUM_CELLS];
+    uint16_t cell_temp[NUM_THERM_TOTAL];
+    uint16_t module_averages[NUM_DEVICES];
+    uint16_t cell_volt_lowest;
+    uint16_t cell_volt_highest;
+    uint16_t cell_temp_lowest;
+    uint16_t cell_temp_highest;
+    uint32_t pack_voltage;
+    uint16_t read_auxreg[NUM_AUXES];
     uint32_t soc;
-}batteryModule;
+} batteryModule;
 
 struct CANMessage {
-	CAN_TxHeaderTypeDef TxHeader;
-	uint32_t TxMailbox;
-	uint8_t data[8];
+    CAN_TxHeaderTypeDef TxHeader;
+    uint32_t TxMailbox;
+    uint8_t data[8];
 };
 
 /* USER CODE END ET */
@@ -102,20 +103,20 @@ void Error_Handler(void);
 #define MCU_HEARTBEAT_LED_GPIO_Port GPIOC
 #define MCU_HV_SENSE_ENABLE_Pin GPIO_PIN_7
 #define MCU_HV_SENSE_ENABLE_GPIO_Port GPIOB
-#define MCU_SOC_Pin GPIO_PIN_3
-#define MCU_SOC_GPIO_Port GPIOC 
+#define MCU_SHUNT_Pin GPIO_PIN_3
+#define MCU_SHUNT_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
-#define NUM_DEVICES				8	//1 slave board
-#define NUM_CELL_SERIES_GROUP	12	//1 slave board
-#define NUM_CELLS				NUM_DEVICES*NUM_CELL_SERIES_GROUP	//multiple slave board
-#define NUM_THERM_PER_MOD		12
-#define NUM_THERM_TOTAL			NUM_DEVICES*NUM_THERM_PER_MOD
-#define NUM_AUX_GROUP			6
-#define NUM_AUXES				NUM_DEVICES*NUM_AUX_GROUP
-#define LTC_DELAY				1000 //500ms update delay
-#define LED_HEARTBEAT_DELAY_MS	500  //500ms update delay
-#define BALANCE 				0 //FALSE
+#define NUM_DEVICES 8                                 // 1 slave board
+#define NUM_CELL_SERIES_GROUP 12                      // 1 slave board
+#define NUM_CELLS NUM_DEVICES* NUM_CELL_SERIES_GROUP  // multiple slave board
+#define NUM_THERM_PER_MOD 12
+#define NUM_THERM_TOTAL NUM_DEVICES* NUM_THERM_PER_MOD
+#define NUM_AUX_GROUP 6
+#define NUM_AUXES NUM_DEVICES* NUM_AUX_GROUP
+#define LTC_DELAY 1000              // 500ms update delay
+#define LED_HEARTBEAT_DELAY_MS 500  // 500ms update delay
+#define BALANCE 0                   // FALSE
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
