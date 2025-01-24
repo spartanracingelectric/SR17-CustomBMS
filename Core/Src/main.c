@@ -184,48 +184,48 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-//		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
+		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
 		if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
 			//calling all CAN realated methods
-//			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
-//					&safetyWarnings, &safetyStates);
-//			CAN_Send_Cell_Summary(&msg, &modPackInfo);
+			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
+					&safetyWarnings, &safetyStates);
+			CAN_Send_Cell_Summary(&msg, &modPackInfo);
 			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
-//			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
+			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
 			//reading cell voltages
 //			Wakeup_Sleep();
 			Read_Volt(modPackInfo.cell_volt);
-	//			printf("Cell voltages:\n");
-	//			for (int i = 0; i < NUM_CELLS; i++) {
-	//			    printf("Cell %d: %u mV\n", i + 1, modPackInfo.cell_volt[i]);
-	//			}
+//			printf("Cell voltages:\n");
+//			for (int i = 0; i < NUM_CELLS; i++) {
+//			    printf("Cell %d: %u mV\n", i + 1, modPackInfo.cell_volt[i]);
+//			}
 
 			//reading cell temperatures
 //			Wakeup_Sleep();
-//			for (uint8_t i = tempindex; i < indexpause; i++) {
-//				Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
-//			}
-//			if (indexpause == 8) {
-//				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[0]);
-//				LTC_STCOMM(2);
-//				tempindex = 8;
-//				indexpause = NUM_THERM_PER_MOD;
-//			} else if (indexpause == NUM_THERM_PER_MOD) {
-//				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[1]);
-//				LTC_STCOMM(2);
-//				indexpause = 8;
-//				tempindex = 0;
-//			}
+			for (uint8_t i = tempindex; i < indexpause; i++) {
+				Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
+			}
+			if (indexpause == 8) {
+				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[0]);
+				LTC_STCOMM(2);
+				tempindex = 8;
+				indexpause = NUM_THERM_PER_MOD;
+			} else if (indexpause == NUM_THERM_PER_MOD) {
+				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[1]);
+				LTC_STCOMM(2);
+				indexpause = 8;
+				tempindex = 0;
+			}
 
-//			ReadHVInput(&modPackInfo.pack_voltage);
+			ReadHVInput(&modPackInfo.pack_voltage);
 			//print(NUM_THERM_TOTAL, (uint16_t*) modPackInfo.cell_temp);
 
 			//getting the summary of all cells in the pack
-//			Cell_Summary_Voltage(&modPackInfo, &safetyFaults,
-//								&safetyWarnings, &safetyStates, &low_volt_hysteresis,
-//								&high_volt_hysteresis, &cell_imbalance_hysteresis);
+			Cell_Summary_Voltage(&modPackInfo, &safetyFaults,
+								&safetyWarnings, &safetyStates, &low_volt_hysteresis,
+								&high_volt_hysteresis, &cell_imbalance_hysteresis);
 
-//			Cell_Summary_Temperature(&modPackInfo, &safetyFaults,&safetyWarnings);
+			Cell_Summary_Temperature(&modPackInfo, &safetyFaults,&safetyWarnings);
 
 
 
