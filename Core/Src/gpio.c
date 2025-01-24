@@ -80,12 +80,6 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(MCU_HEARTBEAT_LED_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : MCU_HV_SENSE_ENABLE_Pin */
-  GPIO_InitStruct.Pin = MCU_HV_SENSE_ENABLE_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(MCU_HV_SENSE_ENABLE_GPIO_Port, &GPIO_InitStruct);
-
 }
 
 /* USER CODE BEGIN 2 */

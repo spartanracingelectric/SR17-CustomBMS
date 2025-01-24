@@ -14,7 +14,7 @@ void Wakeup_Idle(void) {
 	uint8_t hex_ff = 0xFF;
 	for (int i = 0; i < NUM_DEVICES; i++) {
 		LTC_nCS_Low();							   // Pull CS low
-		HAL_SPI_Transmit(&hspi1, &hex_ff, 1, 100); // Send byte 0xFF to wake LTC up
+		HAL_SPI_Transmit_DMA(&hspi1, &hex_ff, 1); // Send byte 0xFF to wake LTC up
 		LTC_nCS_High();							   // Pull CS high
 	}
 }
@@ -52,13 +52,13 @@ LTC_SPI_StatusTypeDef Read_Cell_Volt(uint16_t *read_voltages) {
 
 		LTC_nCS_Low(); // Pull CS low
 
-		hal_ret = HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
+		hal_ret = HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*) cmd, 4);
 		if (hal_ret) {									// Non-zero means error
 			ret |= (1 << (hal_ret + LTC_SPI_TX_BIT_OFFSET)); // TX error
 		}
 
-		hal_ret = HAL_SPI_Receive(&hspi1, (uint8_t*) read_voltages_reg,
-				ARR_SIZE_REG, 100);
+		hal_ret = HAL_SPI_Receive_DMA(&hspi1, (uint8_t*) read_voltages_reg,
+				ARR_SIZE_REG);
 		if (hal_ret) {									// Non-zero means error
 			ret |= (1 << (hal_ret + LTC_SPI_RX_BIT_OFFSET)); // RX error
 		}
@@ -126,7 +126,7 @@ void LTC6811_WRPWM(uint8_t total_ic, uint8_t pwm) {
 
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake.This command can be removed.
 	LTC_nCS_Low();
-	HAL_SPI_Transmit(&hspi1, (uint8_t*) wrpwm_buffer, CMD_LEN, 100);
+	HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*) wrpwm_buffer, CMD_LEN);
 	LTC_nCS_High();
 }
 
@@ -167,7 +167,7 @@ void LTC6811_WRCFG(uint8_t total_ic, //The number of ICs being written to
 
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake.This command can be removed.
 	LTC_nCS_Low();
-	HAL_SPI_Transmit(&hspi1, (uint8_t*) wrcfg_buffer, CMD_LEN, 100);
+	HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*) wrcfg_buffer, CMD_LEN);
 	LTC_nCS_High();
 }
 
@@ -210,7 +210,7 @@ void LTC_WRCOMM(uint8_t total_ic, uint8_t comm[6]) {
 
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake.This command can be removed.
 	LTC_nCS_Low();
-	HAL_SPI_Transmit(&hspi1, (uint8_t*) wrcomm_buffer, CMD_LEN, 100);
+	HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*) wrcomm_buffer, CMD_LEN);
 	LTC_nCS_High();
 }
 
@@ -230,9 +230,9 @@ void LTC_STCOMM(uint8_t len) {
 
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake. This command can be removed.
 	LTC_nCS_Low();
-	HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
+	HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*) cmd, 4);
 	for (int i = 0; i < len * 3; i++) {
-		HAL_SPI_Transmit(&hspi1, (uint8_t*) 0xFF, 1, 100);
+		HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*) 0xFF, 1);
 	}
 	LTC_nCS_High();
 }
@@ -258,13 +258,13 @@ LTC_SPI_StatusTypeDef Read_Cell_Temps(uint16_t *read_auxiliary) {
 
 		LTC_nCS_Low(); // Pull CS low
 
-		hal_ret = HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
+		hal_ret = HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*) cmd, 4);
 		if (hal_ret) {									// Non-zero means error
 			ret |= (1 << (hal_ret + LTC_SPI_TX_BIT_OFFSET)); // TX error
 		}
 
-		hal_ret = HAL_SPI_Receive(&hspi1, (uint8_t*) read_auxiliary_reg,
-				ARR_SIZE_REG, 100);
+		hal_ret = HAL_SPI_Receive_DMA(&hspi1, (uint8_t*) read_auxiliary_reg,
+				ARR_SIZE_REG);
 		if (hal_ret) {									// Non-zero means error
 			ret |= (1 << (hal_ret + LTC_SPI_RX_BIT_OFFSET)); // RX error
 		}
@@ -309,7 +309,7 @@ void LTC_ADCV(uint8_t MD,  // ADC Mode
 
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake. This command can be removed.
 	LTC_nCS_Low();
-	HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
+	HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*) cmd, 4);
 	LTC_nCS_High();
 }
 
@@ -336,7 +336,7 @@ void LTC_ADAX(uint8_t MD, // ADC Mode
 	 */
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake. This command can be removed.
 	LTC_nCS_Low();
-	HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
+	HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*) cmd, 4);
 	LTC_nCS_High();
 }
 
