@@ -17,5 +17,5 @@
 		float amcOutput = adcVoltage / GAIN_TLV9001;
 		float hvInput = amcOutput * DIVIDER_RATIO;
 
-		*read_volt_HV = (uint32_t)(hvInput);
+		*read_volt_HV = (uint32_t)(hvInput * 10000);
 	}
