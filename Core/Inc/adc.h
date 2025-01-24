@@ -16,8 +16,6 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
-/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __ADC_H__
 #define __ADC_H__
 
@@ -25,27 +23,18 @@
 extern "C" {
 #endif
 
-/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
+#define GPIO_SOC_ADC_CHANNEL 13
+#define GPIO_VSENSE_ADC_CHANNEL 15
 
 extern ADC_HandleTypeDef hadc1;
-
 extern ADC_HandleTypeDef hadc2;
-
-/* USER CODE BEGIN Private defines */
-
-/* USER CODE END Private defines */
 
 void MX_ADC1_Init(void);
 void MX_ADC2_Init(void);
 
-/* USER CODE BEGIN Prototypes */
-
-/* USER CODE END Prototypes */
+uint32_t MX_ADC_GetValue(ADC_HandleTypeDef *hadc, uint32_t channel, uint32_t hal_delay) {
 
 #ifdef __cplusplus
 }

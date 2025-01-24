@@ -86,6 +86,11 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(MCU_HV_SENSE_ENABLE_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : MCU_SOC_Pin */
+  GPIO_InitStruct.Pin = MCU_SOC_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(MCU_SOC_GPIO_Port, &GPIO_InitStruct);
 }
 
 /* USER CODE BEGIN 2 */

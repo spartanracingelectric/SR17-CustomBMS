@@ -231,4 +231,14 @@ void CAN_Send_Safety_Checker(struct CANMessage *ptr, struct batteryModule *batt,
 	HAL_Delay(1);
 	CAN_Send(ptr);
 }
-/* USER CODE END 1 */
+
+void CAN_Send_SOC(struct CANMessage *ptr, struct batteryModule *batt) {
+    uint16_t CAN_ID = 0x601;
+	Set_CAN_Id(ptr, CAN_ID);
+	ptr->data[0] = batt->soc; 
+	ptr->data[1] = batt->soc >> 8; 
+	ptr->data[2] = batt->soc >> 16; 
+	ptr->data[3] = batt->soc >> 24; 
+	HAL_Delay(1);
+	CAN_Send(ptr);
+}

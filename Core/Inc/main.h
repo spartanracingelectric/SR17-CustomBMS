@@ -48,6 +48,7 @@ extern "C" {
 #define LTC_DELAY				1000 //500ms update delay
 #define LED_HEARTBEAT_DELAY_MS	500  //500ms update delay
 #define BALANCE 				0 //FALSE
+#define MAX_CELL_CAPACITY       3.0f
 /* USER CODE END Private defines */
 
 typedef struct batteryModule {
@@ -60,7 +61,7 @@ typedef struct batteryModule {
 	uint16_t cell_temp_highest;
 	uint32_t pack_voltage;
 	uint16_t read_auxreg[NUM_AUXES];
-
+    uint32_t soc;
 }batteryModule;
 
 struct CANMessage {
@@ -101,6 +102,8 @@ void Error_Handler(void);
 #define MCU_HEARTBEAT_LED_GPIO_Port GPIOC
 #define MCU_HV_SENSE_ENABLE_Pin GPIO_PIN_7
 #define MCU_HV_SENSE_ENABLE_GPIO_Port GPIOB
+#define MCU_SOC_Pin GPIO_PIN_3
+#define MCU_SOC_GPIO_Port GPIOC 
 
 /* USER CODE BEGIN Private defines */
 #define NUM_DEVICES				8	//1 slave board
