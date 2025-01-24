@@ -45,9 +45,9 @@ extern "C" {
 #define NUM_THERM_TOTAL			NUM_DEVICES*NUM_THERM_PER_MOD
 #define NUM_AUX_GROUP			6
 #define NUM_AUXES				NUM_DEVICES*NUM_AUX_GROUP
-#define LTC_DELAY				1000 //500ms update delay
-#define LED_HEARTBEAT_DELAY_MS	500  //500ms update delay
-//uint8_t BALANCE = 0; //FALSE
+#define LTC_DELAY				100 //500ms update delay
+#define LED_HEARTBEAT_DELAY_MS	250  //500ms update delay
+#define BALANCE = 0; //FALSE
 /* USER CODE END Private defines */
 
 typedef struct batteryModule {
@@ -101,24 +101,6 @@ void Error_Handler(void);
 #define MCU_HEARTBEAT_LED_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
-#define NUM_DEVICES				8	//1 slave board
-#define NUM_CELL_SERIES_GROUP	12	//1 slave board
-#define NUM_CELLS				NUM_DEVICES*NUM_CELL_SERIES_GROUP	//multiple slave board
-#define NUM_THERM_PER_MOD		12
-#define NUM_THERM_TOTAL			NUM_DEVICES*NUM_THERM_PER_MOD
-#define NUM_AUX_GROUP			6
-#define NUM_AUXES				NUM_DEVICES*NUM_AUX_GROUP
-#define LTC_DELAY				1000 //500ms update delay
-#define LED_HEARTBEAT_DELAY_MS	500  //500ms update delay
-<<<<<<< HEAD
-//uint8_t BALANCE = 0; //FALSE
-=======
-<<<<<<< HEAD
-uint8_t BALANCE = 0; //FALSE
-=======
-#define BALANCE 				1//FALSE
->>>>>>> 0c1f7afcc7aca555c9f6aaed6f443b448bb5f619
->>>>>>> 79720c75978d7a53cad5c8ed0c4c2f370dfd6ec9
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
