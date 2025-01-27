@@ -10,3 +10,4 @@
 ../Core/Src/can.c:175:6:CAN_Send_Temperature	5
 ../Core/Src/can.c:203:6:CAN_Send_Cell_Summary	1
 ../Core/Src/can.c:220:6:CAN_Send_Safety_Checker	1
+../Core/Src/can.c:237:6:CAN_Send_SOC	1

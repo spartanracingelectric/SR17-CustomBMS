@@ -1,1 +1,2 @@
-../Core/Src/hv.c:5:7:ReadHVInput	32	static
+../Core/Src/hv.c:6:6:ReadHVInput	32	static
+../Core/Src/hv.c:20:6:State_of_Charge	48	static

@@ -35,7 +35,7 @@ void MX_ADC1_Init(void);
 void MX_ADC2_Init(void);
 
 uint32_t MX_ADC_GetValue(ADC_HandleTypeDef *hadc, uint32_t channel,
-                         uint32_t hal_delay) {
+                         uint32_t hal_delay);
 #ifdef __cplusplus
 }
 #endif

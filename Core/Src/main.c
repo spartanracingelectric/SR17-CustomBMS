@@ -19,6 +19,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
+#include <time.h>
+
 #include "adc.h"
 #include "can.h"
 #include "gpio.h"
@@ -102,7 +104,7 @@ int main(void) {
     uint8_t safetyWarnings = 0;
     uint8_t safetyStates = 0;
 
-    modPackInfo->soc = MAX_BATTERY_CAPACITY;
+    modPackInfo.soc = MAX_BATTERY_CAPACITY;
 
         /* USER CODE END 1 */
 
