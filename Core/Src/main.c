@@ -87,7 +87,7 @@ uint8_t TimerPacket_FixedPulse(TimerPacket *tp);
 static uint8_t BMS_MUX_PAUSE[2][6] = { { 0x69, 0x28, 0x0F, 0x09, 0x7F, 0xF9 }, {
 		0x69, 0x08, 0x0F, 0x09, 0x7F, 0xF9 } };
 
-int _write(int file, char *ptr, int len) {
+int _write(int file, char *ptr, int len) {					//over writing printf() for UART
     HAL_UART_Transmit(&huart1, (uint8_t *)ptr, len, HAL_MAX_DELAY);
     return len;
 }
@@ -189,9 +189,9 @@ int main(void)
 			//calling all CAN realated methods
 			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
 					&safetyWarnings, &safetyStates);
-			CAN_Send_Cell_Summary(&msg, &modPackInfo);
-			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
-			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
+//			CAN_Send_Cell_Summary(&msg, &modPackInfo);
+//			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
+//			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
 			//reading cell voltages
 //			Wakeup_Sleep();
 			Read_Volt(modPackInfo.cell_volt);
