@@ -190,9 +190,9 @@ int main(void)
 			//calling all CAN realated methods
 			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
 					&safetyWarnings, &safetyStates);
-//			CAN_Send_Cell_Summary(&msg, &modPackInfo);
-//			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
-//			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
+			CAN_Send_Cell_Summary(&msg, &modPackInfo);
+			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
+			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
 			//reading cell voltages
 //			Wakeup_Sleep();
 			Read_Volt(modPackInfo.cell_volt);
