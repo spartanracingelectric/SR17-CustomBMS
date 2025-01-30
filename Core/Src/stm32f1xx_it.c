@@ -63,7 +63,10 @@ extern DMA_HandleTypeDef hdma_spi1_rx;
 extern DMA_HandleTypeDef hdma_spi1_tx;
 extern SPI_HandleTypeDef hspi1;
 extern TIM_HandleTypeDef htim7;
+<<<<<<< HEAD
 extern DMA_HandleTypeDef hdma_usart1_rx;
+=======
+>>>>>>> 26541ea (implemented intruption on CAN)
 extern DMA_HandleTypeDef hdma_usart1_tx;
 extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
@@ -266,7 +269,10 @@ void DMA1_Channel4_IRQHandler(void)
 
 /**
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 26541ea (implemented intruption on CAN)
   * @brief This function handles DMA1 channel5 global interrupt.
   */
 void DMA1_Channel5_IRQHandler(void)
@@ -274,14 +280,16 @@ void DMA1_Channel5_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Channel5_IRQn 0 */
 
   /* USER CODE END DMA1_Channel5_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_usart1_rx);
   /* USER CODE BEGIN DMA1_Channel5_IRQn 1 */
 
   /* USER CODE END DMA1_Channel5_IRQn 1 */
 }
 
 /**
+<<<<<<< HEAD
 >>>>>>> 724b400 (converted spi to dma, deleted duplecated header)
+=======
+>>>>>>> 26541ea (implemented intruption on CAN)
   * @brief This function handles ADC1 and ADC2 global interrupts.
   */
 void ADC1_2_IRQHandler(void)
@@ -298,7 +306,10 @@ void ADC1_2_IRQHandler(void)
 
 /**
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 26541ea (implemented intruption on CAN)
   * @brief This function handles CAN1 TX interrupt.
   */
 void CAN1_TX_IRQHandler(void)
@@ -341,7 +352,24 @@ void CAN1_RX1_IRQHandler(void)
 }
 
 /**
+<<<<<<< HEAD
 >>>>>>> 724b400 (converted spi to dma, deleted duplecated header)
+=======
+  * @brief This function handles CAN1 SCE interrupt.
+  */
+void CAN1_SCE_IRQHandler(void)
+{
+  /* USER CODE BEGIN CAN1_SCE_IRQn 0 */
+
+  /* USER CODE END CAN1_SCE_IRQn 0 */
+  HAL_CAN_IRQHandler(&hcan1);
+  /* USER CODE BEGIN CAN1_SCE_IRQn 1 */
+
+  /* USER CODE END CAN1_SCE_IRQn 1 */
+}
+
+/**
+>>>>>>> 26541ea (implemented intruption on CAN)
   * @brief This function handles SPI1 global interrupt.
   */
 void SPI1_IRQHandler(void)
