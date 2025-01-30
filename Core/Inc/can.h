@@ -36,6 +36,12 @@ extern "C" {
 extern CAN_HandleTypeDef hcan1;
 
 /* USER CODE BEGIN Private defines */
+#define CAN_TX_QUEUE_SIZE 50  //size of queue
+typedef struct {
+    CAN_TxHeaderTypeDef TxHeader;
+    uint8_t data[8];
+} CANMessage;
+
 /* USER CODE END Private defines */
 
 void MX_CAN1_Init(void);
