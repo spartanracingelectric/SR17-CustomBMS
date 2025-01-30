@@ -59,20 +59,15 @@ void DMA1_Channel1_IRQHandler(void);
 void DMA1_Channel2_IRQHandler(void);
 void DMA1_Channel3_IRQHandler(void);
 void DMA1_Channel4_IRQHandler(void);
-<<<<<<< HEAD
-void ADC1_2_IRQHandler(void);
-void SPI1_IRQHandler(void);
-void USART1_IRQHandler(void);
-=======
 void DMA1_Channel5_IRQHandler(void);
 void ADC1_2_IRQHandler(void);
 void CAN1_TX_IRQHandler(void);
 void CAN1_RX0_IRQHandler(void);
 void CAN1_RX1_IRQHandler(void);
+void CAN1_SCE_IRQHandler(void);
 void SPI1_IRQHandler(void);
 void USART1_IRQHandler(void);
 void TIM7_IRQHandler(void);
->>>>>>> 724b400 (converted spi to dma, deleted duplecated header)
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

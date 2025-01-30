@@ -21,6 +21,9 @@ CAN1.CalculateTimeQuantum=250.0
 CAN1.IPParameters=CalculateTimeQuantum,CalculateTimeBit,CalculateBaudRate,Prescaler,BS1,BS2
 CAN1.Prescaler=9
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 26541ea (implemented intruption on CAN)
 Dma.ADC1.2.Direction=DMA_PERIPH_TO_MEMORY
 Dma.ADC1.2.Instance=DMA1_Channel1
 Dma.ADC1.2.MemDataAlignment=DMA_MDATAALIGN_HALFWORD
@@ -62,6 +65,7 @@ Dma.USART1_TX.3.PeriphDataAlignment=DMA_PDATAALIGN_BYTE
 Dma.USART1_TX.3.PeriphInc=DMA_PINC_DISABLE
 Dma.USART1_TX.3.Priority=DMA_PRIORITY_LOW
 Dma.USART1_TX.3.RequestParameters=Instance,Direction,PeriphInc,MemInc,PeriphDataAlignment,MemDataAlignment,Mode,Priority
+<<<<<<< HEAD
 =======
 Dma.ADC1.0.Direction=DMA_PERIPH_TO_MEMORY
 Dma.ADC1.0.Instance=DMA1_Channel1
@@ -115,6 +119,8 @@ Dma.USART1_TX.4.PeriphInc=DMA_PINC_DISABLE
 Dma.USART1_TX.4.Priority=DMA_PRIORITY_LOW
 Dma.USART1_TX.4.RequestParameters=Instance,Direction,PeriphInc,MemInc,PeriphDataAlignment,MemDataAlignment,Mode,Priority
 >>>>>>> 724b400 (converted spi to dma, deleted duplecated header)
+=======
+>>>>>>> 26541ea (implemented intruption on CAN)
 File.Version=6
 GPIO.groupedBy=Group By Peripherals
 KeepUserPlacement=false
@@ -144,6 +150,7 @@ Mcu.Pin15=PA10
 Mcu.Pin16=PA13
 Mcu.Pin17=PA14
 <<<<<<< HEAD
+<<<<<<< HEAD
 Mcu.Pin18=PB7
 Mcu.Pin19=PB8
 Mcu.Pin2=PC0
@@ -151,12 +158,17 @@ Mcu.Pin20=PB9
 Mcu.Pin21=VP_SYS_VS_Systick
 Mcu.Pin22=VP_TIM7_VS_ClockSourceINT
 =======
+=======
+>>>>>>> 26541ea (implemented intruption on CAN)
 Mcu.Pin18=PB8
 Mcu.Pin19=PB9
 Mcu.Pin2=PC0
 Mcu.Pin20=VP_SYS_VS_Systick
 Mcu.Pin21=VP_TIM7_VS_ClockSourceINT
+<<<<<<< HEAD
 >>>>>>> 724b400 (converted spi to dma, deleted duplecated header)
+=======
+>>>>>>> 26541ea (implemented intruption on CAN)
 Mcu.Pin3=PC1
 Mcu.Pin4=PC2
 Mcu.Pin5=PC3
@@ -165,10 +177,14 @@ Mcu.Pin7=PA4
 Mcu.Pin8=PA5
 Mcu.Pin9=PA6
 <<<<<<< HEAD
+<<<<<<< HEAD
 Mcu.PinsNb=23
 =======
 Mcu.PinsNb=22
 >>>>>>> 724b400 (converted spi to dma, deleted duplecated header)
+=======
+Mcu.PinsNb=22
+>>>>>>> 26541ea (implemented intruption on CAN)
 Mcu.ThirdPartyNb=0
 Mcu.UserConstants=
 Mcu.UserName=STM32F105RBTx
@@ -177,20 +193,31 @@ MxDb.Version=DB.6.0.130
 NVIC.ADC1_2_IRQn=true\:2\:0\:true\:false\:true\:true\:true\:true
 NVIC.BusFault_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
 <<<<<<< HEAD
+<<<<<<< HEAD
 NVIC.DMA1_Channel1_IRQn=true\:1\:0\:true\:false\:true\:false\:true\:true
 NVIC.DMA1_Channel2_IRQn=true\:3\:0\:true\:false\:true\:false\:true\:true
 NVIC.DMA1_Channel3_IRQn=true\:3\:0\:true\:false\:true\:false\:true\:true
 NVIC.DMA1_Channel4_IRQn=true\:2\:0\:true\:false\:true\:false\:true\:true
 =======
+=======
+>>>>>>> 26541ea (implemented intruption on CAN)
 NVIC.CAN1_RX0_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
 NVIC.CAN1_RX1_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
+NVIC.CAN1_SCE_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
 NVIC.CAN1_TX_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
+<<<<<<< HEAD
 NVIC.DMA1_Channel1_IRQn=true\:2\:0\:true\:false\:true\:false\:true\:true
 NVIC.DMA1_Channel2_IRQn=true\:3\:0\:true\:false\:true\:false\:true\:true
 NVIC.DMA1_Channel3_IRQn=true\:3\:0\:true\:false\:true\:false\:true\:true
 NVIC.DMA1_Channel4_IRQn=true\:1\:0\:true\:false\:true\:false\:true\:true
 NVIC.DMA1_Channel5_IRQn=true\:1\:0\:true\:false\:true\:false\:true\:true
 >>>>>>> 724b400 (converted spi to dma, deleted duplecated header)
+=======
+NVIC.DMA1_Channel1_IRQn=true\:1\:0\:true\:false\:true\:false\:true\:true
+NVIC.DMA1_Channel2_IRQn=true\:3\:0\:true\:false\:true\:false\:true\:true
+NVIC.DMA1_Channel3_IRQn=true\:3\:0\:true\:false\:true\:false\:true\:true
+NVIC.DMA1_Channel4_IRQn=true\:2\:0\:true\:false\:true\:false\:true\:true
+>>>>>>> 26541ea (implemented intruption on CAN)
 NVIC.DebugMonitor_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
 NVIC.ForceEnableDMAVector=true
 NVIC.HardFault_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
@@ -202,9 +229,13 @@ NVIC.SPI1_IRQn=true\:3\:0\:true\:false\:true\:true\:true\:true
 NVIC.SVCall_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
 NVIC.SysTick_IRQn=true\:15\:0\:false\:false\:true\:false\:true\:false
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 NVIC.TIM7_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
 >>>>>>> 724b400 (converted spi to dma, deleted duplecated header)
+=======
+NVIC.TIM7_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
+>>>>>>> 26541ea (implemented intruption on CAN)
 NVIC.USART1_IRQn=true\:1\:0\:true\:false\:true\:true\:true\:true
 NVIC.UsageFault_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
 PA0-WKUP.GPIOParameters=GPIO_Label
@@ -216,9 +247,13 @@ PA10.Locked=true
 PA10.Mode=Asynchronous
 PA10.Signal=USART1_RX
 <<<<<<< HEAD
+<<<<<<< HEAD
 PA13.Locked=true
 =======
 >>>>>>> 724b400 (converted spi to dma, deleted duplecated header)
+=======
+PA13.Locked=true
+>>>>>>> 26541ea (implemented intruption on CAN)
 PA13.Mode=Serial_Wire
 PA13.Signal=SYS_JTMS-SWDIO
 PA14.Locked=true

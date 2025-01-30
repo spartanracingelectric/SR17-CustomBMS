@@ -128,18 +128,26 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
 }
 
 /* USER CODE BEGIN 1 */
+CANMessage canTxQueue[CAN_TX_QUEUE_SIZE];  //TX queue
+volatile uint8_t queueHead = 0;
+volatile uint8_t queueTail = 0;
 
 HAL_StatusTypeDef CAN_Start() {
 	return HAL_CAN_Start(&hcan1);
 }
 
 HAL_StatusTypeDef CAN_Activate() {
-	return HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
+    return HAL_CAN_ActivateNotification(&hcan1,
+        CAN_IT_RX_FIFO0_MSG_PENDING | CAN_IT_TX_MAILBOX_EMPTY);
 }
 
 HAL_StatusTypeDef CAN_Send(struct CANMessage *ptr) {
 	return HAL_CAN_AddTxMessage(&hcan1, &ptr->TxHeader, (uint8_t*) ptr->data,
 			&ptr->TxMailbox);
+}
+
+void HAL_CAN_TxMailbox0CompleteCallback(CAN_HandleTypeDef *hcan) {
+
 }
 
 void CAN_SettingsInit(struct CANMessage *ptr) {
