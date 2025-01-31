@@ -185,6 +185,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
+<<<<<<< HEAD
 		if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
 			//calling all CAN realated methods
 			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
@@ -192,6 +193,9 @@ int main(void)
 			CAN_Send_Cell_Summary(&msg, &modPackInfo);
 			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
+=======
+//		printf("Hello");
+>>>>>>> 33ccef4 (sending CAN every 1 sec)
 			//reading cell voltages
 //			Wakeup_Sleep();
 			Read_Volt(modPackInfo.cell_volt);
@@ -245,8 +249,13 @@ int main(void)
 //			} else if (BALANCE) {
 //				End_Balance(&safetyFaults);
 //			}
-
-
+			if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
+			//calling all CAN realated methods
+			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
+					&safetyWarnings, &safetyStates);
+			CAN_Send_Cell_Summary(&msg, &modPackInfo);
+			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
+			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
 		}
 
 	}
