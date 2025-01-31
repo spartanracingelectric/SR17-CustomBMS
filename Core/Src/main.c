@@ -148,7 +148,8 @@ int main(void)
 
 //	//Sending a fault signal and reseting it
 	HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
-	HAL_Delay(500);
+	HAL_Delay(1000);
+	while(1);
 	HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_RESET);
 
 	//initializing variables
@@ -199,6 +200,7 @@ int main(void)
 			//reading cell voltages
 //			Wakeup_Sleep();
 			Read_Volt(modPackInfo.cell_volt);
+			HAL_Delay(1);
 //			printf("Cell voltages:\n");
 //			for (int i = 0; i < NUM_CELLS; i++) {
 //			    printf("Cell %d: %u mV\n", i + 1, modPackInfo.cell_volt[i]);
@@ -208,6 +210,8 @@ int main(void)
 //			Wakeup_Sleep();
 			for (uint8_t i = tempindex; i < indexpause; i++) {
 				Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
+//				printf(" Cell: %d, Temp: %d\n", i, modPackInfo.cell_temp[i]);
+				HAL_Delay(1);
 			}
 			if (indexpause == 8) {
 				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[0]);
