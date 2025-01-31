@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "can.h"
+#include "stdio.h"
 
 /* USER CODE BEGIN 0 */
 /* USER CODE END 0 */
@@ -134,11 +135,20 @@ volatile uint8_t queueTail = 0;
 
 int CAN_Enqueue(CANMessage *msg) {
     uint8_t nextTail = (queueTail + 1) % CAN_TX_QUEUE_SIZE;
+
+//    printf("Enqueue called: Head=%d, Tail=%d, NextTail=%d\n", queueHead, queueTail, nextTail);
+
     if (nextTail == queueHead) {
-        return -1; //queue is full
+//        printf("Queue is full! Cannot enqueue message.\n");
+        return -1; // キューが満杯
     }
+
+    __disable_irq();  // 割り込みを無効化（データ競合を防ぐ）
     canTxQueue[queueTail] = *msg;
     queueTail = nextTail;
+    __enable_irq();   // 割り込みを再有効化
+
+//    printf("Queue added: New Tail=%d, Head=%d\n", queueTail, queueHead);
     return 0;
 }
 
@@ -148,6 +158,7 @@ int CAN_Dequeue(CANMessage *msg) {
     }
     *msg = canTxQueue[queueHead];
     queueHead = (queueHead + 1) % CAN_TX_QUEUE_SIZE;
+//    printf("dequeue\n");
     return 0;
 }
 
@@ -156,8 +167,7 @@ HAL_StatusTypeDef CAN_Start() {
 }
 
 HAL_StatusTypeDef CAN_Activate() {
-    return HAL_CAN_ActivateNotification(&hcan1,
-        CAN_IT_RX_FIFO0_MSG_PENDING | CAN_IT_TX_MAILBOX_EMPTY);
+    return HAL_CAN_ActivateNotification(&hcan1, CAN_IT_TX_MAILBOX_EMPTY);
 }
 
 //HAL_StatusTypeDef CAN_Send(struct CANMessage *ptr) {
@@ -170,6 +180,7 @@ void HAL_CAN_TxMailbox0CompleteCallback(CAN_HandleTypeDef *hcan) {
     if (CAN_Dequeue(&msg) == 0) {  //if queue has something
         uint32_t TxMailbox;
         HAL_CAN_AddTxMessage(hcan, &msg.TxHeader, msg.data, &TxMailbox);
+        printf("callback happen\n");
     }
 }
 
@@ -208,7 +219,9 @@ void CAN_Send_Voltage(CANMessage *ptr, uint16_t *read_volt) {
 			CAN_ID = CAN_ID + 0x01;
 			Set_CAN_Id(ptr, CAN_ID);
 		}
+//		HAL_Delay(3);
 		CAN_Enqueue(ptr);
+//		printf("enqueue %d\n", &ptr);
 	}
 
 }
