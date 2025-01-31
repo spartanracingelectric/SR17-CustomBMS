@@ -105,7 +105,7 @@ int main(void)
 	TimerPacket timerpacket_ltc;
 
 	batteryModule modPackInfo;
-	struct CANMessage msg;
+	CANMessage msg;
 	uint8_t safetyFaults = 0;
 	uint8_t safetyWarnings = 0;
 	uint8_t safetyStates = 0;
@@ -175,6 +175,8 @@ int main(void)
 	LTC_STCOMM(2);
 
 	ReadHVInput(&modPackInfo.pack_voltage);
+
+	CAN_StartTransmission();
 
   /* USER CODE END 2 */
 
@@ -343,6 +345,14 @@ uint8_t TimerPacket_FixedPulse(TimerPacket *tp) {
 		return 1; //Enact event (time interval is a go)
 	}
 	return 0; //Do not enact event
+}
+
+void CAN_StartTransmission() {
+    CANMessage msg;
+    if (CAN_Dequeue(&msg) == 0) {  //if queue is not empty
+        uint32_t TxMailbox;
+        HAL_CAN_AddTxMessage(&hcan1, &msg.TxHeader, msg.data, &TxMailbox);
+    }
 }
 /* USER CODE END 4 */
 
