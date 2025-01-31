@@ -1,6 +1,6 @@
 #include "safety.h"
 #include "main.h"
-
+#include "stdio.h"
 // ! Fault Thresholds
 
 // Refer to TODO on Line 61
@@ -25,6 +25,8 @@
 #define CELL_VOLT_IMBALANCE_FAULT   2000 //0.1 V
 #define CELL_VOLT_IMBALANCE_WARNING	1000 //0.05 V
 
+#define HYSTERESIS_MARGIN 10
+
 void Cell_Summary_Voltage(struct batteryModule *batt, uint8_t *fault,
 		uint8_t *warnings, uint8_t *states, uint8_t *low_volt_hysteresis,
 		uint8_t *high_volt_hysteresis, uint8_t *cell_imbalance_hysteresis) {
@@ -35,22 +37,25 @@ void Cell_Summary_Voltage(struct batteryModule *batt, uint8_t *fault,
 
 		if (batt->cell_volt[i] > batt->cell_volt_highest) {
 			batt->cell_volt_highest = batt->cell_volt[i];
+			printf("high voltage fault: %d\n", batt->cell_volt_highest);
 
-			if (batt->cell_volt_highest >= CELL_HIGH_VOLT_WARNING) {
+			if (batt->cell_volt_highest >= CELL_HIGH_VOLT_WARNING && batt->cell_volt_highest < CELL_HIGH_VOLT_FAULT) {
 					*warnings |= 0b00010000;
 				}
 
 			//high cell volt fault
-				if ((batt->cell_volt_highest >= CELL_HIGH_VOLT_FAULT)
-						&& ((*high_volt_hysteresis) > 0)) {
-					*fault |= 0b00010000;
-					HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
-				} else if (batt->cell_volt_highest >= CELL_HIGH_VOLT_FAULT) {
-					*high_volt_hysteresis = 1;
-				} else {
-					*high_volt_hysteresis = 0;
-				}
-				//end of high cell volt fault
+			if (batt->cell_volt_highest >= CELL_HIGH_VOLT_FAULT) {
+							*high_volt_hysteresis = 1;
+			}
+			if ((batt->cell_volt_highest >= CELL_HIGH_VOLT_FAULT) && ((*high_volt_hysteresis) > 0)) {
+				*fault |= 0b00010000;
+				HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
+				printf("high voltage fault signal on\n");
+			}
+			if (batt->cell_volt_highest < CELL_HIGH_VOLT_FAULT - HYSTERESIS_MARGIN){
+				*high_volt_hysteresis = 0;
+			}
+			//end of high cell volt fault
 		}
 
 		if (batt->cell_volt[i] < batt->cell_volt_lowest) {
@@ -61,13 +66,15 @@ void Cell_Summary_Voltage(struct batteryModule *batt, uint8_t *fault,
 							}
 
 			//low cell volt fault
+			if (batt->cell_volt_lowest <= CELL_LOW_VOLT_FAULT) {
+							*low_volt_hysteresis = 1;
+			}
 			if ((batt->cell_volt_lowest <= CELL_LOW_VOLT_FAULT)
 					&& ((*low_volt_hysteresis) > 0)) {
 				*fault |= 0b00100000;
 				HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
-			} else if (batt->cell_volt_lowest <= CELL_LOW_VOLT_FAULT) {
-				*low_volt_hysteresis = 1;
-			} else {
+			}
+			if (batt->cell_volt_lowest > CELL_LOW_VOLT_FAULT + HYSTERESIS_MARGIN){
 				*low_volt_hysteresis = 0;
 			}
 			//end of low cell volt fault
@@ -75,22 +82,22 @@ void Cell_Summary_Voltage(struct batteryModule *batt, uint8_t *fault,
 		}
 
 		//cell volt imbalance fault
-		if (((batt->cell_volt_highest - batt->cell_volt_lowest)
-				>= CELL_VOLT_IMBALANCE_FAULT) && ((*cell_imbalance_hysteresis) > 0)) {
-				*fault |= 0b00000100;
-				HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
-			} else if ((batt->cell_volt_highest - batt->cell_volt_lowest)
-					>= CELL_VOLT_IMBALANCE_FAULT) {
-				*cell_imbalance_hysteresis = 1;
-			} else {
-				*cell_imbalance_hysteresis = 0;
-			}
-			//end of cell volt imbalance fault
-
-			if ((batt->cell_volt_highest - batt->cell_volt_lowest)
-					>= CELL_VOLT_IMBALANCE_WARNING) {
-				*warnings |= 0b00000010;
-			}
+//		if (((batt->cell_volt_highest - batt->cell_volt_lowest)
+//				>= CELL_VOLT_IMBALANCE_FAULT) && ((*cell_imbalance_hysteresis) > 0)) {
+//				*fault |= 0b00000100;
+//				HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
+//			} else if ((batt->cell_volt_highest - batt->cell_volt_lowest)
+//					>= CELL_VOLT_IMBALANCE_FAULT) {
+//				*cell_imbalance_hysteresis = 1;
+//			} else {
+//				*cell_imbalance_hysteresis = 0;
+//			}
+//			//end of cell volt imbalance fault
+//
+//			if ((batt->cell_volt_highest - batt->cell_volt_lowest)
+//					>= CELL_VOLT_IMBALANCE_WARNING) {
+//				*warnings |= 0b00000010;
+//			}
 
 //			if (BALANCE) {
 //				*states |= 0b10000000;
@@ -105,26 +112,26 @@ void Cell_Summary_Voltage(struct batteryModule *batt, uint8_t *fault,
 //		if (sum_voltage - batt->pack_voltage ){
 
 //		}
-		if (batt->pack_voltage >= PACK_HIGH_VOLT_WARNING) {
-			*warnings |= 0b10000000;
-		}
-		if (batt->pack_voltage <= PACK_LOW_VOLT_WARNING) {
-			*warnings |= 0b01000000;
-		}
-		if (batt->pack_voltage >= PACK_HIGH_VOLT_FAULT) {
-			*fault |= 0b10000000;
-			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
-		}
-		if (batt->pack_voltage <= PACK_LOW_VOLT_FAULT) {
-			*fault |= 0b01000000;
-			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
-		}
+//		if (batt->pack_voltage >= PACK_HIGH_VOLT_WARNING) {
+//			*warnings |= 0b10000000;
+//		}
+//		if (batt->pack_voltage <= PACK_LOW_VOLT_WARNING) {
+//			*warnings |= 0b01000000;
+//		}
+//		if (batt->pack_voltage >= PACK_HIGH_VOLT_FAULT) {
+//			*fault |= 0b10000000;
+//			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
+//		}
+//		if (batt->pack_voltage <= PACK_LOW_VOLT_FAULT) {
+//			*fault |= 0b01000000;
+//			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
+//		}
 
 
-		if ((batt->cell_volt_highest - batt->cell_volt_lowest)
-				>= CELL_VOLT_IMBALANCE_WARNING) {
-			*warnings |= 0b00000010;
-		}
+//		if ((batt->cell_volt_highest - batt->cell_volt_lowest)
+//				>= CELL_VOLT_IMBALANCE_WARNING) {
+//			*warnings |= 0b00000010;
+//		}
 //		if (BALANCE) {
 //			*states |= 0b10000000;
 //		}
