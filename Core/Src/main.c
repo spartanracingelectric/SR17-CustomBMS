@@ -176,8 +176,6 @@ int main(void)
 
 	ReadHVInput(&modPackInfo.pack_voltage);
 
-	CAN_StartTransmission();
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -226,8 +224,6 @@ int main(void)
 			Cell_Summary_Voltage(&modPackInfo, &safetyFaults,
 								&safetyWarnings, &safetyStates, &low_volt_hysteresis,
 								&high_volt_hysteresis, &cell_imbalance_hysteresis);
-			printf("can queue: %d\n", CAN_Dequeue(&msg) );
-
 			Cell_Summary_Temperature(&modPackInfo, &safetyFaults,&safetyWarnings);
 
 
@@ -346,13 +342,7 @@ uint8_t TimerPacket_FixedPulse(TimerPacket *tp) {
 	return 0; //Do not enact event
 }
 
-void CAN_StartTransmission() {
-    CANMessage msg;
-    if (CAN_Dequeue(&msg) == 0) {  //if queue is not empty
-        uint32_t TxMailbox;
-        HAL_CAN_AddTxMessage(&hcan1, &msg.TxHeader, msg.data, &TxMailbox);
-    }
-}
+
 /* USER CODE END 4 */
 
 /**

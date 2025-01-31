@@ -36,19 +36,13 @@ extern "C" {
 extern CAN_HandleTypeDef hcan1;
 
 /* USER CODE BEGIN Private defines */
-#define CAN_TX_QUEUE_SIZE 50  //size of queue
 
 /* USER CODE END Private defines */
 
 void MX_CAN1_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-extern CANMessage canTxQueue[CAN_TX_QUEUE_SIZE];  // TX キュー
-extern volatile uint8_t queueHead;
-extern volatile uint8_t queueTail;
 
-int CAN_Enqueue(CANMessage *msg);
-int CAN_Dequeue(CANMessage *msg);
 HAL_StatusTypeDef CAN_Start();
 HAL_StatusTypeDef CAN_Activate();
 HAL_StatusTypeDef CAN_Send(CANMessage *ptr);
@@ -59,7 +53,6 @@ void CAN_Send_Voltage(CANMessage *ptr, uint16_t *read_volt);
 void CAN_Send_Temperature(CANMessage *ptr, uint16_t *read_temp);
 void CAN_Send_Cell_Summary(CANMessage *ptr, struct batteryModule *batt);
 void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_t* faults, uint8_t* warnings, uint8_t *states);
-void CAN_StartTransmission();
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
