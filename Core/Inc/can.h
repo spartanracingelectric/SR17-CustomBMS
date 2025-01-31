@@ -43,6 +43,10 @@ extern CAN_HandleTypeDef hcan1;
 void MX_CAN1_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+extern CANMessage canTxQueue[CAN_TX_QUEUE_SIZE];  // TX キュー
+extern volatile uint8_t queueHead;
+extern volatile uint8_t queueTail;
+
 int CAN_Enqueue(CANMessage *msg);
 int CAN_Dequeue(CANMessage *msg);
 HAL_StatusTypeDef CAN_Start();
