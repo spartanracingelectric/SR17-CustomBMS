@@ -226,6 +226,7 @@ int main(void)
 			Cell_Summary_Voltage(&modPackInfo, &safetyFaults,
 								&safetyWarnings, &safetyStates, &low_volt_hysteresis,
 								&high_volt_hysteresis, &cell_imbalance_hysteresis);
+			printf("can queue: %d\n", CAN_Dequeue(&msg) );
 
 			Cell_Summary_Temperature(&modPackInfo, &safetyFaults,&safetyWarnings);
 
