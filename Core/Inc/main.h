@@ -63,11 +63,11 @@ typedef struct batteryModule {
 
 }batteryModule;
 
-struct CANMessage {
-	CAN_TxHeaderTypeDef TxHeader;
-	uint32_t TxMailbox;
-	uint8_t data[8];
-};
+typedef struct CANMessage{
+    CAN_TxHeaderTypeDef TxHeader;
+    uint32_t TxMailbox;
+    uint8_t data[8];
+} CANMessage;
 
 /* USER CODE END ET */
 
