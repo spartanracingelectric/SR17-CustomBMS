@@ -53,6 +53,7 @@ extern "C" {
 typedef struct batteryModule {
 	uint16_t cell_volt[NUM_CELLS];
 	uint16_t cell_temp[NUM_THERM_TOTAL];
+	uint16_t cell_temp_8bits[NUM_THERM_TOTAL];
 	uint16_t module_averages[NUM_DEVICES];
 	uint16_t cell_volt_lowest;
 	uint16_t cell_volt_highest;
@@ -60,7 +61,6 @@ typedef struct batteryModule {
 	uint16_t cell_temp_highest;
 	uint32_t pack_voltage;
 	uint16_t read_auxreg[NUM_AUXES];
-
 }batteryModule;
 
 typedef struct CANMessage{
