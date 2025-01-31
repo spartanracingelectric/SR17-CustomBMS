@@ -132,6 +132,25 @@ CANMessage canTxQueue[CAN_TX_QUEUE_SIZE];  //TX queue
 volatile uint8_t queueHead = 0;
 volatile uint8_t queueTail = 0;
 
+int CAN_Enqueue(CANMessage *msg) {
+    uint8_t nextTail = (queueTail + 1) % CAN_TX_QUEUE_SIZE;
+    if (nextTail == queueHead) {
+        return -1; //queue is full
+    }
+    canTxQueue[queueTail] = *msg;
+    queueTail = nextTail;
+    return 0;
+}
+
+int CAN_Dequeue(CANMessage *msg) {
+    if (queueHead == queueTail) {
+        return -1;//queue is empty
+    }
+    *msg = canTxQueue[queueHead];
+    queueHead = (queueHead + 1) % CAN_TX_QUEUE_SIZE;
+    return 0;
+}
+
 HAL_StatusTypeDef CAN_Start() {
 	return HAL_CAN_Start(&hcan1);
 }
@@ -141,16 +160,20 @@ HAL_StatusTypeDef CAN_Activate() {
         CAN_IT_RX_FIFO0_MSG_PENDING | CAN_IT_TX_MAILBOX_EMPTY);
 }
 
-HAL_StatusTypeDef CAN_Send(struct CANMessage *ptr) {
-	return HAL_CAN_AddTxMessage(&hcan1, &ptr->TxHeader, (uint8_t*) ptr->data,
-			&ptr->TxMailbox);
-}
+//HAL_StatusTypeDef CAN_Send(struct CANMessage *ptr) {
+//	return HAL_CAN_AddTxMessage(&hcan1, &ptr->TxHeader, (uint8_t*) ptr->data,
+//			&ptr->TxMailbox);
+//}
 
 void HAL_CAN_TxMailbox0CompleteCallback(CAN_HandleTypeDef *hcan) {
-
+    CANMessage msg;
+    if (CAN_Dequeue(&msg) == 0) {  //if queue has something
+        uint32_t TxMailbox;
+        HAL_CAN_AddTxMessage(hcan, &msg.TxHeader, msg.data, &TxMailbox);
+    }
 }
 
-void CAN_SettingsInit(struct CANMessage *ptr) {
+void CAN_SettingsInit(CANMessage *ptr) {
 	CAN_Start();
 	CAN_Activate();
 	ptr->TxHeader.IDE = CAN_ID_STD;
@@ -159,11 +182,11 @@ void CAN_SettingsInit(struct CANMessage *ptr) {
 	ptr->TxHeader.DLC = 8;
 }
 
-void Set_CAN_Id(struct CANMessage *ptr, uint32_t id) {
+void Set_CAN_Id(CANMessage *ptr, uint32_t id) {
 	ptr->TxHeader.StdId = id;
 }
 
-void CAN_Send_Voltage(struct CANMessage *ptr, uint16_t *read_volt) {
+void CAN_Send_Voltage(CANMessage *ptr, uint16_t *read_volt) {
 	uint16_t CAN_ID = 0x630;
 	Set_CAN_Id(ptr, CAN_ID);
 	for (int i = 0; i < NUM_CELLS; i++) {
@@ -185,13 +208,12 @@ void CAN_Send_Voltage(struct CANMessage *ptr, uint16_t *read_volt) {
 			CAN_ID = CAN_ID + 0x01;
 			Set_CAN_Id(ptr, CAN_ID);
 		}
-		HAL_Delay(1);
-		CAN_Send(ptr);
+		CAN_Enqueue(ptr);
 	}
 
 }
 
-void CAN_Send_Temperature(struct CANMessage *ptr, uint16_t *read_temp) {
+void CAN_Send_Temperature(CANMessage *ptr, uint16_t *read_temp) {
 	uint16_t CAN_ID = 0x680;
 	Set_CAN_Id(ptr, CAN_ID);
 	for (uint8_t i = 0; i < NUM_THERM_TOTAL; i++) {
@@ -213,13 +235,12 @@ void CAN_Send_Temperature(struct CANMessage *ptr, uint16_t *read_temp) {
 			CAN_ID = CAN_ID + 0x01;
 			Set_CAN_Id(ptr, CAN_ID);
 		}
-		HAL_Delay(1);
-		CAN_Send(ptr);
+		CAN_Enqueue(ptr);
 	}
 
 }
 
-void CAN_Send_Cell_Summary(struct CANMessage *ptr, struct batteryModule *batt) {
+void CAN_Send_Cell_Summary(CANMessage *ptr, struct batteryModule *batt) {
 	uint16_t CAN_ID = 0x622;
 	Set_CAN_Id(ptr, CAN_ID);
 
@@ -231,12 +252,10 @@ void CAN_Send_Cell_Summary(struct CANMessage *ptr, struct batteryModule *batt) {
 	ptr->data[5] = (batt->cell_temp_highest) >> 8;
 	ptr->data[6] = batt->cell_temp_lowest;
 	ptr->data[7] = (batt->cell_temp_lowest) >> 8;
-
-	HAL_Delay(1);
-	CAN_Send(ptr);
+	CAN_Enqueue(ptr);
 }
 
-void CAN_Send_Safety_Checker(struct CANMessage *ptr, struct batteryModule *batt, uint8_t *faults,
+void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_t *faults,
 		uint8_t *warnings, uint8_t *states) {
 	uint16_t CAN_ID = 0x600;
 	Set_CAN_Id(ptr, CAN_ID);
@@ -247,7 +266,6 @@ void CAN_Send_Safety_Checker(struct CANMessage *ptr, struct batteryModule *batt,
 	ptr->data[4] = (batt->pack_voltage) >> 8;
 	ptr->data[5] = (batt->pack_voltage) >> 16;
 	ptr->data[6] = (batt->pack_voltage) >> 24;
-	HAL_Delay(1);
-	CAN_Send(ptr);
+	CAN_Enqueue(ptr);
 }
 /* USER CODE END 1 */
