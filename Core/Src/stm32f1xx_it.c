@@ -266,6 +266,7 @@ void DMA1_Channel4_IRQHandler(void)
 /**
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 26541ea (implemented intruption on CAN)
@@ -286,6 +287,8 @@ void DMA1_Channel5_IRQHandler(void)
 >>>>>>> 724b400 (converted spi to dma, deleted duplecated header)
 =======
 >>>>>>> 26541ea (implemented intruption on CAN)
+=======
+>>>>>>> a4c2cde (implemented DMA)
   * @brief This function handles ADC1 and ADC2 global interrupts.
   */
 void ADC1_2_IRQHandler(void)
