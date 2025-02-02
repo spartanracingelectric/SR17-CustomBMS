@@ -71,7 +71,7 @@ typedef struct _TimerPacket {
 	uint32_t delay;		//Amount to delay
 } TimerPacket;
 
-static uint32_t last_tick = 0;
+//static uint32_t last_tick = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -89,27 +89,27 @@ uint8_t TimerPacket_FixedPulse(TimerPacket *tp);
 static uint8_t BMS_MUX_PAUSE[2][6] = { { 0x69, 0x28, 0x0F, 0x09, 0x7F, 0xF9 }, {
 		0x69, 0x08, 0x0F, 0x09, 0x7F, 0xF9 } };
 
-int _write(int file, char *ptr, int len) {					//overloading printf() for UART with DMA
-    char buffer[128]; // バッファ
-    uint32_t current_tick = HAL_GetTick(); // get current time
-    uint32_t elapsed_time = current_tick - last_tick; // get difference from last time
-    last_tick = current_tick; //refresh the last time
-
-    //format timestamp and elapsed time
-    int offset = snprintf(buffer, sizeof(buffer), "[+%lu.%03lu sec] ",
-                          elapsed_time / 1000, elapsed_time % 1000);
-
-    //copy the message from printf and merge with time stamp
-    int copy_len = (len < (sizeof(buffer) - offset - 1)) ? len : (sizeof(buffer) - offset - 1);
-    strncpy(buffer + offset, ptr, copy_len);
-    buffer[offset + copy_len] = '\0';
-
-    //send with DMA and UART
-    HAL_UART_Transmit_DMA(&huart1, (uint8_t *)buffer, strlen(buffer));
-    HAL_Delay(1);
-
-    return len;
-}
+//int _write(int file, char *ptr, int len) {					//overloading printf() for UART with DMA
+//    char buffer[128]; // バッファ
+//    uint32_t current_tick = HAL_GetTick(); // get current time
+//    uint32_t elapsed_time = current_tick - last_tick; // get difference from last time
+//    last_tick = current_tick; //refresh the last time
+//
+//    //format timestamp and elapsed time
+//    int offset = snprintf(buffer, sizeof(buffer), "[+%lu.%03lu sec] ",
+//                          elapsed_time / 1000, elapsed_time % 1000);
+//
+//    //copy the message from printf and merge with time stamp
+//    int copy_len = (len < (sizeof(buffer) - offset - 1)) ? len : (sizeof(buffer) - offset - 1);
+//    strncpy(buffer + offset, ptr, copy_len);
+//    buffer[offset + copy_len] = '\0';
+//
+//    //send with DMA and UART
+//    HAL_UART_Transmit_DMA(&huart1, (uint8_t *)buffer, strlen(buffer));
+//    HAL_Delay(1);
+//
+//    return len;
+//}
 /* USER CODE END 0 */
 
 /**
@@ -207,10 +207,10 @@ int main(void)
 //		printf("hello\n");
 			//reading cell voltages
 //			Wakeup_Sleep();
-			printf("volt start\n");
+//			printf("volt start\n");
 			Read_Volt(modPackInfo.cell_volt);
 			HAL_Delay(1);
-			printf("volt end\n");
+//			printf("volt end\n");
 //			printf("Cell voltages:\n");
 //			for (int i = 0; i < NUM_CELLS; i++) {
 //			    printf("Cell %d: %u mV\n", i + 1, modPackInfo.cell_volt[i]);
@@ -218,7 +218,7 @@ int main(void)
 
 			//reading cell temperatures
 //			Wakeup_Sleep();
-			printf("Temp start\n");
+//			printf("Temp start\n");
 			for (uint8_t i = tempindex; i < indexpause; i++) {
 				Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
 //				printf(" Cell: %d, Temp: %d\n", i, modPackInfo.cell_temp[i]);
@@ -235,23 +235,23 @@ int main(void)
 				indexpause = 8;
 				tempindex = 0;
 			}
-			printf("Temp end\n");
+//			printf("Temp end\n");
 
-			printf("pack volt start\n");
+//			printf("pack volt start\n");
 			ReadHVInput(&modPackInfo.pack_voltage);
-			printf("pack volt end\n");
+//			printf("pack volt end\n");
 			//print(NUM_THERM_TOTAL, (uint16_t*) modPackInfo.cell_temp);
 
 			//getting the summary of all cells in the pack
-			printf("cell summary volt start\n");
+//			printf("cell summary volt start\n");
 			Cell_Summary_Voltage(&modPackInfo, &safetyFaults,
 								&safetyWarnings, &safetyStates, &low_volt_hysteresis,
 								&high_volt_hysteresis, &cell_imbalance_hysteresis);
-			printf("cell summary volt end\n");
+//			printf("cell summary volt end\n");
 
-			printf("cell summary temp start\n");
+//			printf("cell summary temp start\n");
 			Cell_Summary_Temperature(&modPackInfo, &safetyFaults,&safetyWarnings);
-			printf("cell summary temp end\n");
+//			printf("cell summary temp end\n");
 
 
 
@@ -277,13 +277,13 @@ int main(void)
 
 			if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
 			//calling all CAN realated methods
-			printf("CAN start\n");
+//			printf("CAN start\n");
 			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
 					&safetyWarnings, &safetyStates);
 			CAN_Send_Cell_Summary(&msg, &modPackInfo);
 			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
-			printf("CAN end\n");
+//			printf("CAN end\n");
 			}
 
 
