@@ -105,7 +105,7 @@ int _write(int file, char *ptr, int len) {					//overloading printf() for UART w
     buffer[offset + copy_len] = '\0';
 
     //send with DMA and UART
-    HAL_UART_Transmit_DMA(&huart1, (uint8_t *)buffer, strlen(buffer));
+    HAL_UART_Transmit_DMA(&huart1, (uint8_t *)buffer, strlen(buffer), 100);
     HAL_Delay(1);
 
     return len;
@@ -273,16 +273,18 @@ int main(void)
 //			} else if (BALANCE) {
 //				End_Balance(&safetyFaults);
 //			}
-			printf("CAN start\n");
+
 			if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
 			//calling all CAN realated methods
+			printf("CAN start\n");
 			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
 					&safetyWarnings, &safetyStates);
 			CAN_Send_Cell_Summary(&msg, &modPackInfo);
 			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
-			}
 			printf("CAN end\n");
+			}
+
 
 	}
   /* USER CODE END 3 */
