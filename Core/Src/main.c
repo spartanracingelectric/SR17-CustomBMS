@@ -70,6 +70,8 @@ typedef struct _TimerPacket {
 	uint32_t ts_curr; 	//Current timestamp
 	uint32_t delay;		//Amount to delay
 } TimerPacket;
+
+static uint32_t last_tick = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -104,6 +106,7 @@ int _write(int file, char *ptr, int len) {					//overloading printf() for UART w
 
     //send with DMA and UART
     HAL_UART_Transmit_DMA(&huart1, (uint8_t *)buffer, strlen(buffer));
+    HAL_Delay(1);
 
     return len;
 }
@@ -201,11 +204,13 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
-//		printf("Hello");
+//		printf("hello\n");
 			//reading cell voltages
 //			Wakeup_Sleep();
+			printf("volt start\n");
 			Read_Volt(modPackInfo.cell_volt);
 			HAL_Delay(1);
+			printf("volt end\n");
 //			printf("Cell voltages:\n");
 //			for (int i = 0; i < NUM_CELLS; i++) {
 //			    printf("Cell %d: %u mV\n", i + 1, modPackInfo.cell_volt[i]);
@@ -213,6 +218,7 @@ int main(void)
 
 			//reading cell temperatures
 //			Wakeup_Sleep();
+			printf("Temp start\n");
 			for (uint8_t i = tempindex; i < indexpause; i++) {
 				Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
 //				printf(" Cell: %d, Temp: %d\n", i, modPackInfo.cell_temp[i]);
@@ -229,15 +235,23 @@ int main(void)
 				indexpause = 8;
 				tempindex = 0;
 			}
+			printf("Temp end\n");
 
+			printf("pack volt start\n");
 			ReadHVInput(&modPackInfo.pack_voltage);
+			printf("pack volt end\n");
 			//print(NUM_THERM_TOTAL, (uint16_t*) modPackInfo.cell_temp);
 
 			//getting the summary of all cells in the pack
+			printf("cell summary volt start\n");
 			Cell_Summary_Voltage(&modPackInfo, &safetyFaults,
 								&safetyWarnings, &safetyStates, &low_volt_hysteresis,
 								&high_volt_hysteresis, &cell_imbalance_hysteresis);
+			printf("cell summary volt end\n");
+
+			printf("cell summary temp start\n");
 			Cell_Summary_Temperature(&modPackInfo, &safetyFaults,&safetyWarnings);
+			printf("cell summary temp end\n");
 
 
 
@@ -259,6 +273,7 @@ int main(void)
 //			} else if (BALANCE) {
 //				End_Balance(&safetyFaults);
 //			}
+			printf("CAN start\n");
 			if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
 			//calling all CAN realated methods
 			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
@@ -266,7 +281,8 @@ int main(void)
 			CAN_Send_Cell_Summary(&msg, &modPackInfo);
 			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
-		}
+			}
+			printf("CAN end\n");
 
 	}
   /* USER CODE END 3 */

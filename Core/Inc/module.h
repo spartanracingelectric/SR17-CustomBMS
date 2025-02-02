@@ -3,9 +3,9 @@
 
 #include "main.h"
 
-#define MD_FAST 1		//27kHz
-#define MD_NORMAL 2		//7kHz
-#define MD_FILTERED 3	//26Hz
+#define MD_FAST 0b01		//27kHz
+#define MD_NORMAL 0b10 		//7kHz
+#define MD_FILTERED 0b11  	//26Hz
 #define CELL_CH_ALL 0
 #define DCP_DISABLED 0
 

@@ -192,7 +192,7 @@ void CAN_Send_Voltage(CANMessage *ptr, uint16_t *read_volt) {
 			Set_CAN_Id(ptr, CAN_ID);
 		}
 		CAN_Send(ptr);
-		printf("voltage\n");
+//		printf("voltage\n");
 	}
 }
 
@@ -219,7 +219,7 @@ void CAN_Send_Temperature(CANMessage *ptr, uint16_t *read_temp) {
 			Set_CAN_Id(ptr, CAN_ID);
 		}
 	CAN_Send(ptr);
-	printf("Temperature\n");
+//	printf("Temperature\n");
 	}
 }
 
@@ -236,7 +236,7 @@ void CAN_Send_Cell_Summary(CANMessage *ptr, struct batteryModule *batt) {
 	ptr->data[6] = batt->cell_temp_lowest;
 	ptr->data[7] = (batt->cell_temp_lowest) >> 8;
 	CAN_Send(ptr);
-	printf("Summary\n");
+//	printf("Summary\n");
 }
 
 void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_t *faults,
@@ -251,6 +251,6 @@ void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_
 	ptr->data[5] = (batt->pack_voltage) >> 16;
 	ptr->data[6] = (batt->pack_voltage) >> 24;
 	CAN_Send(ptr);
-	printf("Faults\n");
+//	printf("Faults\n");
 }
 /* USER CODE END 1 */
