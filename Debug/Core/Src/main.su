@@ -1,0 +1,8 @@
+../Core/Src/main.c:92:5:_write	176	static
+../Core/Src/main.c:119:5:main	808	static
+../Core/Src/main.c:298:6:SystemClock_Config	120	static
+../Core/Src/main.c:351:6:GpioTimePacket_Init	24	static
+../Core/Src/main.c:359:6:GpioFixedToggle	16	static
+../Core/Src/main.c:368:6:TimerPacket_Init	16	static
+../Core/Src/main.c:374:9:TimerPacket_FixedPulse	16	static
+../Core/Src/main.c:390:6:Error_Handler	4	static,ignoring_inline_asm

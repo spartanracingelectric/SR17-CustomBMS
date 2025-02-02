@@ -105,7 +105,7 @@ int _write(int file, char *ptr, int len) {					//overloading printf() for UART w
     buffer[offset + copy_len] = '\0';
 
     //send with DMA and UART
-    HAL_UART_Transmit_DMA(&huart1, (uint8_t *)buffer, strlen(buffer), 100);
+    HAL_UART_Transmit_DMA(&huart1, (uint8_t *)buffer, strlen(buffer));
     HAL_Delay(1);
 
     return len;
@@ -269,6 +269,8 @@ int main(void)
 //							- modPackInfo.cell_volt_lowest) > 50)) {
 //				Start_Balance((uint16_t*) modPackInfo.cell_volt,
 //				NUM_DEVICES, modPackInfo.cell_volt_lowest);
+
+
 //			} else if (BALANCE) {
 //				End_Balance(&safetyFaults);
 //			}

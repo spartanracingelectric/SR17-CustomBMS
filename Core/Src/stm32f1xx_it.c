@@ -306,9 +306,12 @@ void ADC1_2_IRQHandler(void)
 /**
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 26541ea (implemented intruption on CAN)
+=======
+>>>>>>> bbd5239d03568d89808b06bac830a94271adf3aa
   * @brief This function handles CAN1 TX interrupt.
   */
 void CAN1_TX_IRQHandler(void)
@@ -352,8 +355,11 @@ void CAN1_RX1_IRQHandler(void)
 
 /**
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 724b400 (converted spi to dma, deleted duplecated header)
 =======
+=======
+>>>>>>> bbd5239d03568d89808b06bac830a94271adf3aa
   * @brief This function handles CAN1 SCE interrupt.
   */
 void CAN1_SCE_IRQHandler(void)
@@ -368,7 +374,10 @@ void CAN1_SCE_IRQHandler(void)
 }
 
 /**
+<<<<<<< HEAD
 >>>>>>> 26541ea (implemented intruption on CAN)
+=======
+>>>>>>> bbd5239d03568d89808b06bac830a94271adf3aa
   * @brief This function handles SPI1 global interrupt.
   */
 void SPI1_IRQHandler(void)
