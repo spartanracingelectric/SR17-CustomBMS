@@ -70,6 +70,8 @@ typedef struct _TimerPacket {
 	uint32_t ts_curr; 	//Current timestamp
 	uint32_t delay;		//Amount to delay
 } TimerPacket;
+
+static uint32_t last_tick = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -87,8 +89,25 @@ uint8_t TimerPacket_FixedPulse(TimerPacket *tp);
 static uint8_t BMS_MUX_PAUSE[2][6] = { { 0x69, 0x28, 0x0F, 0x09, 0x7F, 0xF9 }, {
 		0x69, 0x08, 0x0F, 0x09, 0x7F, 0xF9 } };
 
-int _write(int file, char *ptr, int len) {					//over writing printf() for UART
-    HAL_UART_Transmit(&huart1, (uint8_t *)ptr, len, HAL_MAX_DELAY);
+int _write(int file, char *ptr, int len) {					//overloading printf() for UART with DMA
+    char buffer[128]; // バッファ
+    uint32_t current_tick = HAL_GetTick(); // get current time
+    uint32_t elapsed_time = current_tick - last_tick; // get difference from last time
+    last_tick = current_tick; //refresh the last time
+
+    //format timestamp and elapsed time
+    int offset = snprintf(buffer, sizeof(buffer), "[+%lu.%03lu sec] ",
+                          elapsed_time / 1000, elapsed_time % 1000);
+
+    //copy the message from printf and merge with time stamp
+    int copy_len = (len < (sizeof(buffer) - offset - 1)) ? len : (sizeof(buffer) - offset - 1);
+    strncpy(buffer + offset, ptr, copy_len);
+    buffer[offset + copy_len] = '\0';
+
+    //send with DMA and UART
+    HAL_UART_Transmit_DMA(&huart1, (uint8_t *)buffer, strlen(buffer));
+    HAL_Delay(1);
+
     return len;
 }
 /* USER CODE END 0 */
@@ -149,7 +168,6 @@ int main(void)
 //	//Sending a fault signal and reseting it
 	HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
 	HAL_Delay(1000);
-	while(1);
 	HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_RESET);
 
 	//initializing variables
@@ -251,6 +269,7 @@ int main(void)
 			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
 		}
+
 
 	}
   /* USER CODE END 3 */
