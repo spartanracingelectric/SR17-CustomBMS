@@ -40,7 +40,8 @@ void Get_Actual_Temps(uint8_t dev_idx, uint8_t tempindex, uint16_t *actual_temp,
 }
 
 void Read_Volt(uint16_t *read_volt) {
-	LTC_ADCV(MD_NORMAL, DCP_DISABLED, CELL_CH_ALL);//ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
+	LTC_ADCV(MD_FILTERED, DCP_DISABLED, CELL_CH_ALL);//ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
+	HAL_Delay(1);
 	LTC_POLLADC();
 	Wakeup_Idle();
 	Read_Cell_Volt((uint16_t*) read_volt);
