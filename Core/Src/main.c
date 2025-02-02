@@ -87,7 +87,7 @@ uint8_t TimerPacket_FixedPulse(TimerPacket *tp);
 static uint8_t BMS_MUX_PAUSE[2][6] = { { 0x69, 0x28, 0x0F, 0x09, 0x7F, 0xF9 }, {
 		0x69, 0x08, 0x0F, 0x09, 0x7F, 0xF9 } };
 
-int _write(int file, char *ptr, int len) {
+int _write(int file, char *ptr, int len) {					//over writing printf() for UART
     HAL_UART_Transmit(&huart1, (uint8_t *)ptr, len, HAL_MAX_DELAY);
     return len;
 }
@@ -196,26 +196,23 @@ int main(void)
 			//reading cell voltages
 //			Wakeup_Sleep();
 			Read_Volt(modPackInfo.cell_volt);
-			//print(NUM_CELLS, (uint16_t*) modPackInfo.cell_volt);
+//			printf("Cell voltages:\n");
+//			for (int i = 0; i < NUM_CELLS; i++) {
+//			    printf("Cell %d: %u mV\n", i + 1, modPackInfo.cell_volt[i]);
+//			}
 
 			//reading cell temperatures
 //			Wakeup_Sleep();
 			for (uint8_t i = tempindex; i < indexpause; i++) {
-//				Wakeup_Idle();
 				Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
-//				HAL_Delay(5);
 			}
 			if (indexpause == 8) {
-//				Wakeup_Idle();
 				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[0]);
-//				Wakeup_Idle();
 				LTC_STCOMM(2);
 				tempindex = 8;
 				indexpause = NUM_THERM_PER_MOD;
 			} else if (indexpause == NUM_THERM_PER_MOD) {
-//				Wakeup_Idle();
 				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[1]);
-//				Wakeup_Idle();
 				LTC_STCOMM(2);
 				indexpause = 8;
 				tempindex = 0;
@@ -247,7 +244,7 @@ int main(void)
 //							- modPackInfo.cell_volt_lowest) > 50)) {
 //				Start_Balance((uint16_t*) modPackInfo.cell_volt,
 //				NUM_DEVICES, modPackInfo.cell_volt_lowest);
-//////
+
 //			} else if (BALANCE) {
 //				End_Balance(&safetyFaults);
 //			}

@@ -23,6 +23,7 @@
 #define LTC_SERIES_GROUPS_PER_RDCV 3 // Number of cell voltage groups per 8 byte register
 #define LTC_SERIES_GROUPS_PER_RDAUX 3
 #define NUM_AUX_SERIES_GROUPS 6 // Number of series groups
+#define TIMEOUT_MS 100
 
 typedef enum {
 	LTC_SPI_OK = 0x00U, //0b00000000
