@@ -341,9 +341,9 @@ void LTC_ADAX(uint8_t MD, // ADC Mode
 }
 
 int32_t LTC_POLLADC() {
-	uint32_t counter = 0;
+	uint32_t start_time = HAL_GetTick();
 	uint8_t finished = 0;
-	uint8_t current_time = 0;
+	uint8_t adc_status;
 	uint8_t cmd[4];
 	uint16_t cmd_pec;
 
@@ -357,18 +357,26 @@ int32_t LTC_POLLADC() {
 
 	LTC_nCS_Low();
 	HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
-
-	while ((counter < 200000) && (finished == 0)) {
-		current_time = HAL_GetTick();
-		if (current_time > 0) {
-			finished = 1;
-		} else {
-			counter = counter + 10;
-		}
-	}
 	LTC_nCS_High();
-	return (counter);
+
+	while (((HAL_GetTick() - start_time) < 210)) {  // timeout at 210ms
+		LTC_nCS_Low();
+		HAL_SPI_Receive(&hspi1, &adc_status, 1, 100);  // recive 1 byte
+		LTC_nCS_High();
+
+		if (adc_status != 0xFF) {  // if it's not 0xFF, finish adc
+			finished = 1;
+			break;
+		} else {
+			HAL_Delay(1);  //delay 1ms
+		}
+	    }
+
+	LTC_nCS_High();
+	return (finished);
 }
+
+
 
 /* Read and store raw cell voltages at uint8_t 2d pointer */
 int Calc_Pack_Voltage(uint16_t *read_voltages) {
