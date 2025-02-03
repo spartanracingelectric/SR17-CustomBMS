@@ -164,7 +164,6 @@ int main(void)
 	Read_Volt(modPackInfo.cell_volt);
 
 	//reading cell temperatures
-	Wakeup_Sleep();
 	for (uint8_t i = tempindex; i < indexpause; i++) {
 		Wakeup_Idle();
 		Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
@@ -188,7 +187,6 @@ int main(void)
 		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
 //		printf("Hello");
 			//reading cell voltages
-//			Wakeup_Sleep();
 			Read_Volt(modPackInfo.cell_volt);
 			HAL_Delay(1);
 //			printf("Cell voltages:\n");
@@ -197,7 +195,6 @@ int main(void)
 //			}
 
 			//reading cell temperatures
-//			Wakeup_Sleep();
 			for (uint8_t i = tempindex; i < indexpause; i++) {
 				Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
 //				printf(" Cell: %d, Temp: %d\n", i, modPackInfo.cell_temp[i]);
