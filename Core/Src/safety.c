@@ -64,6 +64,7 @@ void Cell_Summary_Voltage(struct batteryModule *batt, uint8_t *fault,
 		else if (batt->cell_volt_highest < CELL_HIGH_VOLT_FAULT - HYSTERESIS_MARGIN && *high_volt_hysteresis == 1){
 			*high_volt_hysteresis = 0;
 			*fault &= ~FAULT_BIT_HIGH_VOLT;
+			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_RESET);
 		}
 			//end of high cell volt fault
 
@@ -84,6 +85,7 @@ void Cell_Summary_Voltage(struct batteryModule *batt, uint8_t *fault,
 		else if(batt->cell_volt_lowest > CELL_LOW_VOLT_FAULT + HYSTERESIS_MARGIN && *low_volt_hysteresis == 1){
 			*low_volt_hysteresis = 0;
 			*fault &= ~FAULT_BIT_LOW_VOLT;
+			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_RESET);
 		}
 //			end of low cell volt fault
 
@@ -170,6 +172,7 @@ void Cell_Summary_Temperature(struct batteryModule *batt, uint8_t *fault, uint8_
 		}
 		else if (batt->cell_temp_highest < CELL_HIGH_TEMP_FAULT){
 			*fault &= ~FAULT_BIT_HIGH_TEMP;
+			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_RESET);
 		}
 	}
 }
