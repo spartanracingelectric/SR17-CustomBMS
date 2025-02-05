@@ -173,9 +173,11 @@ int main(void)
 	//initializing variables
 	uint8_t tempindex = 0;
 	uint8_t indexpause = 8;
+	uint8_t high_volt_fault_lock = 0;
 	uint8_t low_volt_hysteresis = 0;
-	uint8_t high_volt_hysteresis = 0;
+	uint8_t low_volt_fault_lock = 0;
 	uint8_t cell_imbalance_hysteresis = 0;
+	uint8_t high_temp_hysteresis = 0;
 
 	//reading cell voltages
 	Wakeup_Sleep();
@@ -237,10 +239,10 @@ int main(void)
 			//print(NUM_THERM_TOTAL, (uint16_t*) modPackInfo.cell_temp);
 
 			//getting the summary of all cells in the pack
-			Cell_Summary_Voltage(&modPackInfo, &safetyFaults,
-								&safetyWarnings, &safetyStates, &low_volt_hysteresis,
-								&high_volt_hysteresis, &cell_imbalance_hysteresis);
-			Cell_Summary_Temperature(&modPackInfo, &safetyFaults,&safetyWarnings);
+			Cell_Voltage_Fault(	&modPackInfo, &safetyFaults, &safetyWarnings, &safetyStates,
+								&high_volt_fault_lock, &low_volt_hysteresis, &low_volt_fault_lock,
+								&cell_imbalance_hysteresis);
+			Cell_Temperature_Fault(&modPackInfo, &safetyFaults,&safetyWarnings, &high_temp_hysteresis);
 
 
 
