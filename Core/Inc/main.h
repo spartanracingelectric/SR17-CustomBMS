@@ -48,7 +48,7 @@ extern "C" {
 #define LTC_DELAY 1000              // 500ms update delay
 #define LED_HEARTBEAT_DELAY_MS 500  // 500ms update delay
 #define BALANCE 0                   // FALSE
-#define MAX_CELL_CAPACITY 3.0f
+#define MAX_CELL_CAPACITY 3
 #define MAX_BATTERY_CAPACITY NUM_DEVICES* MAX_CELL_CAPACITY
 /* USER CODE END Private defines */
 

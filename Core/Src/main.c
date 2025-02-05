@@ -185,6 +185,8 @@ int main(void)
 
     clock_t prev_soc_time = clock();
 
+    float current = 0;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -201,7 +203,7 @@ int main(void)
             CAN_Send_Cell_Summary(&msg, &modPackInfo);
             CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
             CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
-            CAN_Send_SOC(&msg, modPackInfo.soc, MAX_BATTERY_CAPACITY);
+            CAN_Send_SOC(&msg, modPackInfo.soc, MAX_BATTERY_CAPACITY, (uint32_t) current);
             // reading cell voltages
             Wakeup_Sleep();
             Read_Volt(modPackInfo.cell_volt);
@@ -233,7 +235,7 @@ int main(void)
             ReadHVInput(&modPackInfo.pack_voltage);
             // print(NUM_THERM_TOTAL, (uint16_t*) modPackInfo.cell_temp);
 
-            State_of_Charge(&modPackInfo.soc,
+            current = State_of_Charge(&modPackInfo.soc,
                             (double)(clock() - prev_soc_time) / CLOCKS_PER_SEC);
             prev_soc_time = clock();
 

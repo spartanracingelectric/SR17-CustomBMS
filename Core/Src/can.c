@@ -88,12 +88,14 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef* canHandle)
     __HAL_AFIO_REMAP_CAN1_2();
 
     /* CAN1 interrupt Init */
-    HAL_NVIC_SetPriority(CAN1_TX_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(CAN1_TX_IRQn, 2, 0);
     HAL_NVIC_EnableIRQ(CAN1_TX_IRQn);
-    HAL_NVIC_SetPriority(CAN1_RX0_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(CAN1_RX0_IRQn, 2, 0);
     HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
-    HAL_NVIC_SetPriority(CAN1_RX1_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(CAN1_RX1_IRQn, 2, 0);
     HAL_NVIC_EnableIRQ(CAN1_RX1_IRQn);
+    HAL_NVIC_SetPriority(CAN1_SCE_IRQn, 2, 0);
+    HAL_NVIC_EnableIRQ(CAN1_SCE_IRQn);
   /* USER CODE BEGIN CAN1_MspInit 1 */
 
   /* USER CODE END CAN1_MspInit 1 */
@@ -121,6 +123,7 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
     HAL_NVIC_DisableIRQ(CAN1_TX_IRQn);
     HAL_NVIC_DisableIRQ(CAN1_RX0_IRQn);
     HAL_NVIC_DisableIRQ(CAN1_RX1_IRQn);
+    HAL_NVIC_DisableIRQ(CAN1_SCE_IRQn);
   /* USER CODE BEGIN CAN1_MspDeInit 1 */
 
   /* USER CODE END CAN1_MspDeInit 1 */
@@ -244,7 +247,7 @@ void CAN_Send_Safety_Checker(struct CANMessage *ptr, struct batteryModule *batt,
 }
 
 
-void CAN_Send_SOC(struct CANMessage *ptr, uint32_t soc, uint32_t max_capacity) {
+void CAN_Send_SOC(struct CANMessage *ptr, uint32_t soc, uint32_t max_capacity, uint32_t current) {
     uint16_t CAN_ID = 0x601;
 	Set_CAN_Id(ptr, CAN_ID);
 
@@ -254,7 +257,10 @@ void CAN_Send_SOC(struct CANMessage *ptr, uint32_t soc, uint32_t max_capacity) {
 	ptr->data[3] = soc >> 24;
 
     uint8_t percent = (uint8_t)(soc / max_capacity * 100);
-	ptr->data[4] = percent;
+	ptr->data[4] = current;
+	ptr->data[5] = current >> 8;
+	ptr->data[6] = current >> 16;
+	ptr->data[7] = current >> 24;
 
 	HAL_Delay(1);
 	CAN_Send(ptr);
