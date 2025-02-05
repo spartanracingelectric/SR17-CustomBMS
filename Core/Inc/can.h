@@ -51,7 +51,7 @@ void CAN_Send_Voltage(struct CANMessage *ptr, uint16_t *read_volt);
 void CAN_Send_Temperature(struct CANMessage *ptr, uint16_t *read_temp);
 void CAN_Send_Cell_Summary(struct CANMessage *ptr, struct batteryModule *batt);
 void CAN_Send_Safety_Checker(struct CANMessage *ptr, struct batteryModule *batt, uint8_t* faults, uint8_t* warnings, uint8_t *states);
-void CAN_Send_SOC(struct CANMessage *ptr, uint32_t soc, uint32_t max_capacity, uint32_t current);
+void CAN_Send_SOC(struct CANMessage *ptr, batteryModule *batt, uint16_t max_capacity);
 
 /* USER CODE END Prototypes */
 

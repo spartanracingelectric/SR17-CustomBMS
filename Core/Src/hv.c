@@ -19,7 +19,7 @@
 		*read_volt_HV = (uint32_t)(hvInput);
 	}
 
-float State_of_Charge(uint32_t *soc, float elapsed_time) {
+void State_of_Charge(batteryModule *batt, uint32_t elapsed_time) {
     uint32_t adcValue = 0;
 	HAL_ADC_Start(&hadc2);//start adc with adc1
 	if (HAL_ADC_PollForConversion(&hadc2, HAL_MAX_DELAY) == HAL_OK) {
@@ -27,7 +27,6 @@ float State_of_Charge(uint32_t *soc, float elapsed_time) {
 	}
 	HAL_ADC_Stop(&hadc2);//stop adc
     float voltage = ((float)adcValue / ADC_RESOLUTION) * V_REF;
-    float current = (voltage / MAX_SHUNT_VOLTAGE) * MAX_SHUNT_AMPAGE;
-    *soc -= (uint32_t)(current * (1 / (NUM_DEVICES)) * (elapsed_time / 3600));
-    return current;
+    batt->current = (voltage / MAX_SHUNT_VOLTAGE) * MAX_SHUNT_AMPAGE;
+    batt->soc -= (uint16_t)(batt->current * (float)(elapsed_time / 3600000.0f));
 }

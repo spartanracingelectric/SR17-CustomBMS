@@ -247,20 +247,19 @@ void CAN_Send_Safety_Checker(struct CANMessage *ptr, struct batteryModule *batt,
 }
 
 
-void CAN_Send_SOC(struct CANMessage *ptr, uint32_t soc, uint32_t max_capacity, uint32_t current) {
+void CAN_Send_SOC(struct CANMessage *ptr, batteryModule *batt, uint16_t max_capacity) {
     uint16_t CAN_ID = 0x601;
 	Set_CAN_Id(ptr, CAN_ID);
 
-	ptr->data[0] = soc;
-	ptr->data[1] = soc >> 8;
-	ptr->data[2] = soc >> 16;
-	ptr->data[3] = soc >> 24;
+	ptr->data[0] = batt->soc;
+	ptr->data[1] = batt->soc >> 8;
 
-    uint8_t percent = (uint8_t)(soc / max_capacity * 100);
-	ptr->data[4] = current;
-	ptr->data[5] = current >> 8;
-	ptr->data[6] = current >> 16;
-	ptr->data[7] = current >> 24;
+    uint8_t percent = (uint8_t)(batt->soc * 100 / max_capacity);
+	ptr->data[2] = percent;
+	ptr->data[3] = batt->current;
+	ptr->data[4] = batt->current >> 8;
+	ptr->data[5] = batt->current >> 16;
+	ptr->data[6] = batt->current >> 24;
 
 	HAL_Delay(1);
 	CAN_Send(ptr);

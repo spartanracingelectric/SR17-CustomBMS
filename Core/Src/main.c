@@ -183,9 +183,7 @@ int main(void)
     Wakeup_Idle();
     LTC_STCOMM(2);
 
-    clock_t prev_soc_time = clock();
-
-    float current = 0;
+    uint32_t prev_soc_time = HAL_GetTick();
 
   /* USER CODE END 2 */
 
@@ -203,7 +201,7 @@ int main(void)
             CAN_Send_Cell_Summary(&msg, &modPackInfo);
             CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
             CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
-            CAN_Send_SOC(&msg, modPackInfo.soc, MAX_BATTERY_CAPACITY, (uint32_t) current);
+            CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
             // reading cell voltages
             Wakeup_Sleep();
             Read_Volt(modPackInfo.cell_volt);
@@ -235,10 +233,10 @@ int main(void)
             ReadHVInput(&modPackInfo.pack_voltage);
             // print(NUM_THERM_TOTAL, (uint16_t*) modPackInfo.cell_temp);
 
-            current = State_of_Charge(&modPackInfo.soc,
-                            (double)(clock() - prev_soc_time) / CLOCKS_PER_SEC);
-            prev_soc_time = clock();
+            State_of_Charge(&modPackInfo,
+                            (HAL_GetTick() - prev_soc_time));
 
+            prev_soc_time = HAL_GetTick();
             // getting the summary of all cells in the pack
             Cell_Summary_Voltage(&modPackInfo, &safetyFaults, &safetyWarnings,
                                  &safetyStates, &low_volt_hysteresis,
