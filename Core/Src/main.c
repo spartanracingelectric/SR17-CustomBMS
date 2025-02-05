@@ -107,6 +107,8 @@ int main(void)
 	uint8_t safetyWarnings = 0;
 	uint8_t safetyStates = 0;
 
+	modPackInfo.soc = MAX_BATTERY_CAPACITY;
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -170,7 +172,9 @@ int main(void)
 	Wakeup_Idle();
 	LTC_STCOMM(2);
 
-	ReadHVInput(&modPackInfo.pack_voltage);
+	ReadHVInput(&modPackInfo);
+
+	uint32_t prev_soc_time = HAL_GetTick();
 
   /* USER CODE END 2 */
 
@@ -216,10 +220,10 @@ int main(void)
 //			printf("Temp end\n");
 
 //			printf("pack volt start\n");
-			ReadHVInput(&modPackInfo.pack_voltage);
+			ReadHVInput(&modPackInfo);
 //			printf("pack volt end\n");
 			//print(NUM_THERM_TOTAL, (uint16_t*) modPackInfo.cell_temp);
-
+			State_of_Charge(&modPackInfo,(HAL_GetTick() - prev_soc_time));
 			//getting the summary of all cells in the pack
 //			printf("cell summary volt start\n");
 			Cell_Summary_Voltage(&modPackInfo, &safetyFaults,

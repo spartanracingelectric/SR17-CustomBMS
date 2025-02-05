@@ -48,6 +48,8 @@ extern "C" {
 #define LTC_DELAY				1000 //500ms update delay
 #define LED_HEARTBEAT_DELAY_MS	10  //500ms update delay
 #define BALANCE 0 //FALSE
+#define MAX_CELL_CAPACITY 3000
+#define MAX_BATTERY_CAPACITY NUM_DEVICES* MAX_CELL_CAPACITY
 /* USER CODE END Private defines */
 
 typedef struct batteryModule {
@@ -61,6 +63,8 @@ typedef struct batteryModule {
 	uint16_t cell_temp_highest;
 	uint32_t pack_voltage;
 	uint16_t read_auxreg[NUM_AUXES];
+	uint16_t soc;
+	uint32_t current;
 }batteryModule;
 
 typedef struct CANMessage{
