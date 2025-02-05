@@ -1,4 +1,6 @@
 #include "6811.h"
+#include "spi.h"
+#include "main.h"
 
 uint8_t wrpwm_buffer[4 + (8 * NUM_DEVICES)];
 uint8_t wrcfg_buffer[4 + (8 * NUM_DEVICES)];
@@ -298,6 +300,7 @@ void LTC_ADCV(uint8_t MD,  // ADC Mode
 	uint8_t cmd[4];
 	uint16_t cmd_pec;
 	uint8_t md_bits;
+	uint32_t start_time = HAL_GetTick();
 
 	md_bits = (MD & 0x02) >> 1;
 	cmd[0] = md_bits + 0x02;
@@ -310,6 +313,11 @@ void LTC_ADCV(uint8_t MD,  // ADC Mode
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake. This command can be removed.
 	LTC_nCS_Low();
 	HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
+//	HAL_SPI_DeInit();
+    while ((HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6) == GPIO_PIN_RESET) && ((HAL_GetTick() - start_time) <= 21000)) {
+        HAL_Delay(1);
+    }
+//    MX_SPI1_Init();
 	LTC_nCS_High();
 }
 
@@ -319,6 +327,7 @@ void LTC_ADAX(uint8_t MD, // ADC Mode
 	uint8_t cmd[4];
 	uint16_t cmd_pec;
 	uint8_t md_bits;
+	uint32_t start_time = HAL_GetTick();
 
 	md_bits = (MD & 0x02) >> 1;
 	cmd[0] = md_bits + 0x04;
@@ -337,6 +346,11 @@ void LTC_ADAX(uint8_t MD, // ADC Mode
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake. This command can be removed.
 	LTC_nCS_Low();
 	HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
+//	HAL_SPI_DeInit();
+    while ((HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6) == GPIO_PIN_RESET) && ((HAL_GetTick() - start_time) <= 21000)) {
+        HAL_Delay(1);
+    }
+//    MX_SPI1_Init();
 	LTC_nCS_High();
 }
 
@@ -360,11 +374,11 @@ int32_t LTC_POLLADC() {
 	HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
 	LTC_nCS_High();
 	//Check if ADC is done
-	while (((HAL_GetTick() - start_time) < 210)) {  // timeout at 210ms
+	while (((HAL_GetTick() - start_time) < 210000)) {  // timeout at 210ms
 		LTC_nCS_Low();
-		HAL_SPI_TransmitReceive(&hspi1, &dummy_tx, &adc_status, 1, 100);  //Send dummy byte and get adc status
+		HAL_SPI_Transmit(&hspi1, &dummy_tx, 1, 100);  //Send dummy byte and get adc status
+		HAL_SPI_Receive(&hspi1, &adc_status, 1, 100);
 		LTC_nCS_High();
-
 		if (adc_status != 0xFF) {  // if it's not 0xFF, finish adc
 			finished = 1;
 			break;
