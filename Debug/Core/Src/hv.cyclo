@@ -1,2 +1,2 @@
-../Core/Src/hv.c:6:6:ReadHVInput	1
-../Core/Src/hv.c:20:6:State_of_Charge	1
+../Core/Src/hv.c:5:7:ReadHVInput	2
+../Core/Src/hv.c:22:6:State_of_Charge	2

@@ -16,7 +16,6 @@
 #define MAX_SHUNT_VOLTAGE 3.3f
 
 void ReadHVInput(uint32_t *read_volt_HV);
-void State_of_Charge(batteryModule *batt, float elapsed_time, uint8_t *fault,
-                     uint8_t *warnings);
+void State_of_Charge(uint32_t *soc, float elapsed_time);
 
 #endif /* INC_HV_H_ */

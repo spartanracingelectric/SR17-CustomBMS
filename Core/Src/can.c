@@ -87,6 +87,13 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef* canHandle)
 
     __HAL_AFIO_REMAP_CAN1_2();
 
+    /* CAN1 interrupt Init */
+    HAL_NVIC_SetPriority(CAN1_TX_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(CAN1_TX_IRQn);
+    HAL_NVIC_SetPriority(CAN1_RX0_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
+    HAL_NVIC_SetPriority(CAN1_RX1_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(CAN1_RX1_IRQn);
   /* USER CODE BEGIN CAN1_MspInit 1 */
 
   /* USER CODE END CAN1_MspInit 1 */
@@ -110,6 +117,10 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
     */
     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_8|GPIO_PIN_9);
 
+    /* CAN1 interrupt Deinit */
+    HAL_NVIC_DisableIRQ(CAN1_TX_IRQn);
+    HAL_NVIC_DisableIRQ(CAN1_RX0_IRQn);
+    HAL_NVIC_DisableIRQ(CAN1_RX1_IRQn);
   /* USER CODE BEGIN CAN1_MspDeInit 1 */
 
   /* USER CODE END CAN1_MspDeInit 1 */
@@ -221,7 +232,6 @@ void CAN_Send_Safety_Checker(struct CANMessage *ptr, struct batteryModule *batt,
 		uint8_t *warnings, uint8_t *states) {
 	uint16_t CAN_ID = 0x600;
 	Set_CAN_Id(ptr, CAN_ID);
-
 	ptr->data[0] = *faults;
 	ptr->data[1] = *warnings;
 	ptr->data[2] = *states;
@@ -229,23 +239,24 @@ void CAN_Send_Safety_Checker(struct CANMessage *ptr, struct batteryModule *batt,
 	ptr->data[4] = (batt->pack_voltage) >> 8;
 	ptr->data[5] = (batt->pack_voltage) >> 16;
 	ptr->data[6] = (batt->pack_voltage) >> 24;
-
 	HAL_Delay(1);
 	CAN_Send(ptr);
 }
 
-void CAN_Send_SOC(struct CANMessage *ptr, struct batteryModule *batt) {
+
+void CAN_Send_SOC(struct CANMessage *ptr, uint32_t soc, uint32_t max_capacity) {
     uint16_t CAN_ID = 0x601;
 	Set_CAN_Id(ptr, CAN_ID);
 
-	ptr->data[0] = batt->soc; 
-	ptr->data[1] = batt->soc >> 8; 
-	ptr->data[2] = batt->soc >> 16; 
-	ptr->data[3] = batt->soc >> 24; 
+	ptr->data[0] = soc;
+	ptr->data[1] = soc >> 8;
+	ptr->data[2] = soc >> 16;
+	ptr->data[3] = soc >> 24;
 
-    uint8_t percent = (uint8_t)(batt->soc / MAX_BATTERY_CAPACITY); 
-	ptr->data[4] = percent; 
+    uint8_t percent = (uint8_t)(soc / max_capacity * 100);
+	ptr->data[4] = percent;
 
 	HAL_Delay(1);
 	CAN_Send(ptr);
 }
+/* USER CODE END 1 */

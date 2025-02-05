@@ -91,6 +91,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define SHUNT_SIGNAL_Pin GPIO_PIN_3
+#define SHUNT_SIGNAL_GPIO_Port GPIOC
 #define MCU_USB_INT_Pin GPIO_PIN_0
 #define MCU_USB_INT_GPIO_Port GPIOA
 #define LTC_nCS_Pin GPIO_PIN_4
@@ -103,8 +105,6 @@ void Error_Handler(void);
 #define MCU_HEARTBEAT_LED_GPIO_Port GPIOC
 #define MCU_HV_SENSE_ENABLE_Pin GPIO_PIN_7
 #define MCU_HV_SENSE_ENABLE_GPIO_Port GPIOB
-#define MCU_SHUNT_Pin GPIO_PIN_3
-#define MCU_SHUNT_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 #define NUM_DEVICES 8                                 // 1 slave board
@@ -117,6 +117,8 @@ void Error_Handler(void);
 #define LTC_DELAY 1000              // 500ms update delay
 #define LED_HEARTBEAT_DELAY_MS 500  // 500ms update delay
 #define BALANCE 0                   // FALSE
+#define MAX_CELL_CAPACITY 3.0f
+#define MAX_BATTERY_CAPACITY NUM_DEVICES* MAX_CELL_CAPACITY
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

@@ -60,8 +60,8 @@ all: main-build
 main-build: SR16_BMS_Reduced_Delay.elf secondary-outputs
 
 # Tool invocations
-SR16_BMS_Reduced_Delay.elf SR16_BMS_Reduced_Delay.map: $(OBJS) $(USER_OBJS) /Users/ben/Projects/SR16-CustomBMS/STM32F105RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "SR16_BMS_Reduced_Delay.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"/Users/ben/Projects/SR16-CustomBMS/STM32F105RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SR16_BMS_Reduced_Delay.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+SR16_BMS_Reduced_Delay.elf SR16_BMS_Reduced_Delay.map: $(OBJS) $(USER_OBJS) C:\Users\panda\Documents\Spartan\ Racing\BMS-SR16\SR16_CustomBMS\SR16-CustomBMS\STM32F105RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "SR16_BMS_Reduced_Delay.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\panda\Documents\Spartan Racing\BMS-SR16\SR16_CustomBMS\SR16-CustomBMS\STM32F105RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SR16_BMS_Reduced_Delay.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
