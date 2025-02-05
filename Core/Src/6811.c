@@ -300,7 +300,6 @@ void LTC_ADCV(uint8_t MD,  // ADC Mode
 	uint8_t cmd[4];
 	uint16_t cmd_pec;
 	uint8_t md_bits;
-	uint32_t start_time = HAL_GetTick();
 
 	md_bits = (MD & 0x02) >> 1;
 	cmd[0] = md_bits + 0x02;
@@ -313,11 +312,6 @@ void LTC_ADCV(uint8_t MD,  // ADC Mode
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake. This command can be removed.
 	LTC_nCS_Low();
 	HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
-//	HAL_SPI_DeInit();
-    while ((HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6) == GPIO_PIN_RESET) && ((HAL_GetTick() - start_time) <= 21000)) {
-        HAL_Delay(1);
-    }
-//    MX_SPI1_Init();
 	LTC_nCS_High();
 }
 
@@ -327,7 +321,6 @@ void LTC_ADAX(uint8_t MD, // ADC Mode
 	uint8_t cmd[4];
 	uint16_t cmd_pec;
 	uint8_t md_bits;
-	uint32_t start_time = HAL_GetTick();
 
 	md_bits = (MD & 0x02) >> 1;
 	cmd[0] = md_bits + 0x04;
@@ -346,11 +339,6 @@ void LTC_ADAX(uint8_t MD, // ADC Mode
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake. This command can be removed.
 	LTC_nCS_Low();
 	HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
-//	HAL_SPI_DeInit();
-    while ((HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6) == GPIO_PIN_RESET) && ((HAL_GetTick() - start_time) <= 21000)) {
-        HAL_Delay(1);
-    }
-//    MX_SPI1_Init();
 	LTC_nCS_High();
 }
 

@@ -43,9 +43,9 @@ void Get_Actual_Temps(uint8_t dev_idx, uint8_t tempindex, uint16_t *actual_temp,
 void Read_Volt(uint16_t *read_volt) {
 	printf("volt start\n");
 	Wakeup_Idle();
-	LTC_ADCV(MD_FILTERED, DCP_DISABLED, CELL_CH_ALL);//ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
+	LTC_ADCV(MD_NORMAL, DCP_DISABLED, CELL_CH_ALL);//ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
 
-//	HAL_Delay(1);
+	HAL_Delay(NORMAL_DELAY);	//FAST_DELAY, NORMAL_DELAY, FILTERD_DELAY;
 //	LTC_POLLADC();
 	printf("end adc\n");
 	Wakeup_Idle();
@@ -62,6 +62,7 @@ void Read_Temp(uint8_t tempindex, uint16_t *read_temp, uint16_t *read_auxreg) {
 
 	Wakeup_Idle();
 	LTC_ADAX(MD_FAST, 1); //ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
+	HAL_Delay(FAST_DELAY); //FAST_DELAY, NORMAL_DELAY, FILTERD_DELAY;
 //	LTC_POLLADC();
 	Wakeup_Idle();
 	if (!Read_Cell_Temps((uint16_t*) read_auxreg)) // Set to read back all aux registers

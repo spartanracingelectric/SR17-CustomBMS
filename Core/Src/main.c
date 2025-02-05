@@ -203,14 +203,14 @@ int main(void)
     /* USER CODE BEGIN 3 */
 		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
 //		printf("Hello");
-		if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
-					//calling all CAN realated methods
-					CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
-							&safetyWarnings, &safetyStates);
-					CAN_Send_Cell_Summary(&msg, &modPackInfo);
-					CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
-					CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
-				}
+//		if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
+//					//calling all CAN realated methods
+//					CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
+//							&safetyWarnings, &safetyStates);
+//					CAN_Send_Cell_Summary(&msg, &modPackInfo);
+//					CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
+//					CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
+//				}
 			//reading cell voltages
 			Read_Volt(modPackInfo.cell_volt);
 //			HAL_Delay(1);
@@ -265,6 +265,14 @@ int main(void)
 //			} else if (BALANCE) {
 //				End_Balance(&safetyFaults);
 //			}
+			if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
+			//calling all CAN realated methods
+			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
+					&safetyWarnings, &safetyStates);
+			CAN_Send_Cell_Summary(&msg, &modPackInfo);
+			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
+			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
+		}
 //
 
 	}
