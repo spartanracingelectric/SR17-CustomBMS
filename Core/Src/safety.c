@@ -165,9 +165,8 @@ void High_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 	uint32_t sum_voltage = 0;
 
 	for (int i = 0; i < NUM_CELLS; i++) {
-		 sum_voltage += (uint32_t)batt->cell_volt[i]; // 累積和を計算
+		 sum_voltage += (uint32_t)batt->cell_volt[i]; //get sum voltage
 	}
-
 	if ((sum_voltage - batt->pack_voltage) >= FAULT_LOCK_MARGIN_LOW_VOLT){
 		*warnings |= WARNING_BIT_SLAVE_VOLT;
 	}
@@ -191,45 +190,34 @@ void High_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 	else{
 		*fault &= ~FAULT_BIT_LOW_PACK_VOLT;
 	}
-
 }
 
-void Module_Averages(struct batteryModule *batt) {
 
-	for (int i = 0; i < NUM_CELLS; i += 12) {
-		uint16_t temp_sum = 0;
+void Module_Voltage_Averages(struct batteryModule *batt) {
+    for (int i = 0; i < NUM_CELLS; i += NUM_CELL_SERIES_GROUP) {
+        uint16_t volt_sum = 0;
 
-		for (int j = 0; j < i + 12; j++) {
-			temp_sum += batt->cell_volt[j];
-		}
+        for (int j = i; j < i + NUM_CELL_SERIES_GROUP && j < NUM_CELLS; j++) {
+            volt_sum += batt->cell_volt[j];
+        }
 
-		uint16_t average = temp_sum / NUM_CELL_SERIES_GROUP;
+        uint16_t average = volt_sum / NUM_CELL_SERIES_GROUP;
 
-		switch (i / 12) {
-		case 0:
-			batt->module_averages[i] = average;
-			break;
-		case 1:
-			batt->module_averages[i] = average;
-			break;
-		case 2:
-			batt->module_averages[i] = average;
-			break;
-		case 3:
-			batt->module_averages[i] = average;
-			break;
-		case 4:
-			batt->module_averages[i] = average;
-			break;
-		case 5:
-			batt->module_averages[i] = average;
-			break;
-		case 6:
-			batt->module_averages[i] = average;
-			break;
-		case 7:
-			batt->module_averages[i] = average;
-			break;
-		}
-	}
+        batt->average_volt[i / NUM_CELL_SERIES_GROUP] = average;
+    }
+}
+
+
+void Module_Temperature_Averages(struct batteryModule *batt) {
+    for (int i = 0; i < NUM_THERM_TOTAL; i += NUM_THERM_PER_MOD) {
+        uint16_t temp_sum = 0;
+
+        for (int j = i; j < i + NUM_THERM_PER_MOD && j < NUM_THERM_TOTAL; j++) {
+            temp_sum += batt->cell_temp[j];
+        }
+
+        uint16_t average = temp_sum / NUM_THERM_PER_MOD;
+
+        batt->average_temp[i / NUM_THERM_PER_MOD] = average;
+    }
 }

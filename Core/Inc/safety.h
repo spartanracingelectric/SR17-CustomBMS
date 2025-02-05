@@ -11,6 +11,8 @@ void Cell_Temperature_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t 
 
 void High_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings);
 
-void Module_Averages(struct batteryModule *batt);
+void Module_Voltage_Averages(struct batteryModule *batt);
+
+void Module_Temperature_Averages(struct batteryModule *batt);
 
 #endif /* INC_SAFETY_H_ */

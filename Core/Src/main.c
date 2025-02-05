@@ -127,7 +127,9 @@ int main(void)
 	CANMessage msg;
 	uint8_t safetyFaults = 0;
 	uint8_t safetyWarnings = 0;
+	uint8_t moduleCounts = 0;
 	uint8_t safetyStates = 0;
+
 
   /* USER CODE END 1 */
 
@@ -242,7 +244,7 @@ int main(void)
 			Cell_Voltage_Fault(	&modPackInfo, &safetyFaults, &safetyWarnings, &safetyStates,
 								&high_volt_fault_lock, &low_volt_hysteresis, &low_volt_fault_lock,
 								&cell_imbalance_hysteresis);
-			Cell_Temperature_Fault(&modPackInfo, &safetyFaults,&safetyWarnings, &high_temp_hysteresis);
+			Cell_Temperature_Fault(&modPackInfo, &safetyFaults, &safetyWarnings, &high_temp_hysteresis);
 
 
 
