@@ -43,9 +43,9 @@ void MX_CAN1_Init(void)
   hcan1.Init.TimeSeg1 = CAN_BS1_3TQ;
   hcan1.Init.TimeSeg2 = CAN_BS2_4TQ;
   hcan1.Init.TimeTriggeredMode = DISABLE;
-  hcan1.Init.AutoBusOff = DISABLE;
+  hcan1.Init.AutoBusOff = ENABLE;
   hcan1.Init.AutoWakeUp = DISABLE;
-  hcan1.Init.AutoRetransmission = DISABLE;
+  hcan1.Init.AutoRetransmission = ENABLE;
   hcan1.Init.ReceiveFifoLocked = DISABLE;
   hcan1.Init.TransmitFifoPriority = DISABLE;
   if (HAL_CAN_Init(&hcan1) != HAL_OK)
@@ -132,29 +132,32 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
 
 /* USER CODE BEGIN 1 */
 
-uint8_t CAN_TX_HALT = 0; //halt frag to send it to mailbox
+uint8_t CAN_TX_HALT = 1; //halt frag to send it to mailbox
 
 HAL_StatusTypeDef CAN_Start() {
 	return HAL_CAN_Start(&hcan1);
 }
 
 HAL_StatusTypeDef CAN_Activate() {
-    return HAL_CAN_ActivateNotification(&hcan1,  CAN_IT_RX_FIFO0_MSG_PENDING | CAN_IT_TX_MAILBOX_EMPTY);
+    return HAL_CAN_ActivateNotification(&hcan1,  CAN_IT_RX_FIFO0_MSG_PENDING);
 }
 
 HAL_StatusTypeDef CAN_Send(CANMessage *ptr) {
-	while(CAN_TX_HALT == 1){
-		HAL_Delay(1);
-		if(CAN_TX_HALT == 0){
-			break;
-		}
-	}
+	  while (HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) == 0) {
+	    }
 	return HAL_CAN_AddTxMessage(&hcan1, &ptr->TxHeader, (uint8_t*) ptr->data,&ptr->TxMailbox);
+
 }
 
-void HAL_CAN_TxMailbox0CompleteCallback(CAN_HandleTypeDef *hcan) {
-	CAN_TX_HALT = 0;
-}
+//void HAL_CAN_TxMailbox0CompleteCallback(CAN_HandleTypeDef *hcan) {
+//	CAN_TX_HALT = 0;
+//}
+//void HAL_CAN_TxMailbox1CompleteCallback(CAN_HandleTypeDef *hcan) {
+//	CAN_TX_HALT = 0;
+//}
+//void HAL_CAN_TxMailbox2CompleteCallback(CAN_HandleTypeDef *hcan) {
+//	CAN_TX_HALT = 0;
+//}
 
 void CAN_SettingsInit(CANMessage *ptr) {
 	CAN_Start();

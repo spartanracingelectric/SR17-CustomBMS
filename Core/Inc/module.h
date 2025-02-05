@@ -6,6 +6,9 @@
 #define MD_FAST 0b01		//27kHz
 #define MD_NORMAL 0b10 		//7kHz
 #define MD_FILTERED 0b11  	//26Hz
+#define FAST_DELAY 2
+#define NORMAL_DELAY 4
+#define FILTERD_DELAY 202
 #define CELL_CH_ALL 0
 #define DCP_DISABLED 0
 

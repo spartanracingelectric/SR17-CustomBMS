@@ -20,7 +20,6 @@
 #include "main.h"
 #include "adc.h"
 #include "can.h"
-#include "dma.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
@@ -128,7 +127,6 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
   MX_ADC1_Init();
   MX_ADC2_Init();
   MX_TIM7_Init();
@@ -188,7 +186,7 @@ int main(void)
 //			Wakeup_Sleep();
 //			printf("volt start\n");
 			Read_Volt(modPackInfo.cell_volt);
-			HAL_Delay(1);
+//			HAL_Delay(1);
 //			printf("volt end\n");
 //			printf("Cell voltages:\n");
 //			for (int i = 0; i < NUM_CELLS; i++) {
@@ -201,14 +199,15 @@ int main(void)
 			for (uint8_t i = tempindex; i < indexpause; i++) {
 				Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
 //				printf(" Cell: %d, Temp: %d\n", i, modPackInfo.cell_temp[i]);
-				HAL_Delay(1);
+//				HAL_Delay(1);
 			}
 			if (indexpause == 8) {
 				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[0]);
 				LTC_STCOMM(2);
 				tempindex = 8;
 				indexpause = NUM_THERM_PER_MOD;
-			} else if (indexpause == NUM_THERM_PER_MOD) {
+			}
+			if (indexpause == NUM_THERM_PER_MOD) {
 				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[1]);
 				LTC_STCOMM(2);
 				indexpause = 8;

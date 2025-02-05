@@ -2,6 +2,7 @@
 #include <math.h>
 #include "print.h"
 #include "6811.h"
+#include <stdio.h>
 
 #define ntcNominal 10000.0f
 #define ntcSeriesResistance 10000.0f
@@ -40,23 +41,20 @@ void Get_Actual_Temps(uint8_t dev_idx, uint8_t tempindex, uint16_t *actual_temp,
 }
 
 void Read_Volt(uint16_t *read_volt) {
+//	printf("voltage read start\n");
 	LTC_ADCV(MD_FILTERED, DCP_DISABLED, CELL_CH_ALL);//ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
-	HAL_Delay(1);
-	LTC_POLLADC();
-	Wakeup_Idle();
+	HAL_Delay(NORMAL_DELAY); //FAST_DELAY, NORMAL_DELAY, FILTERD_DELAY;
 	Read_Cell_Volt((uint16_t*) read_volt);
+//	printf("voltage read end\n");
 }
 
 void Read_Temp(uint8_t tempindex, uint16_t *read_temp, uint16_t *read_auxreg) {
+//	printf("Temperature read start\n");
 	LTC_WRCOMM(NUM_DEVICES, BMS_THERM[tempindex]);
-	Wakeup_Idle();
 	LTC_STCOMM(2);
 	//end sending to mux to read temperatures
-
-	Wakeup_Idle();
 	LTC_ADAX(MD_FAST, 1); //ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
-	LTC_POLLADC();
-	Wakeup_Idle();
+	HAL_Delay(FAST_DELAY); //FAST_DELAY, NORMAL_DELAY, FILTERD_DELAY;
 	if (!Read_Cell_Temps((uint16_t*) read_auxreg)) // Set to read back all aux registers
 			{
 		for (uint8_t dev_idx = 0; dev_idx < NUM_DEVICES; dev_idx++) {
@@ -69,4 +67,5 @@ void Read_Temp(uint8_t tempindex, uint16_t *read_temp, uint16_t *read_auxreg) {
 
 		}
 	}
+//	printf("Temperature read end\n");
 }
