@@ -205,6 +205,7 @@ void SysTick_Handler(void)
 
 /**
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   * @brief This function handles DMA1 channel1 global interrupt.
   */
@@ -280,6 +281,8 @@ void DMA1_Channel5_IRQHandler(void)
 
 /**
 >>>>>>> voltTemp
+=======
+>>>>>>> soc-module
   * @brief This function handles ADC1 and ADC2 global interrupts.
   */
 void ADC1_2_IRQHandler(void)
