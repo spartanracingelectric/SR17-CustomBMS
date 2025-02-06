@@ -54,7 +54,7 @@ void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 		//find highest volt
 		if (batt->cell_volt[i] > batt->cell_volt_highest) {
 			batt->cell_volt_highest = batt->cell_volt[i];
-			printf("high voltage fault: %d\n", batt->cell_volt_highest);
+//			printf("high voltage fault: %d\n", batt->cell_volt_highest);
 		}
 		//high cell volt warning
 		if (batt->cell_volt_highest >= CELL_HIGH_VOLT_WARNING && batt->cell_volt_highest < CELL_HIGH_VOLT_FAULT) {
@@ -65,7 +65,7 @@ void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 			*high_volt_fault_lock = 1;
 			*fault |= FAULT_BIT_HIGH_VOLT;
 			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
-			printf("high voltage fault signal on\n");
+//			printf("high voltage fault signal on\n");
 		}
 		//reset high cell volt fault
 		else if (batt->cell_volt_highest < (CELL_HIGH_VOLT_FAULT - FAULT_LOCK_MARGIN_HIGH_VOLT) && *high_volt_fault_lock == 1){
@@ -203,31 +203,31 @@ void Cell_Temperature_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t 
 //}
 
 
-void Module_Voltage_Averages(struct batteryModule *batt) {
-    for (int i = 0; i < NUM_CELLS; i += NUM_CELL_SERIES_GROUP) {
-        uint16_t volt_sum = 0;
-
-        for (int j = i; j < i + NUM_CELL_SERIES_GROUP && j < NUM_CELLS; j++) {
-            volt_sum += batt->cell_volt[j];
-        }
-
-        uint16_t average = volt_sum / NUM_CELL_SERIES_GROUP;
-
-        batt->average_volt[i / NUM_CELL_SERIES_GROUP] = average;
-    }
-}
-
-
-void Module_Temperature_Averages(struct batteryModule *batt) {
-    for (int i = 0; i < NUM_THERM_TOTAL; i += NUM_THERM_PER_MOD) {
-        uint16_t temp_sum = 0;
-
-        for (int j = i; j < i + NUM_THERM_PER_MOD && j < NUM_THERM_TOTAL; j++) {
-            temp_sum += batt->cell_temp[j];
-        }
-
-        uint16_t average = temp_sum / NUM_THERM_PER_MOD;
-
-        batt->average_temp[i / NUM_THERM_PER_MOD] = average;
-    }
-}
+//void Module_Voltage_Averages(struct batteryModule *batt) {
+//    for (int i = 0; i < NUM_CELLS; i += NUM_CELL_SERIES_GROUP) {
+//        uint16_t volt_sum = 0;
+//
+//        for (int j = i; j < i + NUM_CELL_SERIES_GROUP && j < NUM_CELLS; j++) {
+//            volt_sum += batt->cell_volt[j];
+//        }
+//
+//        uint16_t average = volt_sum / NUM_CELL_SERIES_GROUP;
+//
+//        batt->average_volt[i / NUM_CELL_SERIES_GROUP] = average;
+//    }
+//}
+//
+//
+//void Module_Temperature_Averages(struct batteryModule *batt) {
+//    for (int i = 0; i < NUM_THERM_TOTAL; i += NUM_THERM_PER_MOD) {
+//        uint16_t temp_sum = 0;
+//
+//        for (int j = i; j < i + NUM_THERM_PER_MOD && j < NUM_THERM_TOTAL; j++) {
+//            temp_sum += batt->cell_temp[j];
+//        }
+//
+//        uint16_t average = temp_sum / NUM_THERM_PER_MOD;
+//
+//        batt->average_temp[i / NUM_THERM_PER_MOD] = average;
+//    }
+//}

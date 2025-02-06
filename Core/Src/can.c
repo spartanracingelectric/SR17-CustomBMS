@@ -132,7 +132,7 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
 
 /* USER CODE BEGIN 1 */
 
-uint8_t CAN_TX_HALT = 1; //halt frag to send it to mailbox
+//uint8_t CAN_TX_HALT = 1; //halt frag to send it to mailbox
 
 HAL_StatusTypeDef CAN_Start() {
 	return HAL_CAN_Start(&hcan1);

@@ -196,7 +196,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
-//		printf("hello\n");
+		printf("hello\n");
 			//reading cell voltages
 //			printf("volt start\n");
 			Read_Volt(modPackInfo.cell_volt);
@@ -216,15 +216,19 @@ int main(void)
 				LTC_STCOMM(2);
 				tempindex = 8;
 				indexpause = NUM_THERM_PER_MOD;
+//				HAL_Delay(1); //this delay is for stablize mux
 			}
-			if (indexpause == NUM_THERM_PER_MOD) {
+			else if (indexpause == NUM_THERM_PER_MOD) {
 				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[1]);
 				LTC_STCOMM(2);
 				indexpause = 8;
 				tempindex = 0;
+//				HAL_Delay(1); //this delay is for stablize mux
 			}
-//			printf("Temp end\n");
-
+//			HAL_Delay(1);
+//			for(int i = 0; i < NUM_THERM_TOTAL; i++){
+//				printf("Temp[%d]: %d\n",i, modPackInfo.cell_temp[i]);
+//			}
 //			printf("pack volt start\n");
 			ReadHVInput(&modPackInfo);
 //			printf("pack volt end\n");
