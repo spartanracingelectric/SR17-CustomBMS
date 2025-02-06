@@ -11,11 +11,6 @@
 #define R2 6810.0f     // 6 863kΩ
 #define DIVIDER_RATIO R1 / R2
 
-#define MAX_SHUNT_AMPAGE 500000
-#define MAX_SHUNT_VOLTAGE 2.62f
-
 void ReadHVInput(batteryModule *batt);
-
-void State_of_Charge(batteryModule *batt, uint32_t elapsed_time);
 
 #endif /* INC_HV_H_ */
