@@ -3,16 +3,16 @@
 
 #include "main.h"
 
-#define ADC_RESOLUTION 4096.0f 	//12-bit ADC
-#define V_REF 3.3f  			//Reference voltage (V)
-#define GAIN_TLV9001 1.58f 		//TLV9001 gain
-//Resistor values for the voltage divider
-#define R1 1400060.0f  			//1.4 MΩ
-#define R2 6810.0f     			//6 863kΩ
+#define ADC_RESOLUTION 4096.0f  // 12-bit ADC
+#define V_REF 3.3f              // Reference voltage (V)
+#define GAIN_TLV9001 1.58f      // TLV9001 gain
+// Resistor values for the voltage divider
+#define R1 1400060.0f  // 1.4 MΩ
+#define R2 6810.0f     // 6 863kΩ
 #define DIVIDER_RATIO R1 / R2
 
 #define MAX_SHUNT_AMPAGE 500000
-#define MAX_SHUNT_VOLTAGE 3.3f
+#define MAX_SHUNT_VOLTAGE 2.62f
 
 void ReadHVInput(batteryModule *batt);
 
