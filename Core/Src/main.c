@@ -31,7 +31,6 @@
 #include "hv.h"
 #include <stdio.h>
 #include "module.h"
-#include "print.h"
 #include "safety.h"
 #include "string.h"
 #include <time.h>
@@ -102,7 +101,7 @@ int main(void)
 	CANMessage msg;
 	uint8_t safetyFaults = 0;
 	uint8_t safetyWarnings = 0;
-	uint8_t moduleCounts = 0;
+//	uint8_t moduleCounts = 0;
 	uint8_t safetyStates = 0;
 
     modPackInfo.soc = MAX_BATTERY_CAPACITY;
@@ -161,16 +160,30 @@ int main(void)
     Read_Volt(modPackInfo.cell_volt);
 
 	//reading cell temperatures
+//	for (uint8_t i = tempindex; i < indexpause; i++) {
+//		Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
+//	}
+//	LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[0]);
+//	LTC_STCOMM(2);
+
 	for (uint8_t i = tempindex; i < indexpause; i++) {
-		Wakeup_Idle();
 		Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
+//				printf(" Cell: %d, Temp: %d\n", i, modPackInfo.cell_temp[i]);
 	}
-	LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[0]);
-	LTC_STCOMM(2);
+	if (indexpause == 8) {
+		LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[0]);
+		LTC_STCOMM(2);
+		tempindex = 8;
+		indexpause = NUM_THERM_PER_MOD;
+	}
+	if (indexpause == NUM_THERM_PER_MOD) {
+		LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[1]);
+		LTC_STCOMM(2);
+		indexpause = 8;
+		tempindex = 0;
+	}
 
 	ReadHVInput(&modPackInfo);
-
-	uint32_t prev_soc_time = HAL_GetTick();
 
 	uint32_t prev_soc_time = HAL_GetTick();
 
@@ -185,7 +198,6 @@ int main(void)
 		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
 //		printf("hello\n");
 			//reading cell voltages
-//			Wakeup_Sleep();
 //			printf("volt start\n");
 			Read_Volt(modPackInfo.cell_volt);
 //			printf("volt end\n");

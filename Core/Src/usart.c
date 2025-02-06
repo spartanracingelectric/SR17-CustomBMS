@@ -112,7 +112,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9|GPIO_PIN_10);
 
     /* USART1 interrupt Deinit */
-    HAL_NVIC_DisableIRQ(USART1_IRQn);
+    HAL_NVIC_DisableIRQ(USART1_dIRQn);
   /* USER CODE BEGIN USART1_MspDeInit 1 */
 
   /* USER CODE END USART1_MspDeInit 1 */
@@ -121,7 +121,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 
 /* USER CODE BEGIN 1 */
 int _write(int file, char *ptr, int len) {					//overloading printf() for UART with DMA
-    char buffer[128]; // バッファ
+    char buffer[128];
     uint32_t current_tick = HAL_GetTick(); // get current time
     uint32_t elapsed_time = current_tick - last_tick; // get difference from last time
     last_tick = current_tick; //refresh the last time

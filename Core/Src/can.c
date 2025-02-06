@@ -146,7 +146,6 @@ HAL_StatusTypeDef CAN_Send(CANMessage *ptr) {
 	  while (HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) == 0) {
 	    }
 	return HAL_CAN_AddTxMessage(&hcan1, &ptr->TxHeader, (uint8_t*) ptr->data,&ptr->TxMailbox);
-
 }
 
 //void HAL_CAN_TxMailbox0CompleteCallback(CAN_HandleTypeDef *hcan) {

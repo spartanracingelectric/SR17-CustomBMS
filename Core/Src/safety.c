@@ -101,7 +101,7 @@ void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 		if (batt->cell_volt_lowest <= CELL_LOW_VOLT_FAULT) {
 			*low_volt_hysteresis = 1;//use hysteresis and spend 2 cycle to fault
 		}
-		if (batt->cell_volt_lowest > CELL_LOW_VOLT_FAULT) {
+		else if (batt->cell_volt_lowest > CELL_LOW_VOLT_FAULT) {
 			*low_volt_hysteresis = 0;//use hysteresis and spend 2 cycle to fault
 		}
 
@@ -165,42 +165,42 @@ void Cell_Temperature_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t 
 		if (batt->cell_temp_highest >= CELL_HIGH_TEMP_FAULT) {
 			*high_temp_hysteresis = 1;
 		}
-		if (batt->cell_temp_highest < CELL_HIGH_TEMP_FAULT) {
+		else if (batt->cell_temp_highest < CELL_HIGH_TEMP_FAULT) {
 			*high_temp_hysteresis = 0;
 		}
 	}
 }
 
-void High_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings){
-	uint32_t sum_voltage = 0;
-
-	for (int i = 0; i < NUM_CELLS; i++) {
-		 sum_voltage += (uint32_t)batt->cell_volt[i]; //get sum voltage
-	}
-	if ((sum_voltage - batt->pack_voltage) >= FAULT_LOCK_MARGIN_LOW_VOLT){
-		*warnings |= WARNING_BIT_SLAVE_VOLT;
-	}
-	if (batt->pack_voltage >= PACK_HIGH_VOLT_WARNING) {
-		*warnings |= WARNING_BIT_HIGH_PACK_VOLT;
-	}
-	if (batt->pack_voltage <= PACK_LOW_VOLT_WARNING) {
-		*warnings |= WARNING_BIT_LOW_PACK_VOLT;
-	}
-	if (batt->pack_voltage >= PACK_HIGH_VOLT_FAULT) {
-		*fault |= FAULT_BIT_HIGH_PACK_VOLT;
-		HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
-	}
-	else{
-		*fault &= ~FAULT_BIT_HIGH_PACK_VOLT;
-	}
-	if (batt->pack_voltage <= PACK_LOW_VOLT_FAULT) {
-		*fault |= FAULT_BIT_LOW_PACK_VOLT;
-		HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
-	}
-	else{
-		*fault &= ~FAULT_BIT_LOW_PACK_VOLT;
-	}
-}
+//void High_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings){
+//	uint32_t sum_voltage = 0;
+//
+//	for (int i = 0; i < NUM_CELLS; i++) {
+//		 sum_voltage += (uint32_t)batt->cell_volt[i]; //get sum voltage
+//	}
+//	if ((sum_voltage - batt->pack_voltage) >= FAULT_LOCK_MARGIN_LOW_VOLT){
+//		*warnings |= WARNING_BIT_SLAVE_VOLT;
+//	}
+//	if (batt->pack_voltage >= PACK_HIGH_VOLT_WARNING) {
+//		*warnings |= WARNING_BIT_HIGH_PACK_VOLT;
+//	}
+//	if (batt->pack_voltage <= PACK_LOW_VOLT_WARNING) {
+//		*warnings |= WARNING_BIT_LOW_PACK_VOLT;
+//	}
+//	if (batt->pack_voltage >= PACK_HIGH_VOLT_FAULT) {
+//		*fault |= FAULT_BIT_HIGH_PACK_VOLT;
+//		HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
+//	}
+//	else{
+//		*fault &= ~FAULT_BIT_HIGH_PACK_VOLT;
+//	}
+//	if (batt->pack_voltage <= PACK_LOW_VOLT_FAULT) {
+//		*fault |= FAULT_BIT_LOW_PACK_VOLT;
+//		HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
+//	}
+//	else{
+//		*fault &= ~FAULT_BIT_LOW_PACK_VOLT;
+//	}
+//}
 
 
 void Module_Voltage_Averages(struct batteryModule *batt) {
