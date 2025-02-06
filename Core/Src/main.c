@@ -157,7 +157,6 @@ int main(void)
 	Read_Volt(modPackInfo.cell_volt);
 
 	//reading cell temperatures
-	Wakeup_Sleep();
 	for (uint8_t i = tempindex; i < indexpause; i++) {
 		Wakeup_Idle();
 		Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
@@ -192,8 +191,6 @@ int main(void)
 //			}
 
 			//reading cell temperatures
-//			Wakeup_Sleep();
-//			printf("Temp start\n");
 			for (uint8_t i = tempindex; i < indexpause; i++) {
 				Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
 //				printf(" Cell: %d, Temp: %d\n", i, modPackInfo.cell_temp[i]);
@@ -260,9 +257,6 @@ int main(void)
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
 //			printf("CAN end\n");
 			}
-
-
-
 	}
   /* USER CODE END 3 */
 }
