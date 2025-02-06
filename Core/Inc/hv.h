@@ -14,7 +14,8 @@
 #define MAX_SHUNT_AMPAGE 500000
 #define MAX_SHUNT_VOLTAGE 3.3f
 
-void ReadHVInput(uint32_t *read_volt_HV);
+void ReadHVInput(batteryModule *batt);
+
 void State_of_Charge(batteryModule *batt, uint32_t elapsed_time);
 
 #endif /* INC_HV_H_ */

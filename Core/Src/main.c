@@ -168,7 +168,9 @@ int main(void)
 	LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[0]);
 	LTC_STCOMM(2);
 
-	ReadHVInput(&modPackInfo.pack_voltage);
+	ReadHVInput(&modPackInfo);
+
+	uint32_t prev_soc_time = HAL_GetTick();
 
 	uint32_t prev_soc_time = HAL_GetTick();
 
@@ -212,12 +214,11 @@ int main(void)
 //			printf("Temp end\n");
 
 //			printf("pack volt start\n");
-			ReadHVInput(&modPackInfo.pack_voltage);
+			ReadHVInput(&modPackInfo);
 //			printf("pack volt end\n");
 
 			State_of_Charge(&modPackInfo,(HAL_GetTick() - prev_soc_time));
 			prev_soc_time = HAL_GetTick();
-
 			//getting the summary of all cells in the pack
 			Cell_Voltage_Fault(	&modPackInfo, &safetyFaults, &safetyWarnings, &safetyStates,
 								&high_volt_fault_lock, &low_volt_hysteresis, &low_volt_fault_lock,
