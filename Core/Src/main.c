@@ -69,7 +69,6 @@ typedef struct _TimerPacket {
 	uint32_t delay;		//Amount to delay
 } TimerPacket;
 
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -86,7 +85,6 @@ uint8_t TimerPacket_FixedPulse(TimerPacket *tp);
 /* USER CODE BEGIN 0 */
 static uint8_t BMS_MUX_PAUSE[2][6] = { { 0x69, 0x28, 0x0F, 0x09, 0x7F, 0xF9 }, {
 		0x69, 0x08, 0x0F, 0x09, 0x7F, 0xF9 } };
-
 
 /* USER CODE END 0 */
 
@@ -248,7 +246,6 @@ int main(void)
 //				Start_Balance((uint16_t*) modPackInfo.cell_volt,
 //				NUM_DEVICES, modPackInfo.cell_volt_lowest);
 
-
 //			} else if (BALANCE) {
 //				End_Balance(&safetyFaults);
 //			}
@@ -263,6 +260,7 @@ int main(void)
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
 //			printf("CAN end\n");
 			}
+
 
 
 	}
