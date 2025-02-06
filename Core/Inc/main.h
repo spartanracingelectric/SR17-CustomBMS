@@ -35,9 +35,20 @@ extern "C" {
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
-/* USER CODE BEGIN ET */
 
+/* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN Private defines */
+#define SHUNT_SIGNAL_Pin GPIO_PIN_3
+#define SHUNT_SIGNAL_GPIO_Port GPIOC
+#define LTC_nCS_Pin GPIO_PIN_4
+#define LTC_nCS_GPIO_Port GPIOA
+#define MCU_ADC_VSENSE_Pin GPIO_PIN_5
+#define MCU_ADC_VSENSE_GPIO_Port GPIOC
+#define MCU_SHUTDOWN_SIGNAL_Pin GPIO_PIN_1
+#define MCU_SHUTDOWN_SIGNAL_GPIO_Port GPIOB
+#define MCU_HEARTBEAT_LED_Pin GPIO_PIN_6
+#define MCU_HEARTBEAT_LED_GPIO_Port GPIOC
+
 #define NUM_DEVICES				8	//1 slave board
 #define NUM_CELL_SERIES_GROUP	12	//1 slave board
 #define NUM_CELLS				NUM_DEVICES*NUM_CELL_SERIES_GROUP	//multiple slave board
@@ -48,10 +59,11 @@ extern "C" {
 #define LTC_DELAY				1000 //500ms update delay
 #define LED_HEARTBEAT_DELAY_MS	10  //500ms update delay
 #define BALANCE 0 //FALSE
-#define MAX_CELL_CAPACITY 3000
-#define MAX_BATTERY_CAPACITY NUM_DEVICES* MAX_CELL_CAPACITY
+#define MAX_CELL_CAPACITY 2600
+#define MAX_BATTERY_CAPACITY (NUM_DEVICES * MAX_CELL_CAPACITY)
 /* USER CODE END Private defines */
 
+/* USER CODE BEGIN ET */
 typedef struct batteryModule {
 	uint16_t cell_volt[NUM_CELLS];
 	uint16_t cell_temp[NUM_THERM_TOTAL];
@@ -93,33 +105,6 @@ void Error_Handler(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
-
-/* Private defines -----------------------------------------------------------*/
-#define SHUNT_SIGNAL_Pin GPIO_PIN_3
-#define SHUNT_SIGNAL_GPIO_Port GPIOC
-#define LTC_nCS_Pin GPIO_PIN_4
-#define LTC_nCS_GPIO_Port GPIOA
-#define MCU_ADC_VSENSE_Pin GPIO_PIN_5
-#define MCU_ADC_VSENSE_GPIO_Port GPIOC
-#define MCU_SHUTDOWN_SIGNAL_Pin GPIO_PIN_1
-#define MCU_SHUTDOWN_SIGNAL_GPIO_Port GPIOB
-#define MCU_HEARTBEAT_LED_Pin GPIO_PIN_6
-#define MCU_HEARTBEAT_LED_GPIO_Port GPIOC
-
-/* USER CODE BEGIN Private defines */
-#define NUM_DEVICES				8	//1 slave board
-#define NUM_CELL_SERIES_GROUP	12	//1 slave board
-#define NUM_CELLS				NUM_DEVICES*NUM_CELL_SERIES_GROUP	//multiple slave board
-#define NUM_THERM_PER_MOD		12
-#define NUM_THERM_TOTAL			NUM_DEVICES*NUM_THERM_PER_MOD
-#define NUM_AUX_GROUP			6
-#define NUM_AUXES				NUM_DEVICES*NUM_AUX_GROUP
-#define LTC_DELAY				1000 //500ms update delay
-#define LED_HEARTBEAT_DELAY_MS	10  //500ms update delay
-#define BALANCE 0 //FALSE
-#define MAX_CELL_CAPACITY 3000
-#define MAX_BATTERY_CAPACITY NUM_DEVICES* MAX_CELL_CAPACITY
-/* USER CODE END Private defines */
 
 #ifdef __cplusplus
 }
