@@ -11,6 +11,8 @@
 //static uint8_t VOV_and_VUV = 0x00;
 //static uint8_t VOV = 0x00;
 //static int DCTO[4] = { 1, 1, 1, 1 };
+uint8_t balance = 0;			//FALSE
+
 static uint8_t config[8][6] =
 		{ { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00,
 				0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8,
@@ -24,27 +26,27 @@ static uint8_t defaultConfig[8][6] = { { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, {
 		0x00, 0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8,
 		0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 } };
 
-//void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
-//    CAN_RxHeaderTypeDef rxHeader;
-//    uint8_t rxData[8];
-//
-//    // メッセージを受信
-//    if (HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &rxHeader, rxData) == HAL_OK) {
-//        // メッセージIDでフィルタリング
-//        if (rxHeader.StdId == 0x100) {  // CAN message from charger
-//            uint8_t balanceCommand = rxData[0]; // see the data bit on CAN
-//
-//            // change the BALANCE flag to enable balance
-//            if (balanceCommand == 0x01) {
-//                BALANCE = 1;  // enable balance
-//                printf("BALANCE enabled by CAN message.\n");
-//            } else if (balanceCommand == 0x00) {
-//                BALANCE = 0;  // disable balance
-//                printf("BALANCE disabled by CAN message.\n");
-//            }
-//        }
-//    }
-//}
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
+    CAN_RxHeaderTypeDef rxHeader;
+    uint8_t rxData[8];
+
+    // メッセージを受信
+    if (HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &rxHeader, rxData) == HAL_OK) {
+        // メッセージIDでフィルタリング
+        if (rxHeader.StdId == 0x100) {  // CAN message from charger
+            uint8_t balanceCommand = rxData[0]; // see the data bit on CAN
+
+            // change the BALANCE flag to enable balance
+            if (balanceCommand == 0x01) {
+            	balance = 1;  // enable balance
+                printf("BALANCE enabled by CAN message.\n");
+            } else if (balanceCommand == 0x00) {
+            	balance = 0;  // disable balance
+                printf("BALANCE disabled by CAN message.\n");
+            }
+        }
+    }
+}
 
 void Start_Balance(uint16_t *read_volt, uint8_t length, uint16_t lowest) {
 	Discharge_Algo(read_volt, NUM_DEVICES, lowest);
