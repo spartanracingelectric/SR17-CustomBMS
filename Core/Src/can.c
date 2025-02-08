@@ -133,7 +133,6 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
 /* USER CODE BEGIN 1 */
 
 //uint8_t CAN_TX_HALT = 1; //halt frag to send it to mailbox
-uint32_t timeout = HAL_GetTick();
 
 HAL_StatusTypeDef CAN_Start() {
 	return HAL_CAN_Start(&hcan1);
@@ -144,7 +143,7 @@ HAL_StatusTypeDef CAN_Activate() {
 }
 
 HAL_StatusTypeDef CAN_Send(CANMessage *ptr) {
-	  while (HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) == 0 && (HAL_GetTick() - timeout) > 50) {
+	  while (HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) == 0) {
 	    }
 	return HAL_CAN_AddTxMessage(&hcan1, &ptr->TxHeader, (uint8_t*) ptr->data,&ptr->TxMailbox);
 }
