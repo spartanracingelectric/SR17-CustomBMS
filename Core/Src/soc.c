@@ -12,25 +12,23 @@ uint16_t SOC_offsetFilter(uint16_t measuredX, uint16_t lowerX, uint16_t upperX,
                           uint16_t lowerY, uint16_t upperY);
 uint16_t SOC_searchCapacity(uint16_t **data, uint16_t voltage, uint16_t size);
 
-void SOC_getChargeData0C(uint16_t **output, int *datalen);
-void SOC_getChargeData25C(uint16_t **output, int *datalen);
-void SOC_getChargeData40C(uint16_t **output, int *datalen);
+void SOC_getChargeData0C(uint16_t ***output, int *datalen);
+void SOC_getChargeData25C(uint16_t ***output, int *datalen);
+void SOC_getChargeData40C(uint16_t ***output, int *datalen);
 
 void SOC_getInitialCharge(batteryModule *batt) {
     uint16_t voltage;
     for (int i = 0; i < NUM_DEVICES; ++i) {
         voltage += batt->average_volt[i];
     }
-    voltage = voltage / NUM_DEVICES;
+    voltage /= (NUM_DEVICES * 10);
 
-    uint16_t temperature;
+    int temperature;
     for (int i = 0; i < NUM_DEVICES; ++i) {
         temperature += batt->average_temp[i];
     }
-    temperature = temperature / NUM_DEVICES;
-    // C-rating = current draw / capacity
-    SOC_updateCurrent(batt);
-    float cRating = (float)batt->current / (MAX_SHUNT_VOLTAGE * 1000);
+    temperature /= NUM_DEVICES;
+
     uint16_t **data;
     int datalen;
     int tempCharts[] = {0, 25, 40};
@@ -44,23 +42,25 @@ void SOC_getInitialCharge(batteryModule *batt) {
         }
     }
 
+
     switch (selectTemp) {
         case 0:
-            SOC_getChargeData0C(data, &datalen);
+            SOC_getChargeData0C(&data, &datalen);
             break;
         case 25:
-            SOC_getChargeData25C(data, &datalen);
+            SOC_getChargeData25C(&data, &datalen);
             break;
         default:
-            SOC_getChargeData40C(data, &datalen);
+            SOC_getChargeData40C(&data, &datalen);
             break;
     }
 
-    batt->soc = SOC_searchCapacity(data, (uint16_t)(voltage / 10.0), datalen);
+    batt->soc = SOC_searchCapacity(data, voltage, datalen) * NUM_DEVICES;
 
     for (int i = 0; i < datalen; ++i) {
         free(data[i]);
     }
+
     free(data);
 }
 
@@ -92,8 +92,16 @@ uint16_t SOC_searchCapacity(uint16_t **data, uint16_t target, uint16_t size) {
     uint16_t left = 0;
     uint16_t right = size - 1;
 
+    if (target >= data[left][0]) {
+    	return data[left][1];
+    }
+
+    if (target <= data[right][0]) {
+    	return data[right][1];
+    }
+
     while (left <= right) {
-        uint16_t mid = left + (right - left) / 2;
+        int mid = left + (right - left) / 2;
 
         if (data[mid][0] == target) {
             return data[mid][1];
@@ -104,13 +112,17 @@ uint16_t SOC_searchCapacity(uint16_t **data, uint16_t target, uint16_t size) {
         } else {
             right = mid - 1;
         }
+
+        if (left == right - 1) {
+        	break;
+        }
     }
 
     return SOC_offsetFilter(target, data[right][0], data[left][0],
                             data[right][1], data[left][1]);
 }
 
-void SOC_getChargeData0C(uint16_t **output, int *datalen) {
+void SOC_getChargeData0C(uint16_t ***output, int *datalen) {
     *datalen = 202;
     uint16_t data[][2] = {
         {4172, 2924}, {4131, 2910}, {4119, 2896}, {4109, 2882}, {4100, 2868},
@@ -155,15 +167,15 @@ void SOC_getChargeData0C(uint16_t **output, int *datalen) {
         {2861, 198},  {2820, 184},  {2770, 170},  {2706, 156},  {2619, 142},
         {2517, 130},  {2500, 128}};
 
-    output = malloc(sizeof(uint16_t *) * (*datalen));
+    *output = malloc(sizeof(uint16_t *) * (*datalen));
     for (int i = 0; i < *datalen; ++i) {
-        output[i] = malloc(sizeof(uint16_t) * 2);
-        output[i][0] = data[i][0];
-        output[i][1] = data[i][1];
+        (*output)[i] = malloc(sizeof(uint16_t) * 2);
+        (*output)[i][0] = data[i][0];
+        (*output)[i][1] = data[i][1];
     }
 }
 
-void SOC_getChargeData25C(uint16_t **output, int *datalen) {
+void SOC_getChargeData25C(uint16_t ***output, int *datalen) {
     *datalen = 202;
     uint16_t data[][2] = {
         {4178, 2921}, {4156, 2907}, {4145, 2892}, {4134, 2878}, {4126, 2863},
@@ -208,15 +220,15 @@ void SOC_getChargeData25C(uint16_t **output, int *datalen) {
         {2792, 96},   {2751, 82},   {2703, 67},   {2647, 53},   {2596, 42},
         {2581, 39},   {2500, 24}};
 
-    output = malloc(sizeof(uint16_t *) * (*datalen));
+    *output = malloc(sizeof(uint16_t *) * (*datalen));
     for (int i = 0; i < *datalen; ++i) {
-        output[i] = malloc(sizeof(uint16_t) * 2);
-        output[i][0] = data[i][0];
-        output[i][1] = data[i][1];
+        (*output)[i] = malloc(sizeof(uint16_t) * 2);
+        (*output)[i][0] = data[i][0];
+        (*output)[i][1] = data[i][1];
     }
 }
 
-void SOC_getChargeData40C(uint16_t **output, int *datalen) {
+void SOC_getChargeData40C(uint16_t ***output, int *datalen) {
     *datalen = 202;
     uint16_t data[][2] = {
         {4182, 2920}, {4163, 2905}, {4151, 2891}, {4141, 2876}, {4132, 2862},
@@ -261,11 +273,11 @@ void SOC_getChargeData40C(uint16_t **output, int *datalen) {
         {2795, 97},   {2753, 83},   {2705, 68},   {2648, 54},   {2581, 39},
         {2506, 26},   {2500, 25}};
 
-    output = malloc(sizeof(uint16_t *) * (*datalen));
+    *output = malloc(sizeof(uint16_t *) * (*datalen));
     for (int i = 0; i < *datalen; ++i) {
-        output[i] = malloc(sizeof(uint16_t) * 2);
-        output[i][0] = data[i][0];
-        output[i][1] = data[i][1];
+        (*output)[i] = malloc(sizeof(uint16_t) * 2);
+        (*output)[i][0] = data[i][0];
+        (*output)[i][1] = data[i][1];
     }
 }
 

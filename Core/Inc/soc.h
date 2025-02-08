@@ -9,7 +9,7 @@
 #define V_REF 3.3f              // Reference voltage (V)
 
 #define MAX_SHUNT_AMPAGE 500000
-#define MAX_SHUNT_VOLTAGE 2.62f
+#define MAX_SHUNT_VOLTAGE 7.6732f
 
 void SOC_getInitialCharge(batteryModule *batt);
 void SOC_updateCharge(batteryModule *batt, uint32_t elapsed_time);
