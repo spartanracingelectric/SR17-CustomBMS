@@ -12,7 +12,7 @@
 #define DIVIDER_RATIO R1 / R2
 
 #define MAX_SHUNT_AMPAGE 500000
-#define MAX_SHUNT_VOLTAGE 3.3f
+#define MAX_SHUNT_VOLTAGE 7.6732f
 
 void ReadHVInput(batteryModule *batt);
 
