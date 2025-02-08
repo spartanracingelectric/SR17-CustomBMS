@@ -196,7 +196,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
-		printf("hello\n");
+//		printf("hello\n");
 			//reading cell voltages
 //			printf("volt start\n");
 			Read_Volt(modPackInfo.cell_volt);
