@@ -236,10 +236,10 @@ int main(void)
 			State_of_Charge(&modPackInfo,(HAL_GetTick() - prev_soc_time));
 			prev_soc_time = HAL_GetTick();
 			//getting the summary of all cells in the pack
-//			Cell_Voltage_Fault(	&modPackInfo, &safetyFaults, &safetyWarnings, &safetyStates,
-//								&high_volt_fault_lock, &low_volt_hysteresis, &low_volt_fault_lock,
-//								&cell_imbalance_hysteresis);
-//			Cell_Temperature_Fault(&modPackInfo, &safetyFaults, &safetyWarnings, &high_temp_hysteresis);
+			Cell_Voltage_Fault(	&modPackInfo, &safetyFaults, &safetyWarnings, &safetyStates,
+								&high_volt_fault_lock, &low_volt_hysteresis, &low_volt_fault_lock,
+								&cell_imbalance_hysteresis);
+			Cell_Temperature_Fault(&modPackInfo, &safetyFaults, &safetyWarnings, &high_temp_hysteresis);
 //			Passive balancing is called unless a fault has occurred
 //			if (safetyFaults == 0 && BALANCE
 //					&& ((modPackInfo.cell_volt_highest
