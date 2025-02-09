@@ -95,7 +95,7 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
     GpioTimePacket tp_led_heartbeat;
-    TimerPacket timerpacket_ltc;
+    TimerPacket cycleTimeCap;
 
     batteryModule modPackInfo;
 	CANMessage msg;
@@ -137,7 +137,7 @@ int main(void)
     // Start timer
     GpioTimePacket_Init(&tp_led_heartbeat, MCU_HEARTBEAT_LED_GPIO_Port,
                         MCU_HEARTBEAT_LED_Pin);
-    TimerPacket_Init(&timerpacket_ltc, LTC_DELAY);
+    TimerPacket_Init(&cycleTimeCap, CYCLETIME_CAP);
     // Pull SPI1 nCS HIGH (deselect)
     LTC_nCS_High();
 
@@ -176,7 +176,7 @@ int main(void)
 		tempindex = 8;
 		indexpause = NUM_THERM_PER_MOD;
 	}
-	if (indexpause == NUM_THERM_PER_MOD) {
+	else if (indexpause == NUM_THERM_PER_MOD) {
 		LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[1]);
 		LTC_STCOMM(2);
 		indexpause = 8;
@@ -185,7 +185,7 @@ int main(void)
 
 	ReadHVInput(&modPackInfo);
 
-//	uint32_t prev_soc_time = HAL_GetTick();
+	uint32_t prev_soc_time = HAL_GetTick();
 
   /* USER CODE END 2 */
 
@@ -196,6 +196,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
+		if (TimerPacket_FixedPulse(&cycleTimeCap)) {
 //		printf("hello\n");
 			//reading cell voltages
 //			printf("volt start\n");
@@ -230,11 +231,11 @@ int main(void)
 //				printf("Temp[%d]: %d\n",i, modPackInfo.cell_temp[i]);
 //			}
 //			printf("pack volt start\n");
-//			ReadHVInput(&modPackInfo);
-////			printf("pack volt end\n");
-//
-//			State_of_Charge(&modPackInfo,(HAL_GetTick() - prev_soc_time));
-//			prev_soc_time = HAL_GetTick();
+			ReadHVInput(&modPackInfo);
+//			printf("pack volt end\n");
+
+			State_of_Charge(&modPackInfo,(HAL_GetTick() - prev_soc_time));
+			prev_soc_time = HAL_GetTick();
 			//getting the summary of all cells in the pack
 			Cell_Voltage_Fault(	&modPackInfo, &safetyFaults, &safetyWarnings, &safetyStates,
 								&high_volt_fault_lock, &low_volt_hysteresis, &low_volt_fault_lock,
@@ -251,7 +252,7 @@ int main(void)
 //				End_Balance(&safetyFaults);
 //			}
 
-//			if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
+
 			//calling all CAN realated methods
 //			printf("CAN start\n");
 			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
@@ -261,7 +262,7 @@ int main(void)
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
 			CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
 //			printf("CAN end\n");
-//			}
+			}
 	}
   /* USER CODE END 3 */
 }
