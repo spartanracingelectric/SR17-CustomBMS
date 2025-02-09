@@ -185,7 +185,7 @@ int main(void)
 
 	ReadHVInput(&modPackInfo);
 
-	uint32_t prev_soc_time = HAL_GetTick();
+//	uint32_t prev_soc_time = HAL_GetTick();
 
   /* USER CODE END 2 */
 
@@ -230,11 +230,11 @@ int main(void)
 //				printf("Temp[%d]: %d\n",i, modPackInfo.cell_temp[i]);
 //			}
 //			printf("pack volt start\n");
-			ReadHVInput(&modPackInfo);
-//			printf("pack volt end\n");
-
-			State_of_Charge(&modPackInfo,(HAL_GetTick() - prev_soc_time));
-			prev_soc_time = HAL_GetTick();
+//			ReadHVInput(&modPackInfo);
+////			printf("pack volt end\n");
+//
+//			State_of_Charge(&modPackInfo,(HAL_GetTick() - prev_soc_time));
+//			prev_soc_time = HAL_GetTick();
 			//getting the summary of all cells in the pack
 			Cell_Voltage_Fault(	&modPackInfo, &safetyFaults, &safetyWarnings, &safetyStates,
 								&high_volt_fault_lock, &low_volt_hysteresis, &low_volt_fault_lock,
@@ -251,7 +251,7 @@ int main(void)
 //				End_Balance(&safetyFaults);
 //			}
 
-			if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
+//			if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
 			//calling all CAN realated methods
 //			printf("CAN start\n");
 			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
@@ -261,7 +261,7 @@ int main(void)
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
 			CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
 //			printf("CAN end\n");
-			}
+//			}
 	}
   /* USER CODE END 3 */
 }
