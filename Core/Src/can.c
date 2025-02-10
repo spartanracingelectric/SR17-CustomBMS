@@ -172,55 +172,42 @@ void Set_CAN_Id(CANMessage *ptr, uint32_t id) {
 }
 
 void CAN_Send_Voltage(CANMessage *ptr, uint16_t *read_volt) {
-	uint16_t CAN_ID = 0x630;
-	Set_CAN_Id(ptr, CAN_ID);
-	for (int i = 0; i < NUM_CELLS; i++) {
-		if (i % 4 == 0) {
-			uint8_t temp_volt = i;
-			ptr->data[0] = read_volt[temp_volt];
-			ptr->data[1] = read_volt[temp_volt] >> 8;
-			temp_volt += 1;
-			ptr->data[2] = read_volt[temp_volt];
-			ptr->data[3] = read_volt[temp_volt] >> 8;
-			temp_volt += 1;
-			ptr->data[4] = read_volt[temp_volt];
-			ptr->data[5] = read_volt[temp_volt] >> 8;
-			temp_volt += 1;
-			ptr->data[6] = read_volt[temp_volt];
-			ptr->data[7] = read_volt[temp_volt] >> 8;
-		}
-		if (i > 0 && i % 4 == 0) {
-			CAN_ID = CAN_ID + 0x01;
-			Set_CAN_Id(ptr, CAN_ID);
-		}
-		CAN_Send(ptr);
-//		printf("voltage\n");
-	}
+    uint16_t CAN_ID = 0x630;
+    Set_CAN_Id(ptr, CAN_ID);
+
+    for (int i = 0; i < NUM_CELLS; i += 4) {  //pack every 4 cell group in 1 CAN message
+        ptr->data[0] = read_volt[i] & 0xFF; 			//To ensure the data type is uint8_t, use & 0xFF
+        ptr->data[1] = (read_volt[i] >> 8) & 0xFF;
+        ptr->data[2] = read_volt[i + 1] & 0xFF;
+        ptr->data[3] = (read_volt[i + 1] >> 8) & 0xFF;
+        ptr->data[4] = read_volt[i + 2] & 0xFF;
+        ptr->data[5] = (read_volt[i + 2] >> 8) & 0xFF;
+        ptr->data[6] = read_volt[i + 3] & 0xFF;
+        ptr->data[7] = (read_volt[i + 3] >> 8) & 0xFF;
+
+        CAN_Send(ptr);
+
+        CAN_ID++;
+        Set_CAN_Id(ptr, CAN_ID);
+    }
 }
 
 void CAN_Send_Temperature(CANMessage *ptr, uint16_t *read_temp) {
 	uint16_t CAN_ID = 0x680;
 	Set_CAN_Id(ptr, CAN_ID);
-	for (uint8_t i = 0; i < NUM_THERM_TOTAL; i++) {
-		if (i % 4 == 0) {
-			uint8_t temp_volt = i;
-			ptr->data[0] = read_temp[temp_volt];
-			ptr->data[1] = read_temp[temp_volt] >> 8;
-			temp_volt += 1;
-			ptr->data[2] = read_temp[temp_volt];
-			ptr->data[3] = read_temp[temp_volt] >> 8;
-			temp_volt += 1;
-			ptr->data[4] = read_temp[temp_volt];
-			ptr->data[5] = read_temp[temp_volt] >> 8;
-			temp_volt += 1;
-			ptr->data[6] = read_temp[temp_volt];
-			ptr->data[7] = read_temp[temp_volt] >> 8;
-		}
-		if (i > 0 && i % 4 == 0) {
-			CAN_ID = CAN_ID + 0x01;
-			Set_CAN_Id(ptr, CAN_ID);
-		}
-	CAN_Send(ptr);
+	for (int i = 0; i < NUM_THERM_TOTAL; i += 4) {
+		ptr->data[0] = read_temp[i] & 0xFF;
+		ptr->data[1] = (read_temp[i] >> 8) & 0xFF;
+		ptr->data[2] = read_temp[i + 1] & 0xFF;
+		ptr->data[3] = (read_temp[i + 1] >> 8) & 0xFF;
+		ptr->data[4] = read_temp[i + 2] & 0xFF;
+		ptr->data[5] = (read_temp[i + 2] >> 8) & 0xFF;
+		ptr->data[6] = read_temp[i + 3] & 0xFF;
+		ptr->data[7] = (read_temp[i + 3] >> 8) & 0xFF;
+		CAN_Send(ptr);
+
+		CAN_ID++;
+		Set_CAN_Id(ptr, CAN_ID);
 //	printf("Temperature\n");
 	}
 }
@@ -228,7 +215,6 @@ void CAN_Send_Temperature(CANMessage *ptr, uint16_t *read_temp) {
 void CAN_Send_Cell_Summary(CANMessage *ptr, struct batteryModule *batt) {
 	uint16_t CAN_ID = 0x622;
 	Set_CAN_Id(ptr, CAN_ID);
-
 	ptr->data[0] = batt->cell_volt_highest;
 	ptr->data[1] = (batt->cell_volt_highest) >> 8;
 	ptr->data[2] = batt->cell_volt_lowest;
@@ -241,8 +227,7 @@ void CAN_Send_Cell_Summary(CANMessage *ptr, struct batteryModule *batt) {
 //	printf("Summary\n");
 }
 
-void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_t *faults,
-		uint8_t *warnings, uint8_t *states) {
+void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_t *faults, uint8_t *warnings, uint8_t *states) {
 	uint16_t CAN_ID = 0x600;
 	Set_CAN_Id(ptr, CAN_ID);
 	ptr->data[0] = *faults;
