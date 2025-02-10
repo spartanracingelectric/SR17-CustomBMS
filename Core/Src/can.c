@@ -215,14 +215,14 @@ void CAN_Send_Temperature(CANMessage *ptr, uint16_t *read_temp) {
 void CAN_Send_Cell_Summary(CANMessage *ptr, struct batteryModule *batt) {
 	uint16_t CAN_ID = 0x622;
 	Set_CAN_Id(ptr, CAN_ID);
-	ptr->data[0] = batt->cell_volt_highest;
-	ptr->data[1] = (batt->cell_volt_highest) >> 8;
-	ptr->data[2] = batt->cell_volt_lowest;
-	ptr->data[3] = (batt->cell_volt_lowest) >> 8;
+	ptr->data[0] = batt->cell_volt_highest & 0xFF;
+	ptr->data[1] = (batt->cell_volt_highest >> 8) & 0xFF;
+	ptr->data[2] = batt->cell_volt_lowest & 0xFF;
+	ptr->data[3] = (batt->cell_volt_lowest >> 8) & 0xFF;
 	ptr->data[4] = batt->cell_temp_highest;
-	ptr->data[5] = (batt->cell_temp_highest) >> 8;
-	ptr->data[6] = batt->cell_temp_lowest;
-	ptr->data[7] = (batt->cell_temp_lowest) >> 8;
+	ptr->data[5] = (batt->cell_temp_highest >> 8) & 0xFF;
+	ptr->data[6] = batt->cell_temp_lowest & 0xFF;
+	ptr->data[7] = (batt->cell_temp_lowest >> 8) & 0xFF;
 	CAN_Send(ptr);
 //	printf("Summary\n");
 }
