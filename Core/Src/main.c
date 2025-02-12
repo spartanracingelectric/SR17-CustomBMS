@@ -103,6 +103,7 @@ int main(void)
 	uint8_t safetyWarnings = 0;
 //	uint8_t moduleCounts = 0;
 	uint8_t safetyStates = 0;
+	uint32_t prev_soc_time = HAL_GetTick();
 
     modPackInfo.soc = MAX_BATTERY_CAPACITY;
 
@@ -160,13 +161,7 @@ int main(void)
     Read_Volt(modPackInfo.cell_volt);
 
 	//reading cell temperatures
-//	for (uint8_t i = tempindex; i < indexpause; i++) {
-//		Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
-//	}
-//	LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[0]);
-//	LTC_STCOMM(2);
-
-	for (uint8_t i = tempindex; i < indexpause; i++) {
+    for (uint8_t i = tempindex; i < indexpause; i++) {
 		Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
 //				printf(" Cell: %d, Temp: %d\n", i, modPackInfo.cell_temp[i]);
 	}
@@ -175,17 +170,32 @@ int main(void)
 		LTC_STCOMM(2);
 		tempindex = 8;
 		indexpause = NUM_THERM_PER_MOD;
+//				HAL_Delay(1); //this delay is for stablize mux
 	}
 	else if (indexpause == NUM_THERM_PER_MOD) {
 		LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[1]);
 		LTC_STCOMM(2);
 		indexpause = 8;
 		tempindex = 0;
+//				HAL_Delay(1); //this delay is for stablize mux
 	}
+
+	State_of_Charge(&modPackInfo,(HAL_GetTick() - prev_soc_time));
+	prev_soc_time = HAL_GetTick();
+	//getting the summary of all cells in the pack
+	Cell_Voltage_Fault(	&modPackInfo, &safetyFaults, &safetyWarnings, &safetyStates,
+						&high_volt_fault_lock, &low_volt_hysteresis, &low_volt_fault_lock,
+						&cell_imbalance_hysteresis);
+	Cell_Temperature_Fault(&modPackInfo, &safetyFaults, &safetyWarnings, &high_temp_hysteresis);
 
 	ReadHVInput(&modPackInfo);
 
-	uint32_t prev_soc_time = HAL_GetTick();
+	CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
+						&safetyWarnings, &safetyStates);
+	CAN_Send_Cell_Summary(&msg, &modPackInfo);
+	CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
+	CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
+	CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
 
   /* USER CODE END 2 */
 
@@ -253,6 +263,7 @@ int main(void)
 //			}
 
 
+//			if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
 			//calling all CAN realated methods
 //			printf("CAN start\n");
 			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
@@ -262,8 +273,9 @@ int main(void)
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
 			CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
 //			printf("CAN end\n");
-			}
+//			}
 	}
+    }
   /* USER CODE END 3 */
 }
 
