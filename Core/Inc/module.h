@@ -15,6 +15,19 @@
 void Read_Volt(uint16_t *read_volt);
 void Get_Actual_Temps(uint8_t dev_idx, uint8_t tempindex, uint16_t *actual_temp,
 		uint16_t data);
+
 void Read_Temp(uint8_t tempindex, uint16_t *read_temp, uint16_t *read_auxreg);
+
+void Convert_Analog_To_Pressure(uint8_t dev_idx, uint16_t *pressure, uint16_t adc_data);
+
+void Atmos_Temp_To_Celsius(uint8_t dev_idx, uint16_t *pressure, uint16_t adc_data);
+
+void ADC_To_Humidity(uint8_t dev_idx, uint16_t *humidity, uint16_t adc_data);
+
+void Read_Pressure(batteryModule *batt);
+
+void Read_Atmos_Temp(batteryModule *batt);
+
+void Read_Humidity(batteryModule *batt);
 
 #endif /* INC_MODULE_H_ */

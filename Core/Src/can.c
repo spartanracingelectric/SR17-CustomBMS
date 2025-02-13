@@ -227,7 +227,7 @@ void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_
 	CAN_Send(ptr);
 //	printf("Faults\n");
 }
-
+/*
 void CAN_Send_SOC(struct CANMessage *ptr, batteryModule *batt,
                   uint16_t max_capacity) {
     uint16_t CAN_ID = 0x621;
@@ -243,5 +243,18 @@ void CAN_Send_SOC(struct CANMessage *ptr, batteryModule *batt,
     ptr->data[5] = batt->current >> 16;
     ptr->data[6] = batt->current >> 24;
     CAN_Send(ptr);
+}
+*/
+void CAN_Send_Sensor(struct CANMessage *ptr, batteryModule *batt) {
+    uint16_t CAN_ID = 0x602;
+	Set_CAN_Id(ptr, CAN_ID);
+
+	ptr->data[0] = batt->avg_pressure;
+	ptr->data[1] = batt->avg_pressure >> 8;
+	ptr->data[2] = batt->avg_atmos_temp;
+	ptr->data[3] = batt->avg_atmos_temp >> 8;
+	ptr->data[4] = batt->avg_humidity;
+	ptr->data[5] = batt->avg_humidity >> 8;
+	CAN_Send(ptr);
 }
 /* USER CODE END 1 */

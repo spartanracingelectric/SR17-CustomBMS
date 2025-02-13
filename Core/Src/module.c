@@ -11,7 +11,7 @@
 static const float invNominalTemp = 1.0f / (ntcNominalTemp + 273.15f);
 static const float invBetaFactor = 1.0f / ntcBetaFactor;
 
-static uint8_t BMS_THERM[][6] = {{ 0x69, 0x28, 0x0F, 0xF9, 0x7F, 0xF9 }, { 0x69, 0x28, 0x0F, 0xE9, 0x7F, 0xF9 },
+static uint8_t BMS_MUX[][6] = {{ 0x69, 0x28, 0x0F, 0xF9, 0x7F, 0xF9 }, { 0x69, 0x28, 0x0F, 0xE9, 0x7F, 0xF9 },
 								 { 0x69, 0x28, 0x0F, 0xD9, 0x7F, 0xF9 }, { 0x69, 0x28, 0x0F, 0xC9, 0x7F, 0xF9 },
 								 { 0x69, 0x28, 0x0F, 0xB9, 0x7F, 0xF9 }, { 0x69, 0x28, 0x0F, 0xA9, 0x7F, 0xF9 },
 								 { 0x69, 0x28, 0x0F, 0x99, 0x7F, 0xF9 }, { 0x69, 0x28, 0x0F, 0x89, 0x7F, 0xF9 },
@@ -19,6 +19,59 @@ static uint8_t BMS_THERM[][6] = {{ 0x69, 0x28, 0x0F, 0xF9, 0x7F, 0xF9 }, { 0x69,
 								 { 0x69, 0x08, 0x0F, 0xD9, 0x7F, 0xF9 }, { 0x69, 0x08, 0x0F, 0xC9, 0x7F, 0xF9 },
 							 	 { 0x69, 0x08, 0x0F, 0xB9, 0x7F, 0xF9 }, { 0x69, 0x08, 0x0F, 0xA9, 0x7F, 0xF9 },
 								 { 0x69, 0x08, 0x0F, 0x99, 0x7F, 0xF9 }, { 0x69, 0x08, 0x0F, 0x89, 0x7F, 0xF9 } };
+
+void ADC_To_Pressure(uint8_t dev_idx, uint16_t *pressure, uint16_t adc_data) {
+    float voltage = adc_data * (3.0 / 65535.0);  // convert the adc value based on Vref
+
+    float pressure_value = (voltage - 0.5) * (100.0 / 4.0);  //Calculate pressure
+
+    pressure[dev_idx] = (uint16_t)(pressure_value * 10);  // 圧力値を整数に変換
+}
+
+void Atmos_Temp_To_Celsius(uint8_t dev_idx, uint16_t *read_atmos_temp, uint16_t adc_data) {
+    float voltage = adc_data * (3.0 / 65535.0);  // convert the adc value based on Vref
+
+    float temperature_value = (voltage - 0.5) * (100.0 / 4.0);  //Calculate pressure
+
+    read_atmos_temp[dev_idx] = (uint16_t)(temperature_value * 10);  // 圧力値を整数に変換
+}
+
+void Get_AVG_Atmos_Temp(batteryModule *batt){
+	float avg_temp = 0;
+	for(int i = 0; i < NUM_DEVICES; i++){
+		avg_temp += batt->atmos_temp[i];
+		avg_temp /= NUM_DEVICES;
+	}
+
+	batt->avg_atmos_temp = avg_temp;
+}
+
+void ADC_To_Humidity(uint8_t dev_idx, uint16_t *humidity, uint16_t adc_data) {
+    float voltage = adc_data * (3.0 / 65535.0);  // convert the adc value based on Vref
+
+    float humidity_value = (-12.5 + 125.0 * (voltage / 3.0));  //Calculate pressure
+
+    humidity[dev_idx] = (uint16_t)(humidity_value * 10);  // 圧力値を整数に変換
+}
+
+void Get_AVG_Pressure(batteryModule *batt){
+	float avg_pressure = 0;
+	for(int i = 0; i < NUM_DEVICES; i++){
+		avg_pressure += batt->pressure[i];
+		avg_pressure /= NUM_DEVICES;
+	}
+
+	batt->avg_pressure= avg_pressure;
+}
+void Get_AVG_Humidity(batteryModule *batt){
+	float avg_humidity = 0;
+	for(int i = 0; i < NUM_DEVICES; i++){
+		avg_humidity += batt->humidity[i];
+		avg_humidity /= NUM_DEVICES;
+	}
+
+	batt->avg_humidity = avg_humidity;
+}
 
 void Get_Actual_Temps(uint8_t dev_idx, uint8_t tempindex, uint16_t *actual_temp, uint16_t data) {
     if (data == 0) {
@@ -49,12 +102,12 @@ void Read_Volt(uint16_t *read_volt) {
 
 void Read_Temp(uint8_t tempindex, uint16_t *read_temp, uint16_t *read_auxreg) {
 //	printf("Temperature read start\n");
-	LTC_WRCOMM(NUM_DEVICES, BMS_THERM[tempindex]);
+	LTC_WRCOMM(NUM_DEVICES, BMS_MUX[tempindex]);
 	LTC_STCOMM(2);
 	//end sending to mux to read temperatures
 	LTC_ADAX(MD_FAST, 1); //ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
 	HAL_Delay(FAST_DELAY); //FAST_DELAY, NORMAL_DELAY, FILTERD_DELAY;
-	if (!Read_Cell_Temps((uint16_t*) read_auxreg)) // Set to read back all aux registers
+	if (!Read_GPIO((uint16_t*) read_auxreg)) // Set to read back all aux registers
 			{
 		for (uint8_t dev_idx = 0; dev_idx < NUM_DEVICES; dev_idx++) {
 			//Wakeup_Idle();
@@ -67,3 +120,59 @@ void Read_Temp(uint8_t tempindex, uint16_t *read_temp, uint16_t *read_auxreg) {
 	}
 //	printf("Temperature read end\n");
 }
+
+
+void Read_Pressure(batteryModule *batt) {
+    LTC_WRCOMM(NUM_DEVICES, BMS_MUX[12]);
+    LTC_STCOMM(2);
+
+    LTC_ADAX(MD_NORMAL, 1); //ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
+    HAL_Delay(NORMAL_DELAY); //FAST_DELAY, NORMAL_DELAY, FILTERD_DELAY;
+
+    if (!Read_GPIO((uint16_t*) batt->read_auxreg)) {
+    	for (uint8_t dev_idx = 0; dev_idx < NUM_DEVICES; dev_idx++) {
+            uint16_t data = batt->read_auxreg[dev_idx * NUM_AUX_GROUP];
+            ADC_To_Pressure(dev_idx, batt->pressure, data);
+    	}
+    }
+
+    Get_AVG_Pressure(batt);
+}
+
+void Read_Atmos_Temp(batteryModule *batt) {
+    LTC_WRCOMM(NUM_DEVICES, BMS_MUX[14]);
+    LTC_STCOMM(2);
+
+    LTC_ADAX(MD_NORMAL, 1); //ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
+    HAL_Delay(NORMAL_DELAY); //FAST_DELAY, NORMAL_DELAY, FILTERD_DELAY;
+
+    if (!Read_GPIO((uint16_t*) batt->read_auxreg)) {
+    	for (uint8_t dev_idx = 0; dev_idx < NUM_DEVICES; dev_idx++) {
+            uint16_t data = batt->read_auxreg[dev_idx * NUM_AUX_GROUP];
+            Atmos_Temp_To_Celsius(dev_idx, batt->atmos_temp, data);
+    	}
+    }
+
+    Get_AVG_Atmos_Temp(batt);
+}
+
+void Read_Humidity(batteryModule *batt) {
+    LTC_WRCOMM(NUM_DEVICES, BMS_MUX[13]);
+    LTC_STCOMM(2);
+
+    LTC_ADAX(MD_NORMAL, 1); //ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
+    HAL_Delay(NORMAL_DELAY); //FAST_DELAY, NORMAL_DELAY, FILTERD_DELAY;
+
+    if (!Read_GPIO((uint16_t*) batt->read_auxreg)) {
+    	for (uint8_t dev_idx = 0; dev_idx < NUM_DEVICES; dev_idx++) {
+        uint16_t data = batt->read_auxreg[dev_idx * NUM_AUX_GROUP];
+        ADC_To_Humidity(dev_idx, batt->humidity, data);
+    	}
+    }
+
+    Get_AVG_Humidity(batt);
+}
+
+
+
+
