@@ -227,7 +227,7 @@ void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_
 	CAN_Send(ptr);
 //	printf("Faults\n");
 }
-/*
+
 void CAN_Send_SOC(struct CANMessage *ptr, batteryModule *batt,
                   uint16_t max_capacity) {
     uint16_t CAN_ID = 0x621;
@@ -244,7 +244,7 @@ void CAN_Send_SOC(struct CANMessage *ptr, batteryModule *batt,
     ptr->data[6] = batt->current >> 24;
     CAN_Send(ptr);
 }
-*/
+
 void CAN_Send_Sensor(struct CANMessage *ptr, batteryModule *batt) {
     uint16_t CAN_ID = 0x602;
 	Set_CAN_Id(ptr, CAN_ID);

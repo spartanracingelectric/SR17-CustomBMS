@@ -195,6 +195,7 @@ int main(void)
 	CAN_Send_Cell_Summary(&msg, &modPackInfo);
 	CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 	CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
+	//CAN_Send_Sensor(&msg, &modPackInfo);
 	CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
 
   /* USER CODE END 2 */
@@ -274,6 +275,7 @@ int main(void)
 			CAN_Send_Cell_Summary(&msg, &modPackInfo);
 			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
+			//CAN_Send_Sensor(&msg, &modPackInfo);
 			CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
 //			printf("CAN end\n");
 //			}
