@@ -25,13 +25,13 @@ void ADC_To_Pressure(uint8_t dev_idx, uint16_t *pressure, uint16_t adc_data) {
 
     float pressure_value = (voltage - 0.5) * (100.0 / 4.0);  //Calculate pressure
 
-    pressure[dev_idx] = (uint16_t)(pressure_value * 10);  // 圧力値を整数に変換
+    pressure[dev_idx] = (short)(pressure_value * 10);  // relative to atmospheric pressure
 }
 
 void Atmos_Temp_To_Celsius(uint8_t dev_idx, uint16_t *read_atmos_temp, uint16_t adc_data) {
     float voltage = adc_data * (3.0 / 65535.0);  // convert the adc value based on Vref
 
-    float temperature_value = (voltage - 0.5) * (100.0 / 4.0);  //Calculate pressure
+    float temperature_value = -66.875 + 218.75 * (voltage / 3.0);  //Calculate pressure
 
     read_atmos_temp[dev_idx] = (uint16_t)(temperature_value * 10);  // 圧力値を整数に変換
 }
@@ -46,12 +46,11 @@ void Get_AVG_Atmos_Temp(batteryModule *batt){
 	batt->avg_atmos_temp = avg_temp;
 }
 
-void ADC_To_Humidity(uint8_t dev_idx, uint16_t *humidity, uint16_t adc_data) {
-    float voltage = adc_data * (3.0 / 65535.0);  // convert the adc value based on Vref
-
+void ADC_To_Humidity(uint8_t dev_idx, uint16_t *humidity, uint16_t adcValue) {
+    float voltage = ((float)adcValue / 65535.0) * 3.0f;
     float humidity_value = (-12.5 + 125.0 * (voltage / 3.0));  //Calculate pressure
 
-    humidity[dev_idx] = (uint16_t)(humidity_value * 10);  // 圧力値を整数に変換
+    humidity[dev_idx] = (uint16_t)(humidity_value);  // 圧力値を整数に変換
 }
 
 void Get_AVG_Pressure(batteryModule *batt){
@@ -61,7 +60,7 @@ void Get_AVG_Pressure(batteryModule *batt){
 		avg_pressure /= NUM_DEVICES;
 	}
 
-	batt->avg_pressure= avg_pressure;
+	batt->avg_pressure = avg_pressure;
 }
 void Get_AVG_Humidity(batteryModule *batt){
 	float avg_humidity = 0;

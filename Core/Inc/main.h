@@ -59,8 +59,8 @@ typedef struct batteryModule {
 	uint16_t average_volt[NUM_DEVICES];
 	uint16_t average_temp[NUM_DEVICES];
 	uint16_t standerd_diviation;
-	uint16_t pressure[NUM_DEVICES];
-	uint16_t avg_pressure;
+	short pressure[NUM_DEVICES];
+	short avg_pressure;
 	uint16_t humidity[NUM_DEVICES];
 	uint16_t avg_humidity;
 	uint16_t atmos_temp[NUM_DEVICES];
