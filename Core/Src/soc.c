@@ -23,7 +23,7 @@ void SOC_getInitialCharge(batteryModule *batt) {
     }
     voltage /= (NUM_DEVICES * 10);
 
-    int temperature;
+    uint16_t temperature;
     for (int i = 0; i < NUM_DEVICES; ++i) {
         temperature += batt->average_temp[i];
     }
