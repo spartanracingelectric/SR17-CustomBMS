@@ -17,7 +17,7 @@ uint16_t SOC_getChargeData25C(uint16_t voltage);
 uint16_t SOC_getChargeData40C(uint16_t voltage);
 
 void SOC_getInitialCharge(batteryModule *batt) {
-    uint16_t voltage;
+    uint32_t voltage;
     for (int i = 0; i < NUM_CELLS; ++i) {
         voltage += batt->cell_volt[i];
     }
@@ -42,17 +42,15 @@ void SOC_getInitialCharge(batteryModule *batt) {
 
     switch (selectTemp) {
         case 0:
-            batt->soc = SOC_getChargeData0C(voltage);
+            batt->soc = SOC_getChargeData0C((uint16_t) voltage);
             break;
         case 25:
-            batt->soc = SOC_getChargeData25C(voltage);
+            batt->soc = SOC_getChargeData25C((uint16_t) voltage);
             break;
         default:
-            batt->soc = SOC_getChargeData40C(voltage);
+            batt->soc = SOC_getChargeData40C((uint16_t) voltage);
             break;
     }
-
-    printf("BATTERY SOC %i\n", voltage);
 }
 
 void SOC_updateCurrent(batteryModule *batt) {
