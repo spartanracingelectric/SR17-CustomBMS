@@ -82,11 +82,11 @@ void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 2 */
-static inline void SendFaultSignal() {
+void SendFaultSignal() {
     HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
 }
 
-static inline void ClearFaultSignal() {
+void ClearFaultSignal() {
     HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_RESET);
 }
 /* USER CODE END 2 */
