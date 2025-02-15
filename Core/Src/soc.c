@@ -18,22 +18,20 @@ uint16_t SOC_getChargeData40C(uint16_t voltage);
 
 void SOC_getInitialCharge(batteryModule *batt) {
     uint16_t voltage;
-    for (int i = 0; i < NUM_DEVICES; ++i) {
-        voltage += batt->average_volt[i];
+    for (int i = 0; i < NUM_CELLS; ++i) {
+        voltage += batt->cell_volt[i];
     }
     voltage /= (NUM_DEVICES * 10);
 
     uint16_t temperature;
-    for (int i = 0; i < NUM_DEVICES; ++i) {
-        temperature += batt->average_temp[i];
+    for (int i = 0; i < NUM_CELLS; ++i) {
+        temperature += batt->cell_temp[i];
     }
     temperature /= NUM_DEVICES;
 
-    uint16_t **data;
-    int datalen;
     int tempCharts[] = {0, 25, 40};
 
-    uint16_t minDiff = 100;
+    int minDiff = 100;
     int selectTemp;
     for (int i = 0; i < 3; ++i) {
         if (abs(temperature - tempCharts[i]) < minDiff) {
@@ -54,11 +52,7 @@ void SOC_getInitialCharge(batteryModule *batt) {
             break;
     }
 
-    for (int i = 0; i < datalen; ++i) {
-        free(data[i]);
-    }
-
-    free(data);
+    printf("BATTERY SOC %i\n", voltage);
 }
 
 void SOC_updateCurrent(batteryModule *batt) {
