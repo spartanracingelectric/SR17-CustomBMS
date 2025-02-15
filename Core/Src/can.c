@@ -242,7 +242,6 @@ void CAN_Send_Cell_Summary(CANMessage *ptr, struct batteryModule *batt) {
 }
 
 void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_t *faults, uint8_t *warnings) {
-	batt->cell_difference = (uint8_t)(batt->cell_volt_highest - batt->cell_volt_lowest);
 	uint16_t CAN_ID = 0x600;
 	Set_CAN_Id(ptr, CAN_ID);
 	ptr->data[0] = *faults;
