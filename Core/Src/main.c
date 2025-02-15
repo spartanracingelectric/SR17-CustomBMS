@@ -149,11 +149,7 @@ int main(void)
 	//initializing variables
 	uint8_t tempindex = 0;
 	uint8_t indexpause = 8;
-	uint8_t high_volt_fault_lock = 0;
-	uint8_t low_volt_hysteresis = 0;
-	uint8_t low_volt_fault_lock = 0;
-	uint8_t cell_imbalance_hysteresis = 0;
-	uint8_t high_temp_hysteresis = 0;
+
 
     // reading cell voltages
     Wakeup_Sleep();

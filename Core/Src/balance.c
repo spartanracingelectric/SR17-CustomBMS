@@ -39,10 +39,10 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
             // change the BALANCE flag to enable balance
             if (balanceCommand == 0x01) {
             	balance = 1;  // enable balance
-                printf("BALANCE enabled by CAN message.\n");
+//                printf("BALANCE enabled by CAN message.\n");
             } else if (balanceCommand == 0x00) {
             	balance = 0;  // disable balance
-                printf("BALANCE disabled by CAN message.\n");
+//                printf("BALANCE disabled by CAN message.\n");
             }
         }
     }
