@@ -77,24 +77,24 @@ void Cell_Blance_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warn
 		*warnings |= WARNING_BIT_IMBALANCE;
 	}
 	//cell volt imbalance fault
-	if ((batt->cell_difference >= CELL_VOLT_IMBALANCE_FAULT) && (cell_imbalance_hysteresis == 1)) {
-		*fault |= FAULT_BIT_IMBALANCE;
-		SendFaultSignal();
-	}
-	//reset cell volt imbalance fault
-	else if ((batt->cell_difference < FAULT_LOCK_MARGIN_IMBALANCE) && (cell_imbalance_hysteresis == 1)){
-		cell_imbalance_hysteresis = 0;
-		*warnings &= ~WARNING_BIT_IMBALANCE;
-		*fault &= ~FAULT_BIT_IMBALANCE;
-		ClearFaultSignal();
-	}
-	//cell volt imbalance fault(hysteresis)
-	if (batt->cell_difference >= CELL_VOLT_IMBALANCE_FAULT) {
-		cell_imbalance_hysteresis = 1;
-	}
-	else if (batt->cell_difference < CELL_VOLT_IMBALANCE_FAULT) {
-		cell_imbalance_hysteresis = 0;
-	}
+//	if ((batt->cell_difference >= CELL_VOLT_IMBALANCE_FAULT) && (cell_imbalance_hysteresis == 1)) {
+//		*fault |= FAULT_BIT_IMBALANCE;
+//		SendFaultSignal();
+//	}
+//	//reset cell volt imbalance fault
+//	else if ((batt->cell_difference < FAULT_LOCK_MARGIN_IMBALANCE) && (cell_imbalance_hysteresis == 1)){
+//		cell_imbalance_hysteresis = 0;
+//		*warnings &= ~WARNING_BIT_IMBALANCE;
+//		*fault &= ~FAULT_BIT_IMBALANCE;
+//		ClearFaultSignal();
+//	}
+//	//cell volt imbalance fault(hysteresis)
+//	if (batt->cell_difference >= CELL_VOLT_IMBALANCE_FAULT) {
+//		cell_imbalance_hysteresis = 1;
+//	}
+//	else if (batt->cell_difference < CELL_VOLT_IMBALANCE_FAULT) {
+//		cell_imbalance_hysteresis = 0;
+//	}
 }
 
 void Cell_Temperature_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings) {
