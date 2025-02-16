@@ -33,7 +33,7 @@ void Wakeup_Sleep(void) {
 }
 
 /* Read and store raw cell voltages at uint8_t 2d pointer */
-LTC_SPI_StatusTypeDef Read_Cell_Volt(uint16_t *read_voltages) {
+LTC_SPI_StatusTypeDef LTC_getCellVoltages(uint16_t *read_voltages) {
 	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
 	LTC_SPI_StatusTypeDef hal_ret;
 	const uint8_t ARR_SIZE_REG = NUM_DEVICES * REG_LEN;
@@ -87,7 +87,7 @@ LTC_SPI_StatusTypeDef Read_Cell_Volt(uint16_t *read_voltages) {
  * @param total_ic		total count of ic (daisy chain)
  * @param pwm			A two dimensional array of the configuration data that will be written
  */
-void LTC6811_WRPWM(uint8_t total_ic, uint8_t pwm) {
+void LTC_writePWM(uint8_t total_ic, uint8_t pwm) {
 	// NOTE currently chaging this method to only assign a specific PWM to all registers
 
 	// TODO change it back to relying on @param pwm for duty cycle assignment. 
@@ -132,7 +132,7 @@ void LTC6811_WRPWM(uint8_t total_ic, uint8_t pwm) {
 	LTC_nCS_High();
 }
 
-void LTC6811_WRCFG(uint8_t total_ic, //The number of ICs being written to
+void LTC_writeCFG(uint8_t total_ic, //The number of ICs being written to
 		uint8_t config[][6] //A two dimensional array of the configuration data that will be written
 		) {
 	const uint8_t BYTES_IN_REG = 6;
@@ -178,7 +178,7 @@ void LTC6811_WRCFG(uint8_t total_ic, //The number of ICs being written to
  * @param total_ic	The number of ICs being written to
  * @param comm[6]	A two dimensional array of the comm data that will be written
  */
-void LTC_WRCOMM(uint8_t total_ic, uint8_t comm[6]) {
+void LTC_SPI_writeCommunicationSetting(uint8_t total_ic, uint8_t comm[6]) {
 	const uint8_t BYTES_IN_REG = 6;
 	const uint8_t CMD_LEN = 4 + (8 * total_ic);
 	uint16_t comm_pec;
@@ -219,7 +219,7 @@ void LTC_WRCOMM(uint8_t total_ic, uint8_t comm[6]) {
 /**
  * Shifts data in COMM register out over ltc6811 SPI/I2C port
  */
-void LTC_STCOMM(uint8_t len) {
+void LTC_SPI_requestData(uint8_t len) {
 
 	uint8_t cmd[4];
 	uint16_t cmd_pec;
@@ -239,7 +239,7 @@ void LTC_STCOMM(uint8_t len) {
 	LTC_nCS_High();
 }
 
-LTC_SPI_StatusTypeDef Read_Cell_Temps(uint16_t *read_auxiliary) {
+LTC_SPI_StatusTypeDef LTC_readCellTemperatures(uint16_t *read_auxiliary) {
 	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
 	LTC_SPI_StatusTypeDef hal_ret;
 	const uint8_t ARR_SIZE_REG = NUM_DEVICES * REG_LEN;
@@ -293,7 +293,7 @@ LTC_SPI_StatusTypeDef Read_Cell_Temps(uint16_t *read_auxiliary) {
 /*
  Starts cell voltage conversion
  */
-void LTC_ADCV(uint8_t MD,  // ADC Mode
+void LTC_startADCVoltage(uint8_t MD,  // ADC Mode
 		uint8_t DCP, // Discharge Permit
 		uint8_t CH   // Cell Channels to be measured
 		) {
@@ -315,7 +315,7 @@ void LTC_ADCV(uint8_t MD,  // ADC Mode
 	LTC_nCS_High();
 }
 
-void LTC_ADAX(uint8_t MD, // ADC Mode
+void LTC_startADC_GPIO(uint8_t MD, // ADC Mode
 		uint8_t CHG // GPIO Channels to be measured)
 		) {
 	uint8_t cmd[4];
