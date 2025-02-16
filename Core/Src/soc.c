@@ -42,13 +42,13 @@ void SOC_getInitialCharge(batteryModule *batt) {
 
     switch (selectTemp) {
         case 0:
-            batt->soc = SOC_getChargeData0C((uint16_t) voltage);
+            batt->soc = SOC_getChargeData0C((uint16_t) voltage) * NUM_DEVICES;
             break;
         case 25:
-            batt->soc = SOC_getChargeData25C((uint16_t) voltage);
+            batt->soc = SOC_getChargeData25C((uint16_t) voltage) * NUM_DEVICES;
             break;
         default:
-            batt->soc = SOC_getChargeData40C((uint16_t) voltage);
+            batt->soc = SOC_getChargeData40C((uint16_t) voltage) * NUM_DEVICES;
             break;
     }
 }
