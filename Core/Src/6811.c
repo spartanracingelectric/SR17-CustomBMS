@@ -1,4 +1,6 @@
 #include "6811.h"
+#include "spi.h"
+#include "main.h"
 
 uint8_t wrpwm_buffer[4 + (8 * NUM_DEVICES)];
 uint8_t wrcfg_buffer[4 + (8 * NUM_DEVICES)];
@@ -341,12 +343,13 @@ void LTC_ADAX(uint8_t MD, // ADC Mode
 }
 
 int32_t LTC_POLLADC() {
-	uint32_t counter = 0;
+	uint32_t start_time = HAL_GetTick();
 	uint8_t finished = 0;
-	uint8_t current_time = 0;
+	uint8_t adc_status = 0xFF;	//initialize adc status
+	uint8_t dummy_tx = 0x00;	//we need to send this to give clock LTC6811 so it can send data
 	uint8_t cmd[4];
 	uint16_t cmd_pec;
-
+	//get ready for the PLADC command
 	cmd[0] = 0x07;
 	cmd[1] = 0x14;
 	cmd_pec = LTC_Pec15_Calc(2, cmd);
@@ -354,21 +357,29 @@ int32_t LTC_POLLADC() {
 	cmd[3] = (uint8_t) (cmd_pec);
 
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake. This command can be removed.
-
+	//Send PLADC command to LTC6811
 	LTC_nCS_Low();
 	HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
-
-	while ((counter < 200000) && (finished == 0)) {
-		current_time = HAL_GetTick();
-		if (current_time > 0) {
-			finished = 1;
-		} else {
-			counter = counter + 10;
-		}
-	}
 	LTC_nCS_High();
-	return (counter);
+	//Check if ADC is done
+	while (((HAL_GetTick() - start_time) < 210000)) {  // timeout at 210ms
+		LTC_nCS_Low();
+		HAL_SPI_Transmit(&hspi1, &dummy_tx, 1, 100);  //Send dummy byte and get adc status
+		HAL_SPI_Receive(&hspi1, &adc_status, 1, 100);
+		LTC_nCS_High();
+		if (adc_status != 0xFF) {  // if it's not 0xFF, finish adc
+			finished = 1;
+			break;
+		} else {
+			HAL_Delay(1);  //delay 1ms
+		}
+	    }
+
+	LTC_nCS_High();
+	return (finished ? (HAL_GetTick() - start_time) : 0);
 }
+
+
 
 /* Read and store raw cell voltages at uint8_t 2d pointer */
 int Calc_Pack_Voltage(uint16_t *read_voltages) {

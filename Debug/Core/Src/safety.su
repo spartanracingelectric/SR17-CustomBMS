@@ -1,3 +1,0 @@
-../Core/Src/safety.c:30:6:Cell_Summary_Voltage	32	static
-../Core/Src/safety.c:141:6:Cell_Summary_Temperature	32	static
-../Core/Src/safety.c:175:6:Module_Averages	32	static

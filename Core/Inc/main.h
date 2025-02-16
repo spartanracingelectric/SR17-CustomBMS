@@ -45,29 +45,35 @@ extern "C" {
 #define NUM_THERM_TOTAL			NUM_DEVICES*NUM_THERM_PER_MOD
 #define NUM_AUX_GROUP			6
 #define NUM_AUXES				NUM_DEVICES*NUM_AUX_GROUP
-#define LTC_DELAY				10 //500ms update delay
-#define LED_HEARTBEAT_DELAY_MS	10  //500ms update delay
-#define BALANCE 0 //FALSE
+#define CYCLETIME_CAP			100 //100ms update delay
+#define LED_HEARTBEAT_DELAY_MS	50  //10ms update delay
+#define BALANCE 				0 	//FALSE
+#define MAX_CELL_CAPACITY 		3000
+#define MAX_BATTERY_CAPACITY 	NUM_DEVICES* MAX_CELL_CAPACITY
 /* USER CODE END Private defines */
 
 typedef struct batteryModule {
 	uint16_t cell_volt[NUM_CELLS];
 	uint16_t cell_temp[NUM_THERM_TOTAL];
-	uint16_t module_averages[NUM_DEVICES];
+	uint16_t cell_temp_8bits[NUM_THERM_TOTAL];
+	uint16_t average_volt[NUM_DEVICES];
+	uint16_t average_temp[NUM_DEVICES];
+	uint16_t standerd_diviation;
 	uint16_t cell_volt_lowest;
 	uint16_t cell_volt_highest;
 	uint16_t cell_temp_lowest;
 	uint16_t cell_temp_highest;
 	uint32_t pack_voltage;
 	uint16_t read_auxreg[NUM_AUXES];
-
+    uint16_t soc;
+    uint32_t current;
 }batteryModule;
 
-struct CANMessage {
-	CAN_TxHeaderTypeDef TxHeader;
-	uint32_t TxMailbox;
-	uint8_t data[8];
-};
+typedef struct CANMessage{
+    CAN_TxHeaderTypeDef TxHeader;
+    uint32_t TxMailbox;
+    uint8_t data[8];
+} CANMessage;
 
 /* USER CODE END ET */
 
@@ -89,8 +95,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define MCU_USB_INT_Pin GPIO_PIN_0
-#define MCU_USB_INT_GPIO_Port GPIOA
+#define SHUNT_SIGNAL_Pin GPIO_PIN_3
+#define SHUNT_SIGNAL_GPIO_Port GPIOC
 #define LTC_nCS_Pin GPIO_PIN_4
 #define LTC_nCS_GPIO_Port GPIOA
 #define MCU_ADC_VSENSE_Pin GPIO_PIN_5
