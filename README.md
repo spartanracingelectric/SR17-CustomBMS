@@ -5,9 +5,11 @@
 To work on this project, install the following tools:
 
 1. **STM32CubeIDE**
-2. **STM32CubeProgrammer**
-3. **STM32CubeMX**
-4. **ST-LINK/V2**
+2. **BusMaster**
+3. **Peak CAN Driver**
+4. **ST-LINK/V2 Driver**
+5. **A Windows Laptop**
+6. **Git**
 
 Ensure all tools are properly set up before contributing.
 
@@ -16,6 +18,17 @@ Ensure all tools are properly set up before contributing.
 1. [Slave Battery Moniter IC LTC6811](https://www.analog.com/media/en/technical-documentation/data-sheets/ltc6811-1-6811-2.pdf)
 2. [Master Chip STM32F105](https://www.st.com/resource/en/datasheet/stm32f105r8.pdf)
 3. [Git Cheat Sheet](https://education.github.com/git-cheat-sheet-education.pdf)
+4. [Eclipse Terminal](https://marketplace.eclipse.org/free-tagging/terminal#:~:text=by%20Martin%20Oberhuber-,A%20fully%20working%20command%2Dline%20Terminal%20inside%20Eclipse.,Previous%20sessions%20are...)
+
+## Coding Conventions
+
+- Variables and functions should use `camelCase`
+- Functions names should follow the structure of `Component_functionAction()`
+  - ex: `CAN_sendSummary()`
+- Docstrings should be included for each function
+  - Details on parameter, return value, and description of function
+  - Add information on units when necessary
+    - ex: `millivolts`
 
 ## Pull Request (PR) Guidelines
 
@@ -35,7 +48,7 @@ Ensure all tools are properly set up before contributing.
 - Avoid PRs with **giant changes**
 
 ### Approval Process
-- PRs must be **approved by at least one designer** before merging.
+- PRs must be **approved by at least one designer** before merging, even for designers 😠. 
 
 ---
 
