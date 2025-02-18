@@ -1,44 +1,43 @@
-# SR-16 Battery Management System Repository
-<br/> A.k.a the AMS<br/>
+# SR-16 Custom BMS
 
-## Environment Setup/ Tools Needed
-- Install STM32CubeIDE
-- Install STM32CubeProgrammer
-- Install STM32CubeMX
-- ST-LINK/V2
+## Environment Setup / Tools Needed
 
-## Project Overview
-Note: Lots of the code is prewritten after setting up the project
-1. main.c and main.h
-2. 6811.c and 6811.h: contains the methods mostly written by analog devices
-3. balance.c and balance.h: conatins the cell balancing code
-4. can.c and can.h: contains the code to send CAN bus messages
-5. module.c and module.h: conatins the code to read voltages (Volt) and to read temperatures (Celsius)
-6. print.c and print.h: contains the methods for printing over serial
-7. safety.c and safety.h: conatins the code for cell summary, faults, warnings, and state
+To work on this project, install the following tools:
 
-The #defines are in the files listed below, and the picture show what can be modified
+1. **STM32CubeIDE**
+2. **STM32CubeProgrammer**
+3. **STM32CubeMX**
+4. **ST-LINK/V2**
 
-main.h:
+Ensure all tools are properly set up before contributing.
 
-![image](https://github.com/spartanracingelectric/BMS-SR15/assets/95559518/2c7bda48-9fde-4fd8-8149-28e496742c8e)
+## Resources
 
-6811.c: 
+1. [Slave Battery Moniter IC LTC6811](https://www.analog.com/media/en/technical-documentation/data-sheets/ltc6811-1-6811-2.pdf)
+2. [Master Chip STM32F105](https://www.st.com/resource/en/datasheet/stm32f105r8.pdf)
+3. [Git Cheat Sheet](https://education.github.com/git-cheat-sheet-education.pdf)
 
-![image](https://github.com/spartanracingelectric/BMS-SR15/assets/95559518/d18eaa4f-ec60-435e-8436-ded5282d4fb4)
+## Pull Request (PR) Guidelines
 
-module.c:
+### PR Titles
+- PR titles should be a **one-sentence overall description** of the PR.
+- If you can't fit an overall description in the PR title, the PR is likely too large and should be broken into smaller changes.
 
-![image](https://github.com/spartanracingelectric/BMS-SR15/assets/95559518/ff2355f2-a36c-4e8f-8915-326b2c3bf2f1)
+### PR Description
+- The description should be more **in-depth**, explaining:
+  - The purpose of the PR.
+  - The changes made.
+  - Any other relevant details. 
 
-safety.c:
+### PR Practices
+- After completing testing for a feature, **squash commits** before making a PR.
+- PRs should be **for a singular feature**.
+- Avoid PRs with **giant changes**
 
-![image](https://github.com/spartanracingelectric/BMS-SR15/assets/95559518/32291510-9fff-4c82-ae84-1914c4afdcc3)
+### Approval Process
+- PRs must be **approved by at least one designer** before merging.
 
-can.c: 
+---
 
-![image](https://github.com/spartanracingelectric/BMS-SR15/assets/95559518/39d6e180-5b10-44e5-a95f-db393b4798fa)
+Shoutout to ChatGPT for generating this README.
 
-
-## Resources 
-1. https://www.analog.com/media/en/technical-documentation/data-sheets/ltc6811-1-6811-2.pdf
