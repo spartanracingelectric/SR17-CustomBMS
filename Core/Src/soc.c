@@ -24,7 +24,7 @@ void SOC_getInitialCharge(batteryModule *batt) {
     voltage /= (NUM_DEVICES * 10);
 
     uint16_t temperature;
-    for (int i = 0; i < NUM_CELLS; ++i) {
+    for (int i = 0; i < NUM_THERM_TOTAL; ++i) {
         temperature += batt->cell_temp[i];
     }
     temperature /= NUM_DEVICES;
