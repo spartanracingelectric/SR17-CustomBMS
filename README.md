@@ -20,7 +20,7 @@ Ensure all tools are properly set up before contributing.
 3. [Git Cheat Sheet](https://education.github.com/git-cheat-sheet-education.pdf)
 4. [Eclipse Terminal](https://marketplace.eclipse.org/free-tagging/terminal#:~:text=by%20Martin%20Oberhuber-,A%20fully%20working%20command%2Dline%20Terminal%20inside%20Eclipse.,Previous%20sessions%20are...)
 
-## Resources
+## Notes
 
 Any updates to the DBF should also be reflected in the DBC. BusMaster has a convert tool for converting DBF to DBC.
 
