@@ -30,6 +30,8 @@ extern "C" {
 
 /* USER CODE BEGIN Includes */
 
+#include <stdint.h>
+
 /* USER CODE END Includes */
 
 extern ADC_HandleTypeDef hadc1;
@@ -37,6 +39,11 @@ extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc2;
 
 /* USER CODE BEGIN Private defines */
+#define VREFINT_CAL_ADDR 0x1FFFF7BA
+#define VREFINT_CAL (*((uint16_t*) VREFINT_CAL_ADDR))
+
+extern float adc1_ch15;
+extern float adc2_ch13;
 
 /* USER CODE END Private defines */
 
@@ -44,6 +51,8 @@ void MX_ADC1_Init(void);
 void MX_ADC2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+
+void ADC_Read_Channels(void);
 
 /* USER CODE END Prototypes */
 

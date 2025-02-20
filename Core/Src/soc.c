@@ -54,14 +54,7 @@ void SOC_getInitialCharge(batteryModule *batt) {
 }
 
 void SOC_updateCurrent(batteryModule *batt) {
-    uint32_t adcValue = 0;
-    HAL_ADC_Start(&hadc2);
-    if (HAL_ADC_PollForConversion(&hadc2, HAL_MAX_DELAY) == HAL_OK) {
-        adcValue = HAL_ADC_GetValue(&hadc2);
-    }
-    HAL_ADC_Stop(&hadc2);
-    float voltage = ((float)adcValue / ADC_RESOLUTION) * V_REF;
-    batt->current = (voltage / MAX_SHUNT_VOLTAGE) * MAX_SHUNT_AMPAGE;
+    batt->current = (adc2_ch13 / MAX_SHUNT_VOLTAGE) * MAX_SHUNT_AMPAGE;
 }
 
 void SOC_updateCharge(batteryModule *batt, uint32_t elapsed_time) {

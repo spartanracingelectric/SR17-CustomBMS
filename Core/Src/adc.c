@@ -21,7 +21,10 @@
 #include "adc.h"
 
 /* USER CODE BEGIN 0 */
+#include "stm32f1xx_ll_adc.h"
 
+float adc1_ch15;
+float adc2_ch13;
 /* USER CODE END 0 */
 
 ADC_HandleTypeDef hadc1;
@@ -57,13 +60,22 @@ void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
+    sConfig.Channel = ADC_CHANNEL_VREFINT;
+    sConfig.Rank = ADC_REGULAR_RANK_1;
+    sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+    if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+    {
+        Error_Handler();
+    }
+
   sConfig.Channel = ADC_CHANNEL_15;
-  sConfig.Rank = ADC_REGULAR_RANK_1;
+  sConfig.Rank = ADC_REGULAR_RANK_2;
   sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
   }
+
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */
@@ -111,7 +123,26 @@ void MX_ADC2_Init(void)
   /* USER CODE END ADC2_Init 2 */
 
 }
+/* USER CODE BEGIN */
+void ADC_Read_Channels(void) {
+    HAL_ADC_Start(&hadc1);
+    HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+    uint32_t vrefint_raw = HAL_ADC_GetValue(&hadc1);
+    uint32_t vdda = (VREFINT_CAL * 3300) / vrefint_raw;
+    
+    HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+    uint32_t adc1_ch15_raw = HAL_ADC_GetValue(&hadc1);
+    HAL_ADC_Stop(&hadc1);
 
+    HAL_ADC_Start(&hadc2);
+    HAL_ADC_PollForConversion(&hadc2, HAL_MAX_DELAY);
+    uint32_t adc2_ch13_raw = HAL_ADC_GetValue(&hadc2);
+    HAL_ADC_Stop(&hadc2);
+
+    adc1_ch15 = ((float) __LL_ADC_CALC_DATA_TO_VOLTAGE(vdda, adc1_ch15_raw, 0xFFF)) / 1000;
+    adc2_ch13 = ((float) __LL_ADC_CALC_DATA_TO_VOLTAGE(vdda, adc2_ch13_raw, 0xFFF)) / 1000;
+}
+/* USER CODE END */
 void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
 {
 
