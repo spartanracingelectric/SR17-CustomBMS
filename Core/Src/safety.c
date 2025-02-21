@@ -111,37 +111,23 @@ void Cell_Temperature_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t 
 			*warnings |= WARNING_BIT_HIGH_TEMP;
 		}
 		//highest cell temp fault
-<<<<<<< HEAD
+
 		if (batt->cell_temp_highest >= CELL_HIGH_TEMP_FAULT && *high_temp_hysteresis > 3) {
-=======
-		if (batt->cell_temp_highest >= CELL_HIGH_TEMP_FAULT && high_temp_hysteresis == 1) {
->>>>>>> 41d52a4 (added can sending function for balance status)
 			*fault |= FAULT_BIT_HIGH_TEMP;
 			SendFaultSignal();
 		}
 		//reset highest cell temp fault
-<<<<<<< HEAD
 		else if (batt->cell_temp_highest < (CELL_HIGH_TEMP_FAULT - FAULT_LOCK_MARGIN_HIGH_TEMP) && *high_temp_hysteresis > 0){
-=======
-		else if (batt->cell_temp_highest < (CELL_HIGH_TEMP_FAULT - FAULT_LOCK_MARGIN_HIGH_TEMP) && high_temp_hysteresis == 1){
->>>>>>> 41d52a4 (added can sending function for balance status)
 			*warnings &= ~WARNING_BIT_HIGH_TEMP;
 			*fault &= ~FAULT_BIT_HIGH_TEMP;
 			ClearFaultSignal();
 		}
 		//highest cell temp fault(hysteresis)
 		if (batt->cell_temp_highest >= CELL_HIGH_TEMP_FAULT) {
-<<<<<<< HEAD
 			*high_temp_hysteresis++;
 		}
 		else if (batt->cell_temp_highest < (CELL_HIGH_TEMP_FAULT - FAULT_LOCK_MARGIN_HIGH_TEMP)) {
 			*high_temp_hysteresis = 0;
-=======
-			high_temp_hysteresis = 1;
-		}
-		else if (batt->cell_temp_highest < CELL_HIGH_TEMP_FAULT) {
-			high_temp_hysteresis = 0;
->>>>>>> 41d52a4 (added can sending function for balance status)
 		}
 	}
 }

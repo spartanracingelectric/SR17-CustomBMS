@@ -103,13 +103,9 @@ int main(void)
 	uint8_t safetyFaults = 0;
 	uint8_t safetyWarnings = 0;
 //	uint8_t moduleCounts = 0;
-<<<<<<< HEAD
-	uint8_t safetyStates = 0;
 	uint32_t prev_soc_time = HAL_GetTick();
 
     modPackInfo.soc = MAX_BATTERY_CAPACITY;
-=======
->>>>>>> 41d52a4 (added can sending function for balance status)
 
   /* USER CODE END 1 */
 
@@ -254,7 +250,6 @@ int main(void)
 				Start_Balance(modPackInfo.cell_volt, modPackInfo.cell_volt_lowest, modPackInfo.balance_status);
 			}
 			End_Balance(&safetyFaults);
-
 
 //			if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
 			//calling all CAN realated methods
