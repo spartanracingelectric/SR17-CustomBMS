@@ -214,12 +214,17 @@ void CAN_Send_Cell_Summary(CANMessage *ptr, struct batteryModule *batt) {
 //	printf("Summary\n");
 }
 
+<<<<<<< HEAD
 void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_t *faults, uint8_t *warnings, uint8_t *states) {
+=======
+void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_t *faults, uint8_t *warnings) {
+	batt->cell_difference = (uint8_t)(batt->cell_volt_highest - batt->cell_volt_lowest);
+>>>>>>> 41d52a4 (added can sending function for balance status)
 	uint16_t CAN_ID = 0x600;
 	Set_CAN_Id(ptr, CAN_ID);
 	ptr->data[0] = *faults;
 	ptr->data[1] = *warnings;
-	ptr->data[2] = *states;
+	ptr->data[2] = batt->cell_difference;
 	ptr->data[3] = batt->pack_voltage;
 	ptr->data[4] = (batt->pack_voltage) >> 8;
 	ptr->data[5] = (batt->pack_voltage) >> 16;
@@ -243,5 +248,32 @@ void CAN_Send_SOC(struct CANMessage *ptr, batteryModule *batt,
     ptr->data[5] = batt->current >> 16;
     ptr->data[6] = batt->current >> 24;
     CAN_Send(ptr);
+}
+
+void CAN_Send_Balance_Status(struct CANMessage *ptr, uint16_t *balance_status){
+
+    uint16_t CAN_ID = 0x602;
+	Set_CAN_Id(ptr, CAN_ID);
+
+	ptr->data[0] = balance_status[0];
+	ptr->data[1] = balance_status[0] >> 8;
+	ptr->data[2] = balance_status[1];
+	ptr->data[3] = balance_status[1] >> 8;
+	ptr->data[4] = balance_status[2];
+	ptr->data[5] = balance_status[2] >> 8;
+	ptr->data[6] = balance_status[3];
+	ptr->data[7] = balance_status[3] >> 8;
+	CAN_Send(ptr);
+
+	ptr->data[0] = balance_status[4];
+	ptr->data[1] = balance_status[4] >> 8;
+	ptr->data[2] = balance_status[5];
+	ptr->data[3] = balance_status[5] >> 8;
+	ptr->data[4] = balance_status[6];
+	ptr->data[5] = balance_status[6] >> 8;
+	ptr->data[6] = balance_status[7];
+	ptr->data[7] = balance_status[7] >> 8;
+	CAN_ID++;
+	CAN_Send(ptr);
 }
 /* USER CODE END 1 */
