@@ -24,6 +24,10 @@
 #include "stm32f1xx_ll_adc.h"
 #include <stdint.h>
 
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc);
+void Start_ADC1_Next_Channel(void);
+void ADC_Read_Channels(void);
+
 volatile uint32_t vdda = 0;
 volatile float adc1_ch15 = 0;
 volatile float adc2_ch13 = 0;
@@ -173,14 +177,14 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
             Start_ADC1_Next_Channel(); // Start next conversion
         } else {
             adc1_ch15_raw = adc_value;
-            adc1_ch15 = ((float) __LL_ADC_CALC_DATA_TO_VOLTAGE(vdda, adc1_ch15_raw, 0xFFF)) / 1000;
+            adc1_ch15 = ((float) __LL_ADC_CALC_DATA_TO_VOLTAGE(vdda, adc1_ch15_raw, 0xFFF));
             adc1_done = 1; // ADC1 is done
         }
     }
 
     if (hadc->Instance == ADC2) {
         adc2_ch13_raw = HAL_ADC_GetValue(hadc);
-        adc2_ch13 = ((float) __LL_ADC_CALC_DATA_TO_VOLTAGE(vdda, adc2_ch13_raw, 0xFFF)) / 1000;
+        adc2_ch13 = ((float) __LL_ADC_CALC_DATA_TO_VOLTAGE(vdda, adc2_ch13_raw, 0xFFF));
         adc2_done = 1; // ADC2 is done
     }
 }

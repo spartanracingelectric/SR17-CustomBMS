@@ -137,8 +137,8 @@ int main(void) {
     MX_CAN1_Init();
     MX_USART1_UART_Init();
     /* USER CODE BEGIN 2 */
-    HAL_ADCEx_Calibration_Start(&hadc1);
-    HAL_ADCEx_Calibration_Start(&hadc2);
+    //HAL_ADCEx_Calibration_Start(&hadc1);
+    //HAL_ADCEx_Calibration_Start(&hadc2);
     CAN_SettingsInit(&msg);  // Start CAN at 0x00
     // Start timer
     GpioTimePacket_Init(&tp_led_heartbeat, MCU_HEARTBEAT_LED_GPIO_Port,
