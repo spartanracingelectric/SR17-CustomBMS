@@ -22,9 +22,17 @@
 
 /* USER CODE BEGIN 0 */
 #include "stm32f1xx_ll_adc.h"
+#include <stdint.h>
 
-float adc1_ch15;
-float adc2_ch13;
+volatile uint32_t vdda = 0;
+volatile float adc1_ch15 = 0;
+volatile float adc2_ch13 = 0;
+volatile uint32_t vrefint_raw = 0;
+volatile uint32_t adc1_ch15_raw = 0;
+volatile uint32_t adc2_ch13_raw = 0;
+uint8_t current_channel = 0; // 0 = VREFINT, 1 = ADC1_CH15
+volatile uint8_t adc1_done = 0;
+volatile uint8_t adc2_done = 0;
 /* USER CODE END 0 */
 
 ADC_HandleTypeDef hadc1;
@@ -125,23 +133,58 @@ void MX_ADC2_Init(void)
 }
 /* USER CODE BEGIN */
 void ADC_Read_Channels(void) {
-    HAL_ADC_Start(&hadc1);
-    HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-    uint32_t vrefint_raw = HAL_ADC_GetValue(&hadc1);
-    uint32_t vdda = (VREFINT_CAL * 3300) / vrefint_raw;
-    
-    HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-    uint32_t adc1_ch15_raw = HAL_ADC_GetValue(&hadc1);
-    HAL_ADC_Stop(&hadc1);
+    adc1_done = 0;
+    adc2_done = 0;
+    current_channel = 0; // Start with VREFINT
 
-    HAL_ADC_Start(&hadc2);
-    HAL_ADC_PollForConversion(&hadc2, HAL_MAX_DELAY);
-    uint32_t adc2_ch13_raw = HAL_ADC_GetValue(&hadc2);
-    HAL_ADC_Stop(&hadc2);
+    // Start ADC1 first (it will cycle channels)
+    Start_ADC1_Next_Channel();
 
-    adc1_ch15 = ((float) __LL_ADC_CALC_DATA_TO_VOLTAGE(vdda, adc1_ch15_raw, 0xFFF)) / 1000;
-    adc2_ch13 = ((float) __LL_ADC_CALC_DATA_TO_VOLTAGE(vdda, adc2_ch13_raw, 0xFFF)) / 1000;
+    // Start ADC2 conversion
+    HAL_ADC_Start_IT(&hadc2);
 }
+
+// Function to switch and start ADC1 conversion
+void Start_ADC1_Next_Channel(void) {
+    ADC_ChannelConfTypeDef sConfig = {0};
+
+    if (current_channel == 0) {
+        sConfig.Channel = ADC_CHANNEL_VREFINT;
+    } else {
+        sConfig.Channel = ADC_CHANNEL_15;
+    }
+
+    sConfig.Rank = ADC_REGULAR_RANK_1;
+    sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+
+    HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+    HAL_ADC_Start_IT(&hadc1);
+}
+
+// ADC Conversion Complete Callback
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
+    if (hadc->Instance == ADC1) {
+        uint32_t adc_value = HAL_ADC_GetValue(hadc);
+
+        if (current_channel == 0) {
+            vrefint_raw = adc_value;
+            vdda = (VREFINT_CAL * 3300) / vrefint_raw;
+            current_channel = 1; // Switch to next channel
+            Start_ADC1_Next_Channel(); // Start next conversion
+        } else {
+            adc1_ch15_raw = adc_value;
+            adc1_ch15 = ((float) __LL_ADC_CALC_DATA_TO_VOLTAGE(vdda, adc1_ch15_raw, 0xFFF)) / 1000;
+            adc1_done = 1; // ADC1 is done
+        }
+    }
+
+    if (hadc->Instance == ADC2) {
+        adc2_ch13_raw = HAL_ADC_GetValue(hadc);
+        adc2_ch13 = ((float) __LL_ADC_CALC_DATA_TO_VOLTAGE(vdda, adc2_ch13_raw, 0xFFF)) / 1000;
+        adc2_done = 1; // ADC2 is done
+    }
+}
+
 /* USER CODE END */
 void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
 {

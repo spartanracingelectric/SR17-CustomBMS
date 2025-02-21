@@ -42,8 +42,8 @@ extern ADC_HandleTypeDef hadc2;
 #define VREFINT_CAL_ADDR 0x1FFFF7BA
 #define VREFINT_CAL (*((uint16_t*) VREFINT_CAL_ADDR))
 
-extern float adc1_ch15;
-extern float adc2_ch13;
+extern volatile float adc1_ch15;
+extern volatile float adc2_ch13;
 
 /* USER CODE END Private defines */
 
