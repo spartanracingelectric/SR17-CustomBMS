@@ -49,23 +49,23 @@ void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 			*warnings |= WARNING_BIT_LOW_VOLT;
 		}
 		//low cell volt fault
-		if(batt->cell_volt_lowest <= CELL_LOW_VOLT_FAULT && * low_volt_hysteresis > 3){
+		if(batt->cell_volt_lowest <= CELL_LOW_VOLT_FAULT && low_volt_hysteresis > 3){
 			*fault |= FAULT_BIT_LOW_VOLT;
 			SendFaultSignal();
 		}
 		//reset low cell volt fault
-		else if(batt->cell_volt_lowest > (CELL_LOW_VOLT_FAULT + FAULT_LOCK_MARGIN_LOW_VOLT) && *low_volt_hysteresis > 0){
-			*low_volt_hysteresis = 0;
+		else if(batt->cell_volt_lowest > (CELL_LOW_VOLT_FAULT + FAULT_LOCK_MARGIN_LOW_VOLT) && low_volt_hysteresis > 0){
+			low_volt_hysteresis = 0;
 			*warnings &= ~WARNING_BIT_LOW_VOLT;
 			*fault &= ~FAULT_BIT_LOW_VOLT;
 			ClearFaultSignal();
 		}
 		//low cell volt fault(hysteresis)
 		if (batt->cell_volt_lowest <= CELL_LOW_VOLT_FAULT) {
-			*low_volt_hysteresis++;//use hysteresis and spend 2 cycle to fault
+			low_volt_hysteresis++;//use hysteresis and spend 2 cycle to fault
 		}
 		else if (batt->cell_volt_lowest > (CELL_LOW_VOLT_FAULT + FAULT_LOCK_MARGIN_LOW_VOLT)) {
-			*low_volt_hysteresis = 0;//use hysteresis and spend 2 cycle to fault
+			low_volt_hysteresis = 0;//use hysteresis and spend 2 cycle to fault
 		}
 	}
 }
@@ -112,22 +112,22 @@ void Cell_Temperature_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t 
 		}
 		//highest cell temp fault
 
-		if (batt->cell_temp_highest >= CELL_HIGH_TEMP_FAULT && *high_temp_hysteresis > 3) {
+		if (batt->cell_temp_highest >= CELL_HIGH_TEMP_FAULT && high_temp_hysteresis > 3) {
 			*fault |= FAULT_BIT_HIGH_TEMP;
 			SendFaultSignal();
 		}
 		//reset highest cell temp fault
-		else if (batt->cell_temp_highest < (CELL_HIGH_TEMP_FAULT - FAULT_LOCK_MARGIN_HIGH_TEMP) && *high_temp_hysteresis > 0){
+		else if (batt->cell_temp_highest < (CELL_HIGH_TEMP_FAULT - FAULT_LOCK_MARGIN_HIGH_TEMP) && high_temp_hysteresis > 0){
 			*warnings &= ~WARNING_BIT_HIGH_TEMP;
 			*fault &= ~FAULT_BIT_HIGH_TEMP;
 			ClearFaultSignal();
 		}
 		//highest cell temp fault(hysteresis)
 		if (batt->cell_temp_highest >= CELL_HIGH_TEMP_FAULT) {
-			*high_temp_hysteresis++;
+			high_temp_hysteresis++;
 		}
 		else if (batt->cell_temp_highest < (CELL_HIGH_TEMP_FAULT - FAULT_LOCK_MARGIN_HIGH_TEMP)) {
-			*high_temp_hysteresis = 0;
+			high_temp_hysteresis = 0;
 		}
 	}
 }

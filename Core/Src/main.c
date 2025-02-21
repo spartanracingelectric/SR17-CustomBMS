@@ -179,15 +179,12 @@ int main(void)
 	State_of_Charge(&modPackInfo,(HAL_GetTick() - prev_soc_time));
 	prev_soc_time = HAL_GetTick();
 	//getting the summary of all cells in the pack
-	Cell_Voltage_Fault(	&modPackInfo, &safetyFaults, &safetyWarnings, &safetyStates,
-						&high_volt_fault_lock, &low_volt_hysteresis, &low_volt_fault_lock,
-						&cell_imbalance_hysteresis);
-	Cell_Temperature_Fault(&modPackInfo, &safetyFaults, &safetyWarnings, &high_temp_hysteresis);
+	Cell_Voltage_Fault(	&modPackInfo, &safetyFaults, &safetyWarnings);
+	Cell_Temperature_Fault(&modPackInfo, &safetyFaults, &safetyWarnings);
 
 	ReadHVInput(&modPackInfo);
 
-	CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
-						&safetyWarnings, &safetyStates);
+	CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,&safetyWarnings);
 	CAN_Send_Cell_Summary(&msg, &modPackInfo);
 	CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 	CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
