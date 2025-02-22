@@ -139,6 +139,8 @@ int main(void)
     GpioTimePacket_Init(&tp_led_heartbeat, MCU_HEARTBEAT_LED_GPIO_Port,
                         MCU_HEARTBEAT_LED_Pin);
     TimerPacket_Init(&cycleTimeCap, CYCLETIME_CAP);
+
+
     // Pull SPI1 nCS HIGH (deselect)
     LTC_nCS_High();
 
@@ -189,6 +191,8 @@ int main(void)
 	CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 	CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
 	CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
+	CAN_Send_Balance_Status(&msg, modPackInfo.balance_status);
+	Balance_init(modPackInfo.balance_status);
 
   /* USER CODE END 2 */
 
@@ -246,7 +250,9 @@ int main(void)
 			if(modPackInfo.cell_difference > BALANCE_THRESHOLD){
 				Start_Balance(modPackInfo.cell_volt, modPackInfo.cell_volt_lowest, modPackInfo.balance_status);
 			}
-			End_Balance(&safetyFaults);
+			else {
+				End_Balance(&safetyFaults, modPackInfo.balance_status);
+			}
 
 //			if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
 			//calling all CAN realated methods
@@ -256,6 +262,7 @@ int main(void)
 			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
 			CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
+			CAN_Send_Balance_Status(&msg, modPackInfo.balance_status);
 //			printf("CAN end\n");
 //			}
 	}

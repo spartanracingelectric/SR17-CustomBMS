@@ -251,25 +251,26 @@ void CAN_Send_Balance_Status(struct CANMessage *ptr, uint16_t *balance_status){
     uint16_t CAN_ID = 0x623;
 	Set_CAN_Id(ptr, CAN_ID);
 
-	ptr->data[0] = balance_status[0];
-	ptr->data[1] = balance_status[0] >> 8;
-	ptr->data[2] = balance_status[1];
-	ptr->data[3] = balance_status[1] >> 8;
-	ptr->data[4] = balance_status[2];
-	ptr->data[5] = balance_status[2] >> 8;
-	ptr->data[6] = balance_status[3];
-	ptr->data[7] = balance_status[3] >> 8;
+	ptr->data[0] = balance_status[0] & 0xFF;
+	ptr->data[1] = (balance_status[0] >> 8) & 0xFF;
+	ptr->data[2] = balance_status[1] & 0xFF;
+	ptr->data[3] = (balance_status[1] >> 8) & 0xFF;
+	ptr->data[4] = balance_status[2] & 0xFF;
+	ptr->data[5] = (balance_status[2] >> 8) & 0xFF;
+	ptr->data[6] = balance_status[3] & 0xFF;
+	ptr->data[7] = (balance_status[3] >> 8) & 0xFF;
 	CAN_Send(ptr);
-
-	ptr->data[0] = balance_status[4];
-	ptr->data[1] = balance_status[4] >> 8;
-	ptr->data[2] = balance_status[5];
-	ptr->data[3] = balance_status[5] >> 8;
-	ptr->data[4] = balance_status[6];
-	ptr->data[5] = balance_status[6] >> 8;
-	ptr->data[6] = balance_status[7];
-	ptr->data[7] = balance_status[7] >> 8;
 	CAN_ID++;
+
+	Set_CAN_Id(ptr, CAN_ID);
+	ptr->data[0] = balance_status[4] & 0xFF;
+	ptr->data[1] = (balance_status[4] >> 8) & 0xFF;
+	ptr->data[2] = balance_status[5] & 0xFF;
+	ptr->data[3] = (balance_status[5] >> 8) & 0xFF;
+	ptr->data[4] = balance_status[6] & 0xFF;
+	ptr->data[5] = (balance_status[6] >> 8) & 0xFF;
+	ptr->data[6] = balance_status[7] & 0xFF;
+	ptr->data[7] = (balance_status[7] >> 8) & 0xFF;
 	CAN_Send(ptr);
 }
 /* USER CODE END 1 */

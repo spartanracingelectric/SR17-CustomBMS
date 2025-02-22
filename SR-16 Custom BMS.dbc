@@ -324,16 +324,112 @@ BO_ 1538 BMS_State_of_Charge: 8 BMS
  SG_ BMS_Capacity : 0|16@1+ (1,0) [0|65535] "mAh" BMS
  
 BO_ 1571 BMS_Balance_Status_1: 8 BMS
- SG_ BMS_M1_Balance : 0|16@1+ (1,0) [0|65535] "" BMS
- SG_ BMS_M2_Balance : 16|16@1+ (1,0) [0|65535] "" BMS
- SG_ BMS_M3_Balance : 32|16@1+ (1,0) [0|65535] "" BMS
- SG_ BMS_M4_Balance : 48|16@1+ (1,0) [0|65535] "" BMS
+ SG_ BMS_M1_Cell_1 : 0|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M1_Cell_2 : 1|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M1_Cell_3 : 2|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M1_Cell_4 : 3|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M1_Cell_5 : 4|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M1_Cell_6 : 5|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M1_Cell_7 : 6|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M1_Cell_8 : 7|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M1_Cell_9 : 8|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M1_Cell_10 : 9|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M1_Cell_11 : 10|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M1_Cell_12 : 11|1@1+ (1,0) [0|1] "" BMS
+
+ SG_ BMS_M2_Cell_1 : 16|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M2_Cell_2 : 17|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M2_Cell_3 : 18|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M2_Cell_4 : 19|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M2_Cell_5 : 20|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M2_Cell_6 : 21|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M2_Cell_7 : 22|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M2_Cell_8 : 23|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M2_Cell_9 : 24|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M2_Cell_10 : 25|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M2_Cell_11 : 26|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M2_Cell_12 : 27|1@1+ (1,0) [0|1] "" BMS
+
+ SG_ BMS_M3_Cell_1 : 32|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M3_Cell_2 : 33|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M3_Cell_3 : 34|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M3_Cell_4 : 35|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M3_Cell_5 : 36|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M3_Cell_6 : 37|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M3_Cell_7 : 38|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M3_Cell_8 : 39|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M3_Cell_9 : 40|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M3_Cell_10 : 41|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M3_Cell_11 : 42|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M3_Cell_12 : 43|1@1+ (1,0) [0|1] "" BMS
+
+ SG_ BMS_M4_Cell_1 : 48|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M4_Cell_2 : 49|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M4_Cell_3 : 50|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M4_Cell_4 : 51|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M4_Cell_5 : 52|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M4_Cell_6 : 53|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M4_Cell_7 : 54|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M4_Cell_8 : 55|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M4_Cell_9 : 56|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M4_Cell_10 : 57|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M4_Cell_11 : 58|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M4_Cell_12 : 59|1@1+ (1,0) [0|1] "" BMS
+
 
 BO_ 1572 BMS_Balance_Status_2: 8 BMS
- SG_ BMS_M5_Balance : 0|16@1+ (1,0) [0|65535] "" BMS
- SG_ BMS_M6_Balance : 16|16@1+ (1,0) [0|65535] "" BMS
- SG_ BMS_M7_Balance : 32|16@1+ (1,0) [0|65535] "" BMS
- SG_ BMS_M8_Balance : 48|16@1+ (1,0) [0|65535] "" BMS
+ SG_ BMS_M5_Cell_1 : 0|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M5_Cell_2 : 1|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M5_Cell_3 : 2|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M5_Cell_4 : 3|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M5_Cell_5 : 4|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M5_Cell_6 : 5|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M5_Cell_7 : 6|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M5_Cell_8 : 7|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M5_Cell_9 : 8|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M5_Cell_10 : 9|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M5_Cell_11 : 10|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M5_Cell_12 : 11|1@1+ (1,0) [0|1] "" BMS
+
+ SG_ BMS_M6_Cell_1 : 16|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M6_Cell_2 : 17|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M6_Cell_3 : 18|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M6_Cell_4 : 19|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M6_Cell_5 : 20|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M6_Cell_6 : 21|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M6_Cell_7 : 22|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M6_Cell_8 : 23|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M6_Cell_9 : 24|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M6_Cell_10 : 25|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M6_Cell_11 : 26|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M6_Cell_12 : 27|1@1+ (1,0) [0|1] "" BMS
+
+ SG_ BMS_M7_Cell_1 : 32|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M7_Cell_2 : 33|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M7_Cell_3 : 34|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M7_Cell_4 : 35|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M7_Cell_5 : 36|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M7_Cell_6 : 37|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M7_Cell_7 : 38|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M7_Cell_8 : 39|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M7_Cell_9 : 40|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M7_Cell_10 : 41|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M7_Cell_11 : 42|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M7_Cell_12 : 43|1@1+ (1,0) [0|1] "" BMS
+
+ SG_ BMS_M8_Cell_1 : 48|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M8_Cell_2 : 49|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M8_Cell_3 : 50|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M8_Cell_4 : 51|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M8_Cell_5 : 52|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M8_Cell_6 : 53|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M8_Cell_7 : 54|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M8_Cell_8 : 55|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M8_Cell_9 : 56|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M8_Cell_10 : 57|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M8_Cell_11 : 58|1@1+ (1,0) [0|1] "" BMS
+ SG_ BMS_M8_Cell_12 : 59|1@1+ (1,0) [0|1] "" BMS
+
 
 
 

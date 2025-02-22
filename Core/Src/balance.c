@@ -12,7 +12,6 @@
 //static uint8_t VOV = 0x00;
 //static int DCTO[4] = { 1, 1, 1, 1 };
 uint8_t balance = 0;			//FALSE
-uint16_t balance_status[8];
 
 static uint8_t config[8][6] = { { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 },
 								{ 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 },
@@ -23,6 +22,10 @@ static uint8_t defaultConfig[8][6] = {{ 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 
 									  { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 },
 									  { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 },
 									  { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 } };
+
+void Balance_init(uint16_t *balanceStatus){
+	memset(balanceStatus, 0, 8 * sizeof(uint16_t));
+}
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
     CAN_RxHeaderTypeDef rxHeader;
@@ -47,14 +50,25 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
 }
 
 void Start_Balance(uint16_t *read_volt, uint16_t lowest, uint16_t *balanceStatus) {
-	Discharge_Algo(read_volt, lowest , balanceStatus);
-	Wakeup_Sleep();
-	LTC6811_WRCFG(NUM_DEVICES, config);
+	if(balance > 0){
+		Discharge_Algo(read_volt, lowest , balanceStatus);
+		Wakeup_Sleep();
+		LTC6811_WRCFG(NUM_DEVICES, config);
+	}
+	else{
+		return;
+	}
 }
 
-void End_Balance(uint8_t *faults) {
-	Wakeup_Sleep();
-	LTC6811_WRCFG(NUM_DEVICES, defaultConfig);
+void End_Balance(uint8_t *faults, uint16_t *balanceStatus) {
+	if(balance == 0){
+		Balance_reset(balanceStatus);
+		Wakeup_Sleep();
+		LTC6811_WRCFG(NUM_DEVICES, defaultConfig);
+	}
+	else{
+		return;
+	}
 }
 
 /**
@@ -74,8 +88,18 @@ void Discharge_Algo(uint16_t *read_volt, uint16_t lowest, uint16_t *balanceStatu
 				balanceStatus[dev_idx] |= (1 << cell_idx);
 			} else {
 				DCC[cell_idx] = 0;
+				balanceStatus[dev_idx] &= ~(1 << cell_idx); //set the bit to 0
 			}
 		}
+		Set_Cfg(dev_idx, (uint8_t*) DCC);
+	}
+}
+
+void Balance_reset(uint16_t *balanceStatus) {
+	uint8_t DCC[12] = {0};  //reset all DCC to 0
+	for (uint8_t dev_idx = 0; dev_idx < NUM_DEVICES; dev_idx++) {
+		balanceStatus[dev_idx] = 0;
+
 		Set_Cfg(dev_idx, (uint8_t*) DCC);
 	}
 }
