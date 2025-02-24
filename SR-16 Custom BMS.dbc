@@ -321,7 +321,3 @@ BO_ 1537 BMS_State_of_Charge: 8 Vector__XXX
  SG_ Current : 24|32@1+ (1,0) [0|4.29497e+009] "mA" Vector__XXX
  SG_ Percent : 16|8@1+ (1,0) [0|255] "Percent" Vector__XXX
  SG_ Capacity : 0|16@1+ (1,0) [0|65535] "mAh" Vector__XXX
-
-
-
-
