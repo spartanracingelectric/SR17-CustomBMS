@@ -60,10 +60,10 @@ typedef struct batteryModule {
 	uint16_t standerd_diviation;
 	uint16_t cell_volt_lowest;
 	uint16_t cell_volt_highest;
-	uint8_t cell_difference;
+	uint16_t cell_difference;
 	uint16_t cell_temp_lowest;
 	uint16_t cell_temp_highest;
-	uint32_t pack_voltage;
+	uint16_t pack_voltage;
 	uint16_t read_auxreg[NUM_AUXES];
     uint16_t soc;
     uint32_t current;

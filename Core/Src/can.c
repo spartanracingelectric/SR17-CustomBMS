@@ -215,16 +215,15 @@ void CAN_Send_Cell_Summary(CANMessage *ptr, struct batteryModule *batt) {
 }
 
 void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_t *faults, uint8_t *warnings) {
-	batt->cell_difference = (uint8_t)(batt->cell_volt_highest - batt->cell_volt_lowest);
+	batt->cell_difference = batt->cell_volt_highest - batt->cell_volt_lowest;
 	uint16_t CAN_ID = 0x600;
 	Set_CAN_Id(ptr, CAN_ID);
 	ptr->data[0] = *faults;
 	ptr->data[1] = *warnings;
-	ptr->data[2] = batt->cell_difference;
-	ptr->data[3] = batt->pack_voltage;
-	ptr->data[4] = (batt->pack_voltage) >> 8;
-	ptr->data[5] = (batt->pack_voltage) >> 16;
-	ptr->data[6] = (batt->pack_voltage) >> 24;
+	ptr->data[2] = batt->cell_difference & 0xFF;
+	ptr->data[3] = (batt->cell_difference >> 8) & 0xFF;
+	ptr->data[4] = batt->pack_voltage & 0xFF;
+	ptr->data[5] = (batt->pack_voltage >> 8) & 0xFF;
 	CAN_Send(ptr);
 //	printf("Faults\n");
 }
