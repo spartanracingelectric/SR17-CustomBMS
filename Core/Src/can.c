@@ -264,7 +264,11 @@ void CAN_Send_SOC(struct CANMessage *ptr, batteryModule *batt, uint16_t max_capa
 	ptr->data[0] = batt->soc;
 	ptr->data[1] = batt->soc >> 8;
 
+<<<<<<< HEAD
     uint8_t percent = (uint8_t)((float) batt->soc * 100 / (float) max_capacity);
+=======
+    uint8_t percent = (uint8_t)((float) batt->soc * 100/ (float) max_capacity);
+>>>>>>> f7ebca230b0212384005c48f914e9cc376aecd87
 	ptr->data[2] = percent;
 	ptr->data[3] = batt->current;
 	ptr->data[4] = batt->current >> 8;
