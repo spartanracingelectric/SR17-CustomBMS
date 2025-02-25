@@ -54,7 +54,7 @@ void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 		//find highest volt
 		if (batt->cell_volt[i] > batt->cell_volt_highest) {
 			batt->cell_volt_highest = batt->cell_volt[i];
-			printf("high voltage fault: %d\n", batt->cell_volt_highest);
+//			printf("high voltage fault: %d\n", batt->cell_volt_highest);
 		}
 		//high cell volt warning
 		if (batt->cell_volt_highest >= CELL_HIGH_VOLT_WARNING && batt->cell_volt_highest < CELL_HIGH_VOLT_FAULT) {
@@ -65,7 +65,7 @@ void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 			*high_volt_fault_lock = 1;
 			*fault |= FAULT_BIT_HIGH_VOLT;
 			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
-			printf("high voltage fault signal on\n");
+//			printf("high voltage fault signal on\n");
 		}
 		//reset high cell volt fault
 		else if (batt->cell_volt_highest < (CELL_HIGH_VOLT_FAULT - FAULT_LOCK_MARGIN_HIGH_VOLT) && *high_volt_fault_lock == 1){

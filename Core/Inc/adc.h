@@ -38,6 +38,9 @@ extern ADC_HandleTypeDef hadc2;
 
 /* USER CODE BEGIN Private defines */
 
+#define ADC_RESOLUTION 4096.0f  // 12-bit ADC
+#define V_REF 3.3f              // Reference voltage (V)
+
 /* USER CODE END Private defines */
 
 void MX_ADC1_Init(void);
