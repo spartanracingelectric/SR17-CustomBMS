@@ -183,7 +183,7 @@ int main(void) {
         tempindex = 8;
         indexpause = NUM_THERM_PER_MOD;
     }
-    if (indexpause == NUM_THERM_PER_MOD) {
+    else if (indexpause == NUM_THERM_PER_MOD) {
         LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[1]);
         LTC_STCOMM(2);
         indexpause = 8;
@@ -227,7 +227,7 @@ int main(void) {
             tempindex = 8;
             indexpause = NUM_THERM_PER_MOD;
         }
-        if (indexpause == NUM_THERM_PER_MOD) {
+        else if (indexpause == NUM_THERM_PER_MOD) {
             LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[1]);
             LTC_STCOMM(2);
             indexpause = 8;
