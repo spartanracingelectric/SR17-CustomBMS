@@ -21,55 +21,26 @@ static uint8_t BMS_MUX[][6] = {{ 0x69, 0x28, 0x0F, 0xF9, 0x7F, 0xF9 }, { 0x69, 0
 								 { 0x69, 0x08, 0x0F, 0x99, 0x7F, 0xF9 }, { 0x69, 0x08, 0x0F, 0x89, 0x7F, 0xF9 } };
 
 void ADC_To_Pressure(uint8_t dev_idx, uint16_t *pressure, uint16_t adc_data) {
-    float voltage = adc_data * (3.0 / 65535.0);  // convert the adc value based on Vref
+    float voltage = adc_data / LTC6811_Vdd;  // convert the adc value based on Vref
 
-    float pressure_value = (voltage - 0.5) * (100.0 / 4.0);  //Calculate pressure
+    float pressure_value = (voltage - 0.5) * (100.0 / 5.1);  //Calculate pressure
 
     pressure[dev_idx] = (short)(pressure_value * 10);  // relative to atmospheric pressure
 }
 
 void Atmos_Temp_To_Celsius(uint8_t dev_idx, uint16_t *read_atmos_temp, uint16_t adc_data) {
-    float voltage = adc_data * (3.0 / 65535.0);  // convert the adc value based on Vref
+    float voltage_ratio = (float) adc_data / LTC6811_Vdd;  // convert the adc value based on Vref
 
-    float temperature_value = -66.875 + 218.75 * (voltage / 3.0);  //Calculate pressure
+    float temperature_value = -66.875 + 218.75 * voltage_ratio;  //Calculate pressure
 
-    read_atmos_temp[dev_idx] = (uint16_t)(temperature_value * 10);  // 圧力値を整数に変換
-}
-
-void Get_AVG_Atmos_Temp(batteryModule *batt){
-	float avg_temp = 0;
-	for(int i = 0; i < NUM_DEVICES; i++){
-		avg_temp += batt->atmos_temp[i];
-		avg_temp /= NUM_DEVICES;
-	}
-
-	batt->avg_atmos_temp = avg_temp;
+    read_atmos_temp[dev_idx] = (uint16_t)temperature_value;  // 圧力値を整数に変換
 }
 
 void ADC_To_Humidity(uint8_t dev_idx, uint16_t *humidity, uint16_t adcValue) {
-    float voltage = ((float)adcValue / 65535.0) * 3.0f;
-    float humidity_value = (-12.5 + 125.0 * (voltage / 3.0));  //Calculate pressure
+    float voltage_ratio = (float)adcValue / LTC6811_Vdd;
+    float humidity_value = (-12.5 + 125.0 * voltage_ratio);  //Calculate pressure
 
     humidity[dev_idx] = (uint16_t)(humidity_value);  // 圧力値を整数に変換
-}
-
-void Get_AVG_Pressure(batteryModule *batt){
-	float avg_pressure = 0;
-	for(int i = 0; i < NUM_DEVICES; i++){
-		avg_pressure += batt->pressure[i];
-		avg_pressure /= NUM_DEVICES;
-	}
-
-	batt->avg_pressure = avg_pressure;
-}
-void Get_AVG_Humidity(batteryModule *batt){
-	float avg_humidity = 0;
-	for(int i = 0; i < NUM_DEVICES; i++){
-		avg_humidity += batt->humidity[i];
-		avg_humidity /= NUM_DEVICES;
-	}
-
-	batt->avg_humidity = avg_humidity;
 }
 
 void Get_Actual_Temps(uint8_t dev_idx, uint8_t tempindex, uint16_t *actual_temp, uint16_t data) {
@@ -134,8 +105,6 @@ void Read_Pressure(batteryModule *batt) {
             ADC_To_Pressure(dev_idx, batt->pressure, data);
     	}
     }
-
-    Get_AVG_Pressure(batt);
 }
 
 void Read_Atmos_Temp(batteryModule *batt) {
@@ -151,8 +120,6 @@ void Read_Atmos_Temp(batteryModule *batt) {
             Atmos_Temp_To_Celsius(dev_idx, batt->atmos_temp, data);
     	}
     }
-
-    Get_AVG_Atmos_Temp(batt);
 }
 
 void Read_Humidity(batteryModule *batt) {
@@ -168,8 +135,6 @@ void Read_Humidity(batteryModule *batt) {
         ADC_To_Humidity(dev_idx, batt->humidity, data);
     	}
     }
-
-    Get_AVG_Humidity(batt);
 }
 
 

@@ -249,12 +249,17 @@ void CAN_Send_Sensor(struct CANMessage *ptr, batteryModule *batt) {
     uint16_t CAN_ID = 0x602;
 	Set_CAN_Id(ptr, CAN_ID);
 
-	ptr->data[0] = batt->avg_pressure;
-	ptr->data[1] = batt->avg_pressure >> 8;
-	ptr->data[2] = batt->avg_atmos_temp;
-	ptr->data[3] = batt->avg_atmos_temp >> 8;
-	ptr->data[4] = batt->avg_humidity;
-	ptr->data[5] = batt->avg_humidity >> 8;
-	CAN_Send(ptr);
+	for (int i = 0; i < NUM_DEVICES; ++i) {
+		ptr->data[0] = batt->pressure[i];
+		ptr->data[1] = batt->pressure[i] >> 8;
+		ptr->data[2] = batt->atmos_temp[i];
+		ptr->data[3] = batt->atmos_temp[i] >> 8;
+		ptr->data[4] = batt->humidity[i];
+		ptr->data[5] = batt->humidity[i] >> 8;
+		CAN_Send(ptr);
+
+		CAN_ID++;
+		Set_CAN_Id(ptr, CAN_ID);
+	}
 }
 /* USER CODE END 1 */
