@@ -2,6 +2,7 @@
 #include <math.h>
 #include "6811.h"
 #include <stdio.h>
+#include "usart.h"
 
 #define ntcNominal 10000.0f
 #define ntcSeriesResistance 10000.0f
@@ -11,6 +12,7 @@
 static const float invNominalTemp = 1.0f / (ntcNominalTemp + 273.15f);
 static const float invBetaFactor = 1.0f / ntcBetaFactor;
 
+// addresses provided by the mux (uses i2c protocol)
 static uint8_t BMS_MUX[][6] = {{ 0x69, 0x28, 0x0F, 0xF9, 0x7F, 0xF9 }, { 0x69, 0x28, 0x0F, 0xE9, 0x7F, 0xF9 },
 								 { 0x69, 0x28, 0x0F, 0xD9, 0x7F, 0xF9 }, { 0x69, 0x28, 0x0F, 0xC9, 0x7F, 0xF9 },
 								 { 0x69, 0x28, 0x0F, 0xB9, 0x7F, 0xF9 }, { 0x69, 0x28, 0x0F, 0xA9, 0x7F, 0xF9 },
@@ -38,6 +40,7 @@ void Atmos_Temp_To_Celsius(uint8_t dev_idx, uint16_t *read_atmos_temp, uint16_t 
 
 void ADC_To_Humidity(uint8_t dev_idx, uint16_t *humidity, uint16_t adcValue) {
     float voltage_ratio = (float)adcValue / LTC6811_Vdd;
+
     float humidity_value = (-12.5 + 125.0 * voltage_ratio);  //Calculate pressure
 
     humidity[dev_idx] = (uint16_t)(humidity_value);  // 圧力値を整数に変換
@@ -71,9 +74,13 @@ void Read_Volt(uint16_t *read_volt) {
 }
 
 void Read_Temp(uint8_t tempindex, uint16_t *read_temp, uint16_t *read_auxreg) {
+
 //	printf("Temperature read start\n");
+
+	//
 	LTC_WRCOMM(NUM_DEVICES, BMS_MUX[tempindex]);
 	LTC_STCOMM(2);
+
 	//end sending to mux to read temperatures
 	LTC_ADAX(MD_FAST, 1); //ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
 	HAL_Delay(FAST_DELAY); //FAST_DELAY, NORMAL_DELAY, FILTERD_DELAY;
@@ -86,7 +93,7 @@ void Read_Temp(uint8_t tempindex, uint16_t *read_temp, uint16_t *read_auxreg) {
 			uint16_t data = read_auxreg[dev_idx * NUM_AUX_GROUP];
 			//read_temp[dev_idx * NUM_THERM_PER_MOD + tempindex] = data;
 			Get_Actual_Temps(dev_idx, tempindex, (uint16_t*) read_temp, data); //+5 because vref is the last reg
-	}
+		}
 	}
 //	printf("Temperature read end\n");
 }
@@ -115,11 +122,33 @@ void Read_Atmos_Temp(batteryModule *batt) {
     HAL_Delay(NORMAL_DELAY); //FAST_DELAY, NORMAL_DELAY, FILTERD_DELAY;
 
     if (!Read_GPIO((uint16_t*) batt->read_auxreg)) {
+
     	for (uint8_t dev_idx = 0; dev_idx < NUM_DEVICES; dev_idx++) {
+
             uint16_t data = batt->read_auxreg[dev_idx * NUM_AUX_GROUP];
             Atmos_Temp_To_Celsius(dev_idx, batt->atmos_temp, data);
+
     	}
     }
+}
+
+
+// this function calculates dew point from the properties of a battery module object
+// Dew Point: temperature (in Celsius) that air needs to be cooled to reach 100% humidity
+void Get_Dew_Point(batteryModule *batt) {
+
+	for (uint8_t dev_idx = 0; dev_idx < NUM_DEVICES; dev_idx++) {
+
+		uint16_t humidity = batt->humidity[dev_idx];
+		uint16_t atmos_temp = batt->atmos_temp[dev_idx];
+
+		// simple approximation that is accurate to within 1 deg C
+		// Only works well when Relative Humidity is above 50%
+
+		batt->dew_point[i] = atmos_temp - ((100 - humidity) / 5);;
+
+	}
+
 }
 
 void Read_Humidity(batteryModule *batt) {

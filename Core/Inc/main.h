@@ -70,6 +70,7 @@ typedef struct batteryModule {
 	uint16_t read_auxreg[NUM_AUXES];
     uint16_t soc;
     uint32_t current;
+    uint16_t dew_point[NUM_DEVICES];
 }batteryModule;
 
 typedef struct CANMessage{
