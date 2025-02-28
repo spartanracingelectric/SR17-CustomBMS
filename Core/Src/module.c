@@ -23,11 +23,9 @@ static uint8_t BMS_MUX[][6] = {{ 0x69, 0x28, 0x0F, 0xF9, 0x7F, 0xF9 }, { 0x69, 0
 								 { 0x69, 0x08, 0x0F, 0x99, 0x7F, 0xF9 }, { 0x69, 0x08, 0x0F, 0x89, 0x7F, 0xF9 } };
 
 void ADC_To_Pressure(uint8_t dev_idx, uint16_t *pressure, uint16_t adc_data) {
-    float voltage = adc_data / LTC6811_Vdd;  // convert the adc value based on Vref
+    float psi = adc_data / LTC6811_Vdd;  // convert the adc value based on Vref
 
-    float pressure_value = (voltage - 0.5) * (100.0 / 5.1);  //Calculate pressure
-
-    pressure[dev_idx] = (short)(pressure_value * 10);  // relative to atmospheric pressure
+    pressure[dev_idx] = (uint8_t)(psi * 100);  // relative to atmospheric pressure
 }
 
 void Atmos_Temp_To_Celsius(uint8_t dev_idx, uint16_t *read_atmos_temp, uint16_t adc_data) {
@@ -145,7 +143,7 @@ void Get_Dew_Point(batteryModule *batt) {
 		// simple approximation that is accurate to within 1 deg C
 		// Only works well when Relative Humidity is above 50%
 
-		batt->dew_point[i] = atmos_temp - ((100 - humidity) / 5);;
+		batt->dew_point[dev_idx] = atmos_temp - ((float)(100 - humidity) / 5);
 
 	}
 

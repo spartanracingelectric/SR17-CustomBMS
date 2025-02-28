@@ -234,6 +234,7 @@ int main(void)
                 Read_Pressure(&modPackInfo);
                 Read_Humidity(&modPackInfo);
                 Read_Atmos_Temp(&modPackInfo);
+                Get_Dew_Point(&modPackInfo);
 				LTC_WRCOMM(NUM_DEVICES, BMS_MUX_PAUSE[1]);
 				LTC_STCOMM(2);
 				indexpause = 8;

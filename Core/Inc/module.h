@@ -36,4 +36,6 @@ void Read_Atmos_Temp(batteryModule *batt);
 
 void Read_Humidity(batteryModule *batt);
 
+void Get_Dew_Point(batteryModule *batt);
+
 #endif /* INC_MODULE_H_ */
