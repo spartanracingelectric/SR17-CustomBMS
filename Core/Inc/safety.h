@@ -43,7 +43,7 @@
 
 void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings);
 
-void Cell_Blance_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings);
+void Cell_Balance_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings);
 
 void Cell_Temperature_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings);
 

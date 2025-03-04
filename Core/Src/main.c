@@ -251,7 +251,7 @@ int main(void)
 				Start_Balance(modPackInfo.cell_volt, modPackInfo.cell_volt_lowest, modPackInfo.balance_status);
 			}
 			else {
-				End_Balance(&safetyFaults, modPackInfo.balance_status);
+				End_Balance(modPackInfo.balance_status);
 			}
 
 //			if (TimerPacket_FixedPulse(&timerpacket_ltc)) {

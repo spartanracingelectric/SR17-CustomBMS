@@ -70,7 +70,7 @@ void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 	}
 }
 
-void Cell_Blance_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings) {
+void Cell_Balance_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings) {
 	batt->cell_difference = batt->cell_volt_highest - batt->cell_volt_lowest;
 //cell volt imbalance warning
 	if (batt->cell_difference >= CELL_VOLT_IMBALANCE_WARNING) {

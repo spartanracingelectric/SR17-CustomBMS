@@ -60,7 +60,7 @@ void Start_Balance(uint16_t *read_volt, uint16_t lowest, uint16_t *balanceStatus
 	}
 }
 
-void End_Balance(uint8_t *faults, uint16_t *balanceStatus) {
+void End_Balance(uint16_t *balanceStatus) {
 	if(balance == 0){
 		Balance_reset(balanceStatus);
 		Wakeup_Sleep();
