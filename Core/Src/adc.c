@@ -24,19 +24,6 @@
 #include "stm32f1xx_ll_adc.h"
 #include <stdint.h>
 
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc);
-void Start_ADC1_Next_Channel(void);
-void ADC_Read_Channels(void);
-
-volatile uint32_t vdda = 0;
-volatile float adc1_ch15 = 0;
-volatile float adc2_ch13 = 0;
-volatile uint32_t vrefint_raw = 0;
-volatile uint32_t adc1_ch15_raw = 0;
-volatile uint32_t adc2_ch13_raw = 0;
-uint8_t current_channel = 0; // 0 = VREFINT, 1 = ADC1_CH15
-volatile uint8_t adc1_done = 0;
-volatile uint8_t adc2_done = 0;
 /* USER CODE END 0 */
 
 ADC_HandleTypeDef hadc1;

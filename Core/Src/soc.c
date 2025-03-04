@@ -56,8 +56,6 @@ void SOC_getInitialCharge(batteryModule *batt) {
 
 void SOC_updateCurrent(batteryModule *batt) {
     uint32_t adcValue = 0;
-//    HAL_Delay(300);
-    HAL_ADCEx_Calibration_Start(&hadc2);
     HAL_ADC_Start(&hadc2);
     if (HAL_ADC_PollForConversion(&hadc2, HAL_MAX_DELAY) == HAL_OK) {
         adcValue = HAL_ADC_GetValue(&hadc2);

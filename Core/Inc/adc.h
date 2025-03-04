@@ -35,18 +35,10 @@ extern "C" {
 /* USER CODE END Includes */
 
 extern ADC_HandleTypeDef hadc1;
-
 extern ADC_HandleTypeDef hadc2;
 
-/* USER CODE BEGIN Private defines */
-#define VREFINT_CAL_ADDR 0x1FFFF7B2
-#define VREFINT_CAL (*((uint16_t*) VREFINT_CAL_ADDR))
-
-extern volatile float adc1_ch15;
-extern volatile float adc2_ch13;
-
 #define ADC_RESOLUTION 4095.0f  // 12-bit ADC
-#define V_REF 3.3f              // Reference voltage (V)
+#define V_REF 3.28f              // Reference voltage (V)
 
 /* USER CODE END Private defines */
 
@@ -54,8 +46,6 @@ void MX_ADC1_Init(void);
 void MX_ADC2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
-void ADC_Read_Channels(void);
 
 /* USER CODE END Prototypes */
 
