@@ -2,6 +2,7 @@
 
 #include <math.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #include "adc.h"
 #include "main.h"
@@ -54,9 +55,9 @@ void SOC_getInitialCharge(batteryModule *batt) {
 }
 
 void SOC_updateCurrent(batteryModule *batt) {
-<<<<<<< HEAD
     uint32_t adcValue = 0;
-    HAL_Delay(300);
+//    HAL_Delay(300);
+    HAL_ADCEx_Calibration_Start(&hadc2);
     HAL_ADC_Start(&hadc2);
     if (HAL_ADC_PollForConversion(&hadc2, HAL_MAX_DELAY) == HAL_OK) {
         adcValue = HAL_ADC_GetValue(&hadc2);
@@ -65,9 +66,6 @@ void SOC_updateCurrent(batteryModule *batt) {
     HAL_ADC_Stop(&hadc2);
     float voltage = ((float)adcValue / ADC_RESOLUTION) * V_REF;
     batt->current = (voltage / (2.62)) * MAX_SHUNT_AMPAGE;
-=======
-    batt->current = (adc2_ch13 / MAX_SHUNT_VOLTAGE) * MAX_SHUNT_AMPAGE;
->>>>>>> f7ebca230b0212384005c48f914e9cc376aecd87
 }
 
 void SOC_updateCharge(batteryModule *batt, uint32_t elapsed_time) {
