@@ -67,24 +67,21 @@ void Get_Actual_Temps(uint8_t dev_idx, uint8_t tempindex, uint16_t *actual_temp,
 
 void Read_Volt(uint16_t *read_volt) {
 //	printf("volt start\n");
-	LTC_ADCV(MD_NORMAL, DCP_DISABLED, CELL_CH_ALL);//ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
+	LTC_startADCVoltage(MD_NORMAL, DCP_DISABLED, CELL_CH_ALL);//ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
 	HAL_Delay(NORMAL_DELAY);	//FAST_DELAY, NORMAL_DELAY, FILTERD_DELAY;
-	Read_Cell_Volt((uint16_t*) read_volt);
+	LTC_getCellVoltages((uint16_t*) read_volt);
 //	printf("volt end\n");
 }
 
 void Read_Temp(uint8_t tempindex, uint16_t *read_temp, uint16_t *read_auxreg) {
 
 //	printf("Temperature read start\n");
-
-	//
-	LTC_WRCOMM(NUM_DEVICES, BMS_MUX[tempindex]);
-	LTC_STCOMM(2);
-
+	LTC_SPI_writeCommunicationSetting(NUM_DEVICES, BMS_THERM[tempindex]);
+	LTC_SPI_requestData(2);
 	//end sending to mux to read temperatures
-	LTC_ADAX(MD_FAST, 1); //ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
+	LTC_startADC_GPIO(MD_FAST, 1); //ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
 	HAL_Delay(FAST_DELAY); //FAST_DELAY, NORMAL_DELAY, FILTERD_DELAY;
-	if (!Read_GPIO((uint16_t*) read_auxreg)) // Set to read back all aux registers
+	if (!LTC_readGPIOs((uint16_t*) read_auxreg)) // Set to read back all aux registers
 			{
 		for (uint8_t dev_idx = 0; dev_idx < NUM_DEVICES; dev_idx++) {
 			//Wakeup_Idle();

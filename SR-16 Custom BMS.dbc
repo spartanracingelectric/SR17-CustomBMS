@@ -369,7 +369,3 @@ BO_ 1545 BMS_M8_Sensor: 8 Vector__XXX
  SG_ BMS_M8_Pressure : 0|16@1+ (0.0001,0) [0|6.5535] "PSI" Vector__XXX
  SG_ BMS_M8_Atmosphere_Temp : 16|16@1+ (1,0) [0|65535] "C" Vector__XXX
  SG_ BMS_M8_Humidity : 32|16@1+ (1,0) [0|65535] "%" Vector__XXX
-
-
-
-
