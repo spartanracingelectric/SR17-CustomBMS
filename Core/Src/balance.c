@@ -53,7 +53,7 @@ void Start_Balance(uint16_t *read_volt, uint16_t lowest, uint16_t *balanceStatus
 	if(balance > 0){
 		Discharge_Algo(read_volt, lowest , balanceStatus);
 		Wakeup_Sleep();
-		LTC6811_WRCFG(NUM_DEVICES, config);
+		LTC_writeCFG(NUM_DEVICES, config);
 	}
 	else{
 		return;
@@ -64,7 +64,7 @@ void End_Balance(uint16_t *balanceStatus) {
 	if(balance == 0){
 		Balance_reset(balanceStatus);
 		Wakeup_Sleep();
-		LTC6811_WRCFG(NUM_DEVICES, defaultConfig);
+		LTC_writeCFG(NUM_DEVICES, defaultConfig);
 	}
 	else{
 		return;

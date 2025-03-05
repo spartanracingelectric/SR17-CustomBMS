@@ -65,15 +65,15 @@ typedef struct batteryModule {
 	uint16_t cell_temp_highest;
 	uint16_t pack_voltage;
 	uint16_t read_auxreg[NUM_AUXES];
-    uint16_t soc;
-    uint32_t current;
-    uint16_t balance_status[NUM_DEVICES];
-}batteryModule;
+	uint16_t soc;
+	uint32_t current;
+	uint16_t balance_status[NUM_DEVICES];
+} batteryModule;
 
-typedef struct CANMessage{
-    CAN_TxHeaderTypeDef TxHeader;
-    uint32_t TxMailbox;
-    uint8_t data[8];
+typedef struct CANMessage {
+	CAN_TxHeaderTypeDef TxHeader;
+	uint32_t TxMailbox;
+	uint8_t data[8];
 } CANMessage;
 
 /* USER CODE END ET */
