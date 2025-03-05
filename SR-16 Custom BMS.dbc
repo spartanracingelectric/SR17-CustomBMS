@@ -97,7 +97,7 @@ BO_ 1594 BMS_M4_Cell_Voltage_Data_2: 8 Vector__XXX
 BO_ 1595 BMS_M4_Cell_Voltage_Data_3: 8 Vector__XXX
  SG_ BMS_M4_Cell_12_Voltage : 48|16@1+ (0.0001,0) [0|5] "V" Vector__XXX
  SG_ BMS_M4_Cell_11_Voltage : 32|16@1+ (0.0001,0) [0|5] "V" Vector__XXX
- SG_ BMS_M4_Cell_11_Voltage : 16|16@1+ (0.0001,0) [0|5] "V" Vector__XXX
+ SG_ BMS_M4_Cell_10_Voltage : 16|16@1+ (0.0001,0) [0|5] "V" Vector__XXX
  SG_ BMS_M4_Cell_9_Voltage : 0|16@1+ (0.0001,0) [0|5] "V" Vector__XXX
 
 BO_ 1596 BMS_M5_Cell_Voltage_Data_1: 8 Vector__XXX
