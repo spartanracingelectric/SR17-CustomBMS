@@ -36,6 +36,8 @@ Any updates to the DBF should also be reflected in the DBC. BusMaster has a conv
 
 ## Pull Request (PR) Guidelines
 
+Verify all features on hardware before making a PR.
+
 ### PR Titles
 - PR titles should be a **one-sentence overall description** of the PR.
 - If you can't fit an overall description in the PR title, the PR is likely too large and should be broken into smaller changes.

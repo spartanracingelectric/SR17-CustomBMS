@@ -420,7 +420,3 @@ BO_ 1572 BMS_Balance_Status_2: 8 Vector__XXX
  SG_ BMS_M5_Cell_3 : 2|1@1- (1,0) [0|1] "" Vector__XXX
  SG_ BMS_M5_Cell_2 : 1|1@1- (1,0) [0|1] "" Vector__XXX
  SG_ BMS_M5_Cell_1 : 0|1@1- (1,0) [0|1] "" Vector__XXX
-
-
-
-
