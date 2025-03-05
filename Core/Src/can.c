@@ -244,4 +244,24 @@ void CAN_Send_SOC(struct CANMessage *ptr, batteryModule *batt,
     ptr->data[6] = batt->current >> 24;
     CAN_Send(ptr);
 }
+
+void CAN_Send_Sensor(struct CANMessage *ptr, batteryModule *batt) {
+    uint16_t CAN_ID = 0x602;
+	Set_CAN_Id(ptr, CAN_ID);
+
+	for (int i = 0; i < NUM_DEVICES; ++i) {
+		ptr->data[0] = batt->pressure[i];
+		ptr->data[1] = batt->pressure[i] >> 8;
+		ptr->data[2] = batt->atmos_temp[i];
+		ptr->data[3] = batt->atmos_temp[i] >> 8;
+		ptr->data[4] = batt->humidity[i];
+		ptr->data[5] = batt->humidity[i] >> 8;
+		ptr->data[6] = batt->dew_point[i];
+		ptr->data[7] = batt->dew_point[i] >> 8;
+		CAN_Send(ptr);
+
+		CAN_ID++;
+		Set_CAN_Id(ptr, CAN_ID);
+	}
+}
 /* USER CODE END 1 */

@@ -195,6 +195,7 @@ int main(void)
 	CAN_Send_Cell_Summary(&msg, &modPackInfo);
 	CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 	CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
+	CAN_Send_Sensor(&msg, &modPackInfo);
 	CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
 
   /* USER CODE END 2 */
@@ -230,6 +231,10 @@ int main(void)
 //				HAL_Delay(1); //this delay is for stablize mux
 			}
 			else if (indexpause == NUM_THERM_PER_MOD) {
+        Read_Pressure(&modPackInfo);
+        Read_Humidity(&modPackInfo);
+        Read_Atmos_Temp(&modPackInfo);
+        Get_Dew_Point(&modPackInfo);
 				LTC_SPI_writeCommunicationSetting(NUM_DEVICES, BMS_MUX_PAUSE[1]);
 				LTC_SPI_requestData(2);
 				indexpause = 8;
@@ -271,6 +276,7 @@ int main(void)
 			CAN_Send_Cell_Summary(&msg, &modPackInfo);
 			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
+			CAN_Send_Sensor(&msg, &modPackInfo);
 			CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
 //			printf("CAN end\n");
 //			}

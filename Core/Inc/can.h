@@ -54,6 +54,7 @@ void CAN_Send_Temperature(CANMessage *ptr, uint16_t *read_temp);
 void CAN_Send_Cell_Summary(CANMessage *ptr, struct batteryModule *batt);
 void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_t* faults, uint8_t* warnings, uint8_t *states);
 void CAN_Send_SOC(CANMessage *ptr, batteryModule *batt, uint16_t max_capacity);
+void CAN_Send_Sensor(struct CANMessage *ptr, batteryModule *batt);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
