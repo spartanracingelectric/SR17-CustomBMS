@@ -21,6 +21,9 @@ BO_ 1536 BMS_Safety_Checker: 8 Vector__XXX
  SG_ BMS_Cell_Low_Volt_Fault : 4|1@1- (1,0) [0|1] "" Vector__XXX
  SG_ BMS_Cell_Volt_Imbalance_Fault : 3|1@1- (1,0) [0|1] "" Vector__XXX
  SG_ BMS_Cell_High_Temp_Fault : 2|1@1- (1,0) [0|1] "" Vector__XXX
+ 
+BO_ 1540 BMS_Balance_Enable: 8 Vector__XXX
+ SG_ BMS_Balance_Enable : 0|1@1- (1,0) [0|1] "" Vector__XXX
 
 BO_ 1570 BMS_Cell_Summary: 8 Vector__XXX
  SG_ BMS_Lowest_Cell_Temperature : 48|16@1+ (1,0) [0|100] "C" Vector__XXX
