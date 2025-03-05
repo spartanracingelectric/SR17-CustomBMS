@@ -150,6 +150,7 @@ HAL_StatusTypeDef CAN_Send(CANMessage *ptr) {
 void CAN_SettingsInit(CANMessage *ptr) {
     CAN_Start();
     CAN_Activate();
+    HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
     ptr->TxHeader.IDE = CAN_ID_STD;
     ptr->TxHeader.StdId = 0x00;
     ptr->TxHeader.RTR = CAN_RTR_DATA;
