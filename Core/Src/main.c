@@ -250,9 +250,9 @@ int main(void)
 			if(modPackInfo.cell_difference > BALANCE_THRESHOLD){
 				Start_Balance(modPackInfo.cell_volt, modPackInfo.cell_volt_lowest, modPackInfo.balance_status);
 			}
-			else {
-				End_Balance(modPackInfo.balance_status);
-			}
+
+			End_Balance(modPackInfo.balance_status);//end the balance if CAN RX recieve 0
+
 
 //			if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
 			//calling all CAN realated methods

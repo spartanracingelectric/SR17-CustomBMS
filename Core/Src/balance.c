@@ -50,7 +50,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
 }
 
 void Start_Balance(uint16_t *read_volt, uint16_t lowest, uint16_t *balanceStatus) {
-	printf("balance enable is %d\n", balance);
+//	printf("balance enable is %d\n", balance);
 	if(balance > 0){
 		Discharge_Algo(read_volt, lowest , balanceStatus);
 		Wakeup_Sleep();
@@ -100,6 +100,7 @@ void Balance_reset(uint16_t *balanceStatus) {
 	uint8_t DCC[12] = {0};  //reset all DCC to 0
 	for (uint8_t dev_idx = 0; dev_idx < NUM_DEVICES; dev_idx++) {
 		balanceStatus[dev_idx] = 0;
+		printf("balanceStaus[%d]: %d\n", dev_idx, balanceStatus[dev_idx]);
 
 		Set_Cfg(dev_idx, (uint8_t*) DCC);
 	}

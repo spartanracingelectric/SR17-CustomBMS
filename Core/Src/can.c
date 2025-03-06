@@ -53,7 +53,18 @@ void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
+  CAN_FilterTypeDef sFilterConfig;
+	  sFilterConfig.FilterBank = 0;
+	  sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+	  sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+	  sFilterConfig.FilterIdHigh = 0x604 << 5;  // Recieve only ID 0x604
+	  sFilterConfig.FilterIdLow = 0x0000;
+	  sFilterConfig.FilterMaskIdHigh = 0xFFF << 5;  // only accept complete match
+	  sFilterConfig.FilterMaskIdLow = 0x0000;
+	  sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
+	  sFilterConfig.FilterActivation = ENABLE;
 
+  HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig);
   /* USER CODE END CAN1_Init 2 */
 
 }
@@ -125,18 +136,6 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
     HAL_NVIC_DisableIRQ(CAN1_RX1_IRQn);
     HAL_NVIC_DisableIRQ(CAN1_SCE_IRQn);
   /* USER CODE BEGIN CAN1_MspDeInit 1 */
-    CAN_FilterTypeDef sFilterConfig;
-    sFilterConfig.FilterBank = 0;
-    sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
-    sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
-    sFilterConfig.FilterIdHigh = 0x604 << 5;  // Recieve only ID 0x604
-    sFilterConfig.FilterIdLow = 0x0000;
-    sFilterConfig.FilterMaskIdHigh = 0xFFF << 5;  // only accept complete match
-    sFilterConfig.FilterMaskIdLow = 0x0000;
-    sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
-    sFilterConfig.FilterActivation = ENABLE;
-
-    HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig);
   /* USER CODE END CAN1_MspDeInit 1 */
   }
 }
