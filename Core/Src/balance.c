@@ -13,6 +13,8 @@
 //static uint8_t VOV_and_VUV = 0x00;
 //static uint8_t VOV = 0x00;
 //static int DCTO[4] = { 1, 1, 1, 1 };
+CAN_RxHeaderTypeDef rxHeader;
+uint8_t rxData[8];
 uint8_t balance = 0;			//FALSE
 
 static uint8_t config[8][6] = { { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 },
@@ -30,36 +32,8 @@ void Balance_init(uint16_t *balanceStatus){
 }
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
-    CAN_RxHeaderTypeDef rxHeader;
-    uint8_t rxData[8];
     printf("fifo 0 callback\n");
-
-    // メッセージを受信
     if (HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &rxHeader, rxData) == HAL_OK) {
-        // メッセージIDでフィルタリング
-        if (rxHeader.StdId == 0x604) {  // CAN message from charger
-            uint8_t balanceCommand = rxData[0]; // see the data bit on CAN
-
-            // change the BALANCE flag to enable balance
-            if (balanceCommand == 1) {
-            	balance = 1;  // enable balance
-//                printf("BALANCE enabled by CAN message.\n");
-            } else if (balanceCommand == 0) {
-            	balance = 0;  // disable balance
-//                printf("BALANCE disabled by CAN message.\n");
-            }
-        }
-    }
-}
-
-void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
-    CAN_RxHeaderTypeDef rxHeader;
-    uint8_t rxData[8];
-    printf("fifo 1 callback\n");
-
-    // メッセージを受信
-    if (HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO1, &rxHeader, rxData) == HAL_OK) {
-        // メッセージIDでフィルタリング
         if (rxHeader.StdId == 0x604) {  // CAN message from charger
             uint8_t balanceCommand = rxData[0]; // see the data bit on CAN
 
