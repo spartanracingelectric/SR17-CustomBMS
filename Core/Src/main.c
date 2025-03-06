@@ -220,7 +220,9 @@ int main(void)
 
 			//reading cell temperatures
 			for (uint8_t i = tempindex; i < indexpause; i++) {
+//				HAL_Delay(300);
 				Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
+
 //				printf(" Cell: %d, Temp: %d\n", i, modPackInfo.cell_temp[i]);
 			}
 			if (indexpause == 8) {
@@ -231,17 +233,17 @@ int main(void)
 //				HAL_Delay(1); //this delay is for stablize mux
 			}
 			else if (indexpause == NUM_THERM_PER_MOD) {
-        Read_Pressure(&modPackInfo);
-        Read_Humidity(&modPackInfo);
-        Read_Atmos_Temp(&modPackInfo);
-        Get_Dew_Point(&modPackInfo);
+				Read_Pressure(&modPackInfo);
+				Read_Humidity(&modPackInfo);
+				Read_Atmos_Temp(&modPackInfo);
+				Get_Dew_Point(&modPackInfo);
 				LTC_SPI_writeCommunicationSetting(NUM_DEVICES, BMS_MUX_PAUSE[1]);
 				LTC_SPI_requestData(2);
 				indexpause = 8;
 				tempindex = 0;
 //				HAL_Delay(1); //this delay is for stablize mux
 			}
-//			HAL_Delay(1);
+
 //			for(int i = 0; i < NUM_THERM_TOTAL; i++){
 //				printf("Temp[%d]: %d\n",i, modPackInfo.cell_temp[i]);
 //			}
@@ -278,9 +280,7 @@ int main(void)
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
 			CAN_Send_Sensor(&msg, &modPackInfo);
 			CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
-//			printf("CAN end\n");
-//			}
-	}
+		}
     }
   /* USER CODE END 3 */
 }
