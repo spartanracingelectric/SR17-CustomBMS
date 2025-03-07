@@ -49,12 +49,12 @@ static uint8_t defaultConfig[8][6] = { { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, {
 void Start_Balance(uint16_t *read_volt, uint8_t length, uint16_t lowest) {
 	Discharge_Algo(read_volt, NUM_DEVICES, lowest);
 	Wakeup_Sleep();
-	LTC6811_WRCFG(NUM_DEVICES, config);
+	LTC_writeCFG(NUM_DEVICES, config);
 }
 
 void End_Balance(uint8_t *faults) {
 	Wakeup_Sleep();
-	LTC6811_WRCFG(NUM_DEVICES, defaultConfig);
+	LTC_writeCFG(NUM_DEVICES, defaultConfig);
 	*faults |= 0b00000010;
 }
 
