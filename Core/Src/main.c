@@ -17,6 +17,7 @@
  */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include <hv_sense.h>
 #include "main.h"
 #include "adc.h"
 #include "can.h"
@@ -28,7 +29,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "6811.h"
-#include "hv.h"
 #include <stdio.h>
 #include "module.h"
 #include "safety.h"
@@ -133,6 +133,7 @@ int main(void)
   MX_SPI1_Init();
   MX_CAN1_Init();
   MX_USART1_UART_Init();
+  HAL_ADCEx_Calibration_Start(&hadc1);
   /* USER CODE BEGIN 2 */
   CAN_SettingsInit(&msg);  // Start CAN at 0x00
     // Start timer

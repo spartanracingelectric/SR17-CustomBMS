@@ -1,6 +1,6 @@
-	#include "hv.h"
-	#include "adc.h"
-	#include "main.h"
+#include <hv_sense.h>
+#include "adc.h"
+#include "main.h"
 
 	void ReadHVInput(batteryModule *batt) {
 		uint32_t adcValue = 0;
