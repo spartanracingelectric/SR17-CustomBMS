@@ -63,10 +63,12 @@ void SOC_updateCurrent(batteryModule *batt) {
     printf("ADC VALUE %u/4096\n", adcValue);
     HAL_ADC_Stop(&hadc2);
     float voltage = ((float)adcValue / ADC_RESOLUTION) * V_REF;
-    batt->current = (voltage / (2.62)) * MAX_SHUNT_AMPAGE;
+    batt->current = (voltage / (MAX_SHUNT_VOLTAGE * SHUNT_OPAMP_RATIO)) * MAX_SHUNT_AMPAGE;
 }
 
 void SOC_updateCharge(batteryModule *batt, uint32_t elapsed_time) {
+
+	HAL_ADCEx_Calibration_Start(&hadc2);
     SOC_updateCurrent(batt);
     batt->soc -= (uint16_t)(batt->current * (float)(elapsed_time / 3600000.0f));
 }

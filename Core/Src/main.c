@@ -133,6 +133,7 @@ int main(void)
   MX_SPI1_Init();
   MX_CAN1_Init();
   MX_USART1_UART_Init();
+	HAL_ADCEx_Calibration_Start(&hadc1);
 	HAL_ADCEx_Calibration_Start(&hadc2);
   /* USER CODE BEGIN 2 */
     CAN_SettingsInit(&msg);  // Start CAN at 0x00

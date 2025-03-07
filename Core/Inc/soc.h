@@ -8,9 +8,9 @@
 #define MAX_SHUNT_AMPAGE 500000
 #define MAX_SHUNT_VOLTAGE 2.68f
 
-#define SHUNT_R1 33950.0f  // 1.4 MΩ
-#define SHUNT_R2 28573.0f     // 6 863kΩ
-#define SHUNT_DIVIDER_RATIO SHUNT_R1 / SHUNT_R2
+#define SHUNT_R1 24900.0f  // 24.9 kΩ
+#define SHUNT_R2 20000.0f     // 20 kΩ
+#define SHUNT_OPAMP_RATIO SHUNT_R1 / SHUNT_R2
 
 void SOC_getInitialCharge(batteryModule *batt);
 void SOC_updateCharge(batteryModule *batt, uint32_t elapsed_time);
