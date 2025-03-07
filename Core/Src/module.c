@@ -25,8 +25,6 @@ static uint8_t BMS_MUX[][6] = {{ 0x69, 0x28, 0x0F, 0xF9, 0x7F, 0xF9 }, { 0x69, 0
 void ADC_To_Pressure(uint8_t dev_idx, uint16_t *pressure, uint16_t adc_data) {
     float psi = (float) adc_data / 325.0;  // convert the adc value based on Vref
 
-//    printf("PRESSURE ADC: %f\n", psi);
-
     pressure[dev_idx] = (uint16_t)(psi * 100);  // relative to atmospheric pressure
 }
 
@@ -79,8 +77,13 @@ void Read_Temp(uint8_t tempindex, uint16_t *read_temp, uint16_t *read_auxreg) {
 	LTC_SPI_writeCommunicationSetting(NUM_DEVICES, BMS_MUX[tempindex]);
 	LTC_SPI_requestData(2);
 	//end sending to mux to read temperatures
-	LTC_startADC_GPIO(MD_FAST, 1); //ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
-	HAL_Delay(FAST_DELAY); //FAST_DELAY, NORMAL_DELAY, FILTERD_DELAY;
+	if (tempindex == 0) {
+		LTC_startADC_GPIO(MD_NORMAL, 1); //ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
+		HAL_Delay(NORMAL_DELAY + 2); //FAST_DELAY, NORMAL_DELAY, FILTERD_DELAY;
+	} else {
+		LTC_startADC_GPIO(MD_FAST, 1); //ADC mode: MD_FILTERED, MD_NORMAL, MD_FAST
+		HAL_Delay(FAST_DELAY); //FAST_DELAY, NORMAL_DELAY, FILTERD_DELAY;
+	}
 	if (!LTC_readGPIOs((uint16_t*) read_auxreg)) // Set to read back all aux registers
 			{
 		for (uint8_t dev_idx = 0; dev_idx < NUM_DEVICES; dev_idx++) {
