@@ -25,7 +25,7 @@ static uint8_t BMS_MUX[][6] = {{ 0x69, 0x28, 0x0F, 0xF9, 0x7F, 0xF9 }, { 0x69, 0
 void ADC_To_Pressure(uint8_t dev_idx, uint16_t *pressure, uint16_t adc_data) {
     float psi = (float) adc_data / 325.0;  // convert the adc value based on Vref
 
-    printf("PRESSURE ADC: %f\n", psi);
+//    printf("PRESSURE ADC: %f\n", psi);
 
     pressure[dev_idx] = (uint16_t)(psi * 100);  // relative to atmospheric pressure
 }

@@ -17,7 +17,6 @@
  */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include <hv_sense.h>
 #include "main.h"
 #include "adc.h"
 #include "can.h"
@@ -133,7 +132,6 @@ int main(void)
   MX_SPI1_Init();
   MX_CAN1_Init();
   MX_USART1_UART_Init();
-  HAL_ADCEx_Calibration_Start(&hadc1);
   /* USER CODE BEGIN 2 */
   CAN_SettingsInit(&msg);  // Start CAN at 0x00
     // Start timer
@@ -209,6 +207,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
 		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
 		if (TimerPacket_FixedPulse(&cycleTimeCap)) {
+			 HAL_ADCEx_Calibration_Start(&hadc1);
 //		printf("hello\n");
 			//reading cell voltages
 //			printf("volt start\n");
