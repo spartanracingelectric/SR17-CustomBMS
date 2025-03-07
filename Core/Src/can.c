@@ -228,11 +228,6 @@ void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_
 //	printf("Faults\n");
 }
 
-void CAN_Send_SOC(struct CANMessage *ptr, batteryModule *batt,
-                  uint16_t max_capacity) {
-    uint16_t CAN_ID = 0x621;
-    Set_CAN_Id(ptr, CAN_ID);
-
 void CAN_Send_SOC(struct CANMessage *ptr, batteryModule *batt, uint16_t max_capacity) {
     uint16_t CAN_ID = 0x621;
 	Set_CAN_Id(ptr, CAN_ID);
