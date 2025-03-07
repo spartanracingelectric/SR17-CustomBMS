@@ -6,9 +6,10 @@
 #include "main.h"
 
 #define MAX_SHUNT_AMPAGE 500000
-#define MAX_SHUNT_VOLTAGE 2.68f
+#define MAX_SHUNT_VOLTAGE 2.62f
 
-#define SHUNT_R1 24900.0f  // 24.9 kΩ
+
+#define SHUNT_R1 24925.0f  // 24.9 kΩ
 #define SHUNT_R2 20000.0f     // 20 kΩ
 #define SHUNT_OPAMP_RATIO SHUNT_R1 / SHUNT_R2
 

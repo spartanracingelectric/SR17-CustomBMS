@@ -133,8 +133,6 @@ int main(void)
   MX_SPI1_Init();
   MX_CAN1_Init();
   MX_USART1_UART_Init();
-	HAL_ADCEx_Calibration_Start(&hadc1);
-	HAL_ADCEx_Calibration_Start(&hadc2);
   /* USER CODE BEGIN 2 */
     CAN_SettingsInit(&msg);  // Start CAN at 0x00
     // Start timer
@@ -198,6 +196,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
     while (1) {
     /* USER CODE END WHILE */
+    	HAL_ADCEx_Calibration_Start(&hadc1);
+
+    	HAL_ADCEx_Calibration_Start(&hadc2);
 
     /* USER CODE BEGIN 3 */
         GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
