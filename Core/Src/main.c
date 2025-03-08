@@ -28,7 +28,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "6811.h"
-#include "hv.h"
 #include <stdio.h>
 #include "module.h"
 #include "safety.h"
@@ -208,6 +207,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
 		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
 		if (TimerPacket_FixedPulse(&cycleTimeCap)) {
+			 HAL_ADCEx_Calibration_Start(&hadc1);
 //		printf("hello\n");
 			//reading cell voltages
 //			printf("volt start\n");
