@@ -31,13 +31,19 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
-
-/* Exported types ------------------------------------------------------------*/
-/* USER CODE BEGIN ET */
-
+/* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN Private defines */
+#define SHUNT_SIGNAL_Pin GPIO_PIN_3
+#define SHUNT_SIGNAL_GPIO_Port GPIOC
+#define LTC_nCS_Pin GPIO_PIN_4
+#define LTC_nCS_GPIO_Port GPIOA
+#define MCU_ADC_VSENSE_Pin GPIO_PIN_5
+#define MCU_ADC_VSENSE_GPIO_Port GPIOC
+#define MCU_SHUTDOWN_SIGNAL_Pin GPIO_PIN_1
+#define MCU_SHUTDOWN_SIGNAL_GPIO_Port GPIOB
+#define MCU_HEARTBEAT_LED_Pin GPIO_PIN_6
+#define MCU_HEARTBEAT_LED_GPIO_Port GPIOC
+
 #define NUM_DEVICES				8	//1 slave board
 #define NUM_CELL_SERIES_GROUP	12	//1 slave board
 #define NUM_CELLS				NUM_DEVICES*NUM_CELL_SERIES_GROUP	//multiple slave board
@@ -51,7 +57,10 @@ extern "C" {
 #define MAX_CELL_CAPACITY 		3000
 #define MAX_BATTERY_CAPACITY 	NUM_DEVICES* MAX_CELL_CAPACITY
 /* USER CODE END Private defines */
+/* USER CODE END Includes */
 
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
 typedef struct batteryModule {
 	uint16_t cell_volt[NUM_CELLS];
 	uint16_t cell_temp[NUM_THERM_TOTAL];
@@ -97,18 +106,6 @@ void Error_Handler(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
-
-/* Private defines -----------------------------------------------------------*/
-#define SHUNT_SIGNAL_Pin GPIO_PIN_3
-#define SHUNT_SIGNAL_GPIO_Port GPIOC
-#define LTC_nCS_Pin GPIO_PIN_4
-#define LTC_nCS_GPIO_Port GPIOA
-#define MCU_ADC_VSENSE_Pin GPIO_PIN_5
-#define MCU_ADC_VSENSE_GPIO_Port GPIOC
-#define MCU_SHUTDOWN_SIGNAL_Pin GPIO_PIN_1
-#define MCU_SHUTDOWN_SIGNAL_GPIO_Port GPIOB
-#define MCU_HEARTBEAT_LED_Pin GPIO_PIN_6
-#define MCU_HEARTBEAT_LED_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 /* USER CODE END Private defines */

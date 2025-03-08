@@ -30,6 +30,8 @@ extern "C" {
 
 /* USER CODE BEGIN Includes */
 
+#include <stdint.h>
+
 /* USER CODE END Includes */
 
 extern ADC_HandleTypeDef hadc1;
@@ -37,7 +39,8 @@ extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc2;
 
 /* USER CODE BEGIN Private defines */
-
+#define V_REF 3.28f
+#define ADC_RESOLUTION 4096.0f
 /* USER CODE END Private defines */
 
 void MX_ADC1_Init(void);
