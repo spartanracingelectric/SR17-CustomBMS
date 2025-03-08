@@ -228,20 +228,21 @@ void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_
 //	printf("Faults\n");
 }
 
-void CAN_Send_SOC(struct CANMessage *ptr, batteryModule *batt, uint16_t max_capacity) {
+void CAN_Send_SOC(struct CANMessage *ptr, batteryModule *batt,
+                  uint16_t max_capacity) {
     uint16_t CAN_ID = 0x621;
-	Set_CAN_Id(ptr, CAN_ID);
+    Set_CAN_Id(ptr, CAN_ID);
 
-	ptr->data[0] = batt->soc;
-	ptr->data[1] = batt->soc >> 8;
+    ptr->data[0] = batt->soc;
+    ptr->data[1] = batt->soc >> 8;
 
-    uint8_t percent = (uint8_t)((float) batt->soc * 100 / (float) max_capacity);
-	ptr->data[2] = percent;
-	ptr->data[3] = batt->current;
-	ptr->data[4] = batt->current >> 8;
-	ptr->data[5] = batt->current >> 16;
-	ptr->data[6] = batt->current >> 24;
-	CAN_Send(ptr);
+    uint8_t percent = (uint8_t)(batt->soc * 100 / max_capacity);
+    ptr->data[2] = percent;
+    ptr->data[3] = batt->current;
+    ptr->data[4] = batt->current >> 8;
+    ptr->data[5] = batt->current >> 16;
+    ptr->data[6] = batt->current >> 24;
+    CAN_Send(ptr);
 }
 
 void CAN_Send_Sensor(struct CANMessage *ptr, batteryModule *batt) {
