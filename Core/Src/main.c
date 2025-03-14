@@ -156,35 +156,6 @@ int main(void)
 	uint8_t high_temp_hysteresis = 0;
 
 	Wakeup_Sleep();
-    Read_Volt(modPackInfo.cell_volt);
-
-	//reading cell temperatures
-    for (uint8_t i = tempindex; i < indexpause; i++) {
-		Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
-//				printf(" Cell: %d, Temp: %d\n", i, modPackInfo.cell_temp[i]);
-	}
-	if (indexpause == 8) {
-		LTC_SPI_writeCommunicationSetting(NUM_DEVICES, BMS_MUX_PAUSE[0]);
-		LTC_SPI_requestData(2);
-		tempindex = 8;
-		indexpause = NUM_THERM_PER_MOD;
-//				HAL_Delay(1); //this delay is for stablize mux
-	}
-	else if (indexpause == NUM_THERM_PER_MOD) {
-		LTC_SPI_writeCommunicationSetting(NUM_DEVICES, BMS_MUX_PAUSE[1]);
-		LTC_SPI_requestData(2);
-		indexpause = 8;
-		tempindex = 0;
-//				HAL_Delay(1); //this delay is for stablize mux
-	}
-
-	CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults,
-						&safetyWarnings, &safetyStates);
-	CAN_Send_Cell_Summary(&msg, &modPackInfo);
-	CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
-	CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
-	CAN_Send_Sensor(&msg, &modPackInfo);
-	CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
 
 	SOC_getInitialCharge(&modPackInfo);
 	uint32_t prev_soc_time = HAL_GetTick();
