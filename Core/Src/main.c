@@ -104,6 +104,7 @@ int main(void)
 	uint8_t safetyFaults = 0;
 	uint8_t safetyWarnings = 0;
 //	uint8_t moduleCounts = 0;
+	uint8_t safetyStates = 0;
 
   /* USER CODE END 1 */
 
