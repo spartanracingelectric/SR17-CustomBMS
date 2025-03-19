@@ -292,6 +292,7 @@ void CAN_Send_Balance_Status(struct CANMessage *ptr, uint16_t *balance_status){
 	ptr->data[6] = balance_status[7] & 0xFF;
 	ptr->data[7] = (balance_status[7] >> 8) & 0xFF;
 	CAN_Send(ptr);
+}
 
 void CAN_Send_Sensor(struct CANMessage *ptr, batteryModule *batt) {
     uint16_t CAN_ID = 0x602;
