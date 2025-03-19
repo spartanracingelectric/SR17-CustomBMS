@@ -47,6 +47,7 @@ extern "C" {
 #define NUM_AUXES				NUM_DEVICES*NUM_AUX_GROUP
 #define CYCLETIME_CAP			100 //100ms update delay
 #define LED_HEARTBEAT_DELAY_MS	50  //10ms update delay
+#define BALANCE 				0 	//FALSE
 #define MAX_CELL_CAPACITY 		3000
 #define MAX_BATTERY_CAPACITY 	NUM_DEVICES* MAX_CELL_CAPACITY
 /* USER CODE END Private defines */
@@ -58,6 +59,9 @@ typedef struct batteryModule {
 	uint16_t average_volt[NUM_DEVICES];
 	uint16_t average_temp[NUM_DEVICES];
 	uint16_t standerd_diviation;
+	uint8_t pressure[NUM_DEVICES];
+	uint16_t humidity[NUM_DEVICES];
+	uint16_t atmos_temp[NUM_DEVICES];
 	uint16_t cell_volt_lowest;
 	uint16_t cell_volt_highest;
 	uint16_t cell_difference;
@@ -65,9 +69,10 @@ typedef struct batteryModule {
 	uint16_t cell_temp_highest;
 	uint16_t pack_voltage;
 	uint16_t read_auxreg[NUM_AUXES];
-	uint16_t soc;
-	uint32_t current;
 	uint16_t balance_status[NUM_DEVICES];
+    uint16_t soc;
+    uint32_t current;
+    uint16_t dew_point[NUM_DEVICES];
 } batteryModule;
 
 typedef struct CANMessage {
@@ -108,17 +113,6 @@ void Error_Handler(void);
 #define MCU_HEARTBEAT_LED_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
-#define NUM_DEVICES				8	//1 slave board
-#define NUM_CELL_SERIES_GROUP	12	//1 slave board
-#define NUM_CELLS				NUM_DEVICES*NUM_CELL_SERIES_GROUP	//multiple slave board
-#define NUM_THERM_PER_MOD		12
-#define NUM_THERM_TOTAL			NUM_DEVICES*NUM_THERM_PER_MOD
-#define NUM_AUX_GROUP			6
-#define NUM_AUXES				NUM_DEVICES*NUM_AUX_GROUP
-#define CYCLETIME_CAP			100 //100ms update delay
-#define LED_HEARTBEAT_DELAY_MS	50  //10ms update delay
-#define MAX_CELL_CAPACITY 		3000
-#define MAX_BATTERY_CAPACITY 	NUM_DEVICES* MAX_CELL_CAPACITY
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
