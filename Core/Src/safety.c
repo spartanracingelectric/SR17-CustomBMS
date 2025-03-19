@@ -50,60 +50,18 @@ void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 	batt->cell_volt_highest = batt->cell_volt[0];
 	batt->cell_volt_lowest = batt->cell_volt[0];
 
-	for (int i = 1; i < NUM_CELLS; i++) {
+	for (int i = 0; i < NUM_CELLS; i++) {
 		//find highest volt
 		if (batt->cell_volt[i] > batt->cell_volt_highest) {
 			batt->cell_volt_highest = batt->cell_volt[i];
 //			printf("high voltage fault: %d\n", batt->cell_volt_highest);
 		}
-		//high cell volt warning
-		if (batt->cell_volt_highest >= CELL_HIGH_VOLT_WARNING && batt->cell_volt_highest < CELL_HIGH_VOLT_FAULT) {
-			*warnings |= WARNING_BIT_HIGH_VOLT;
-		}
-		//high cell volt fault
-		if ((batt->cell_volt_highest >= CELL_HIGH_VOLT_FAULT) /*&& ((*high_volt_hysteresis) > 0)*/) {
-			*high_volt_fault_lock = 1;
-			*fault |= FAULT_BIT_HIGH_VOLT;
-			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
-//			printf("high voltage fault signal on\n");
-		}
-		//reset high cell volt fault
-		else if (batt->cell_volt_highest < (CELL_HIGH_VOLT_FAULT - FAULT_LOCK_MARGIN_HIGH_VOLT) && *high_volt_fault_lock == 1){
-			*high_volt_fault_lock = 0;
-			*warnings &= ~WARNING_BIT_HIGH_VOLT;
-			*fault &= ~FAULT_BIT_HIGH_VOLT;
-			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_RESET);
-		}
-
-
 
 		//find lowest volt
 		if (batt->cell_volt[i] < batt->cell_volt_lowest) {
 			batt->cell_volt_lowest = batt->cell_volt[i];
 		}
-		//low cell volt warning
-		if (batt->cell_volt_lowest <= CELL_LOW_VOLT_WARNING) {
-			*warnings |= WARNING_BIT_LOW_VOLT;
-		}
-		//low cell volt fault
-		if(batt->cell_volt_lowest <= CELL_LOW_VOLT_FAULT && * low_volt_hysteresis > 3){
-			*fault |= FAULT_BIT_LOW_VOLT;
-			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
-		}
-		//reset low cell volt fault
-		else if(batt->cell_volt_lowest > (CELL_LOW_VOLT_FAULT + FAULT_LOCK_MARGIN_LOW_VOLT) && *low_volt_hysteresis > 0){
-			*low_volt_hysteresis = 0;
-			*warnings &= ~WARNING_BIT_LOW_VOLT;
-			*fault &= ~FAULT_BIT_LOW_VOLT;
-			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_RESET);
-		}
-		//low cell volt fault(hysteresis)
-		if (batt->cell_volt_lowest <= CELL_LOW_VOLT_FAULT) {
-			*low_volt_hysteresis++;//use hysteresis and spend 2 cycle to fault
-		}
-		else if (batt->cell_volt_lowest > (CELL_LOW_VOLT_FAULT + FAULT_LOCK_MARGIN_LOW_VOLT)) {
-			*low_volt_hysteresis = 0;//use hysteresis and spend 2 cycle to fault
-		}
+
 
 
 
@@ -135,6 +93,45 @@ void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 //			*states |= 0b10000000;
 //		}
 	}
+	//high cell volt warning
+			if (batt->cell_volt_highest >= CELL_HIGH_VOLT_WARNING) {
+				*warnings |= WARNING_BIT_HIGH_VOLT;
+			}
+			//high cell volt fault
+			if ((batt->cell_volt_highest >= CELL_HIGH_VOLT_FAULT) /*&& ((*high_volt_hysteresis) > 0)*/) {
+				*high_volt_fault_lock = 1;
+				*fault |= FAULT_BIT_HIGH_VOLT;
+				HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
+	//			printf("high voltage fault signal on\n");
+			}
+			//reset high cell volt fault
+			else if (batt->cell_volt_highest < (CELL_HIGH_VOLT_FAULT - FAULT_LOCK_MARGIN_HIGH_VOLT) && *high_volt_fault_lock == 1){
+				*high_volt_fault_lock = 0;
+				*warnings &= ~WARNING_BIT_HIGH_VOLT;
+				*fault &= ~FAULT_BIT_HIGH_VOLT;
+				HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_RESET);
+			}
+
+	//low cell volt warning
+			if (batt->cell_volt_lowest <= CELL_LOW_VOLT_WARNING) {
+				*warnings |= WARNING_BIT_LOW_VOLT;
+			}
+			//low cell volt fault
+			if (batt->cell_volt_lowest <= CELL_LOW_VOLT_FAULT){
+				if (*low_volt_hysteresis > 3) {
+					*fault |= FAULT_BIT_LOW_VOLT;
+					HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
+				} else {
+					(*low_volt_hysteresis)++;
+				}
+			} else if (batt->cell_volt_lowest > (CELL_LOW_VOLT_FAULT + FAULT_LOCK_MARGIN_LOW_VOLT)) {
+				if (*low_volt_hysteresis > 0) {
+					*low_volt_hysteresis = 0;
+					*warnings &= ~WARNING_BIT_LOW_VOLT;
+					*fault &= ~FAULT_BIT_LOW_VOLT;
+					HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_RESET);
+				}
+			}
 }
 
 void Cell_Temperature_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings, uint8_t *high_temp_hysteresis) {
@@ -146,27 +143,30 @@ void Cell_Temperature_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t 
 		if (batt->cell_temp_highest < batt->cell_temp[i]) {
 			batt->cell_temp_highest = batt->cell_temp[i];
 		}
-		//highest cell temp warning
-		if (batt->cell_temp_highest >= CELL_HIGH_TEMP_WARNING && batt->cell_temp_highest < CELL_HIGH_TEMP_FAULT) {
-			*warnings |= WARNING_BIT_HIGH_TEMP;
-		}
-		//highest cell temp fault
-		if (batt->cell_temp_highest >= CELL_HIGH_TEMP_FAULT && *high_temp_hysteresis > 3) {
+		if (batt->cell_temp_lowest < batt->cell_temp[i]) {
+		batt->cell_temp_lowest = batt->cell_temp[i];
+	}
+	}
+
+	//highest cell temp warning
+	if (batt->cell_temp_highest >= CELL_HIGH_TEMP_WARNING && batt->cell_temp_highest < CELL_HIGH_TEMP_FAULT) {
+		*warnings |= WARNING_BIT_HIGH_TEMP;
+	}
+	//highest cell temp fault
+
+	if (batt->cell_temp_highest >= CELL_HIGH_TEMP_FAULT) {
+		if (*high_temp_hysteresis > 3) {
 			*fault |= FAULT_BIT_HIGH_TEMP;
 			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
+		} else {
+			(*high_temp_hysteresis)++;
 		}
-		//reset highest cell temp fault
-		else if (batt->cell_temp_highest < (CELL_HIGH_TEMP_FAULT - FAULT_LOCK_MARGIN_HIGH_TEMP) && *high_temp_hysteresis > 0){
+	} else if (batt->cell_temp_highest < (CELL_HIGH_TEMP_FAULT - FAULT_LOCK_MARGIN_HIGH_TEMP)) {
+		if (*high_temp_hysteresis > 0) {
+			*high_temp_hysteresis = 0;
 			*warnings &= ~WARNING_BIT_HIGH_TEMP;
 			*fault &= ~FAULT_BIT_HIGH_TEMP;
 			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_RESET);
-		}
-		//highest cell temp fault(hysteresis)
-		if (batt->cell_temp_highest >= CELL_HIGH_TEMP_FAULT) {
-			*high_temp_hysteresis++;
-		}
-		else if (batt->cell_temp_highest < (CELL_HIGH_TEMP_FAULT - FAULT_LOCK_MARGIN_HIGH_TEMP)) {
-			*high_temp_hysteresis = 0;
 		}
 	}
 }
