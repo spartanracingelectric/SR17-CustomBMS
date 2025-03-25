@@ -1,51 +1,16 @@
 #include "safety.h"
 #include "main.h"
 #include "stdio.h"
+#include "gpio.h"
 // ! Fault Thresholds
 
-// Refer to TODO on Line 61
-#define PACK_HIGH_VOLT_FAULT	    4100000
-#define PACK_LOW_VOLT_FAULT         2880000
-#define CELL_HIGH_VOLT_FAULT	    42000
-#define CELL_LOW_VOLT_FAULT		    25000
-#define CELL_VOLT_IMBALANCE_FAULT   2000 //0.1 V
-#define CELL_HIGH_TEMP_FAULT		60
+uint8_t high_volt_fault_lock = 0;
+uint8_t low_volt_hysteresis = 0;
+uint8_t low_volt_fault_lock = 0;
+uint8_t cell_imbalance_hysteresis = 0;
+uint8_t high_temp_hysteresis = 0;
 
-// ! Warnings Thresholds
-#define PACK_HIGH_VOLT_WARNING	    4085000
-#define PACK_LOW_VOLT_WARNING       3000000
-#define CELL_HIGH_VOLT_WARNING	    40000
-#define CELL_LOW_VOLT_WARNING	    27000
-#define CELL_VOLT_IMBALANCE_WARNING	1000 //0.05 V
-#define CELL_HIGH_TEMP_WARNING		55
-#define CELL_LOW_TEMP_WARNING		0
-
-#define FAULT_LOCK_MARGIN_HIGH_VOLT 100			//10 mV
-#define FAULT_LOCK_MARGIN_LOW_VOLT 	1000		//100 mV
-#define FAULT_LOCK_MARGIN_IMBALANCE 1000		//100 mV
-#define FAULT_LOCK_MARGIN_HIGH_TEMP 10			//10 ℃
-
-#define WARNING_BIT_HIGH_PACK_VOLT 	(1 << 7)	// 0b10000000 (Bit position 7)
-#define WARNING_BIT_LOW_PACK_VOLT  	(1 << 6)	// 0b01000000 (Bit position 6)
-#define WARNING_BIT_HIGH_VOLT    	(1 << 5)  	// 0b00010000 (Bit position 5)
-#define WARNING_BIT_LOW_VOLT     	(1 << 4)  	// 0b00001000 (Bit position 4)
-#define WARNING_BIT_IMBALANCE       (1 << 3)  	// 0b00000100 (Bit position 3)
-#define WARNING_BIT_HIGH_TEMP 		(1 << 2) 	// 0b00000010 (Bit position 2)
-#define WARNING_BIT_SLAVE_VOLT 		(1 << 1) 	// 0b00000001 (Bit position 1)
-
-#define FAULT_BIT_HIGH_PACK_VOLT 	(1 << 7)	// 0b10000000 (Bit position 7)
-#define FAULT_BIT_LOW_PACK_VOLT  	(1 << 6)	// 0b01000000 (Bit position 6)
-#define FAULT_BIT_HIGH_VOLT    		(1 << 5)  	// 0b00010000 (Bit position 5)
-#define FAULT_BIT_LOW_VOLT     		(1 << 4)  	// 0b00001000 (Bit position 4)
-#define FAULT_BIT_IMBALANCE       	(1 << 3)  	// 0b00000100 (Bit position 3)
-#define FAULT_BIT_HIGH_TEMP 		(1 << 2) 	// 0b00000010 (Bit position 2)
-
-#define SLAVE_VOLT_WARNING_MARGIN 	100			//10 mV
-
-
-void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings, uint8_t *states,
-                        uint8_t *high_volt_fault_lock,  uint8_t *low_volt_hysteresis, uint8_t *low_volt_fault_lock,
-                        uint8_t *cell_imbalance_hysteresis){
+void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings){
 
 	batt->cell_volt_highest = batt->cell_volt[0];
 	batt->cell_volt_lowest = batt->cell_volt[0];
@@ -61,37 +26,13 @@ void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 		if (batt->cell_volt[i] < batt->cell_volt_lowest) {
 			batt->cell_volt_lowest = batt->cell_volt[i];
 		}
-
-
-
-
-
-		//cell volt imbalance warning
-//		if ((batt->cell_volt_highest - batt->cell_volt_lowest) >= CELL_VOLT_IMBALANCE_WARNING) {
-//			*warnings |= WARNING_BIT_IMBALANCE;
-//		}
-//		//cell volt imbalance fault
-//		if (((batt->cell_volt_highest - batt->cell_volt_lowest) >= CELL_VOLT_IMBALANCE_FAULT) && (*cell_imbalance_hysteresis == 1)) {
-//			*fault |= FAULT_BIT_IMBALANCE;
-//			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
-//		}
-//		//reset cell volt imbalance fault
-//		else if (((batt->cell_volt_highest - batt->cell_volt_lowest) < FAULT_LOCK_MARGIN_IMBALANCE) && (*cell_imbalance_hysteresis == 1)){
-//			*cell_imbalance_hysteresis = 0;
-//			*warnings &= ~WARNING_BIT_IMBALANCE;
-//			*fault &= ~FAULT_BIT_IMBALANCE;
-//			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_RESET);
-//		}
-//		//cell volt imbalance fault(hysteresis)
-//		if ((batt->cell_volt_highest - batt->cell_volt_lowest) >= CELL_VOLT_IMBALANCE_FAULT) {
-//			*cell_imbalance_hysteresis = 1;
-//		}
-//		else if ((batt->cell_volt_highest - batt->cell_volt_lowest) < CELL_VOLT_IMBALANCE_FAULT) {
-//			*cell_imbalance_hysteresis = 0;
-//		}
-//		if (BALANCE) {
-//			*states |= 0b10000000;
-//		}
+  }
+}
+void Cell_Balance_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings) {
+	batt->cell_difference = batt->cell_volt_highest - batt->cell_volt_lowest;
+//cell volt imbalance warning
+	if (batt->cell_difference >= CELL_VOLT_IMBALANCE_WARNING) {
+		*warnings |= WARNING_BIT_IMBALANCE;
 	}
 	//high cell volt warning
 			if (batt->cell_volt_highest >= CELL_HIGH_VOLT_WARNING) {
@@ -136,7 +77,7 @@ void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 			}
 }
 
-void Cell_Temperature_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings, uint8_t *high_temp_hysteresis) {
+void Cell_Temperature_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings) {
 	batt->cell_temp_highest = batt->cell_temp[0];
 	batt->cell_temp_lowest = batt->cell_temp[0];
 
@@ -168,7 +109,7 @@ void Cell_Temperature_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t 
 			*high_temp_hysteresis = 0;
 			*warnings &= ~WARNING_BIT_HIGH_TEMP;
 			*fault &= ~FAULT_BIT_HIGH_TEMP;
-			HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_RESET);
+			ClearFaultSignal();
 		}
 	}
 }
