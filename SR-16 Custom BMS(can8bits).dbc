@@ -7,12 +7,12 @@ BU_:
 
 
 BO_ 1536 BMS_Safety_Checker: 8 Vector__XXX
-  SG_ BMS_Cell_High_Temp_Warning      : 2|1@1-   (1,0)      [0|1]      " " Vector__XXX
-  SG_ BMS_Cell_Volt_Imbalance_Warning : 3|1@1-   (1,0)      [0|1]      " " Vector__XXX
-  SG_ BMS_Cell_Low_Volt_Warning       : 4|1@1-   (1,0)      [0|1]      " " Vector__XXX
-  SG_ BMS_Cell_High_Volt_Warning      : 5|1@1-   (1,0)      [0|1]      " " Vector__XXX
-  SG_ BMS_Pack_Low_Volt_Warning       : 6|1@1-   (1,0)      [0|1]      " " Vector__XXX
-  SG_ BMS_Pack_High_Volt_Warning      : 7|1@1-   (1,0)      [0|1]      " " Vector__XXX
+  SG_ BMS_Cell_High_Temp_Warning      :  2|1@1-  (1,0)      [0|1]      " " Vector__XXX
+  SG_ BMS_Cell_Volt_Imbalance_Warning :  3|1@1-  (1,0)      [0|1]      " " Vector__XXX
+  SG_ BMS_Cell_Low_Volt_Warning       :  4|1@1-  (1,0)      [0|1]      " " Vector__XXX
+  SG_ BMS_Cell_High_Volt_Warning      :  5|1@1-  (1,0)      [0|1]      " " Vector__XXX
+  SG_ BMS_Pack_Low_Volt_Warning       :  6|1@1-  (1,0)      [0|1]      " " Vector__XXX
+  SG_ BMS_Pack_High_Volt_Warning      :  7|1@1-  (1,0)      [0|1]      " " Vector__XXX
   SG_ BMS_Cell_High_Temp_Fault        : 10|1@1-  (1,0)      [0|1]      " " Vector__XXX
   SG_ BMS_Cell_Volt_Imbalance_Fault   : 11|1@1-  (1,0)      [0|1]      " " Vector__XXX
   SG_ BMS_Cell_Low_Volt_Fault         : 12|1@1-  (1,0)      [0|1]      " " Vector__XXX
@@ -22,7 +22,7 @@ BO_ 1536 BMS_Safety_Checker: 8 Vector__XXX
   SG_ BMS_Cell_Max_Min_Difference     : 16|16@1+ (0.0001,0) [0|6.5535] "V" Vector__XXX
   SG_ BMS_Pack_Voltage                : 32|16@1+ (0.01,0)   [0|655.35] "V" Vector__XXX
 
-BO_ 1540 BMS_Balance_Enable: 8 Vector__XXX
+BO_ 1540 BMS_Balance_Enable:  1 Vector__XXX
   SG_ BMS_Balance_Enable              :  0|1@1-   (1,0)     [0|1]      " " Vector__XXX
 
 BO_ 1569 BMS_State_of_Charge: 8 Vector__XXX
@@ -130,7 +130,7 @@ BO_ 1572 BMS_Balance_Status_M5_to_M8: 8 Vector__XXX
   SG_ BMS_M8_Cell_11                  : 58|1@1-  (1,0)      [0|1]      " " Vector__XXX
   SG_ BMS_M8_Cell_12                  : 59|1@1-  (1,0)      [0|1]      " " Vector__XXX
 
-BO_ 1570 BMS_Cell_Summary: 8 Vector__XXX
+BO_ 1570 BMS_Cell_Summary: 6 Vector__XXX
   SG_ BMS_Highest_Cell_Voltage        :  0|16@1+ (0.0001,0) [0|6.5535] "V" Vector__XXX
   SG_ BMS_Lowest_Cell_Voltage         : 16|16@1+ (0.0001,0) [0|6.5535] "V" Vector__XXX
   SG_ BMS_Higest_Cell_Temperature     : 32| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
