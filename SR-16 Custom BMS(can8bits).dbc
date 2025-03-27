@@ -295,10 +295,10 @@ BO_ 1665 BMS_M1_Cell_Thermistor_Data_2: 8 Vector__XXX
   SG_ BMS_M1_Cell_10_Thermistor       :  8| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
   SG_ BMS_M1_Cell_11_Thermistor       : 16| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
   SG_ BMS_M1_Cell_12_Thermistor       : 24| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
-  SG_ BMS_M1_Pressure                 : 32| 8@1+ (0.01,0)   [0|655.35]"PSI" Vector__XXX
-  SG_ BMS_M1_Atmosphere_Temp          : 40| 8@1+ (1,0)      [0|65535]  "C" Vector__XXX
-  SG_ BMS_M1_Humidity                 : 48| 8@1+ (1,0)      [0|65535]  "%" Vector__XXX
-  SG_ BMS_M1_Dew_Point                : 56| 8@1+ (1,0)      [0|65535]  "C" Vector__XXX
+  SG_ BMS_M1_Pressure                 : 32| 8@1+ (0.01,0)   [0|2.55] "PSI" Vector__XXX
+  SG_ BMS_M1_Atmosphere_Temp          : 40| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
+  SG_ BMS_M1_Humidity                 : 48| 8@1+ (1,0)      [0|255]    "%" Vector__XXX
+  SG_ BMS_M1_Dew_Point                : 56| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
 
 BO_ 1666 BMS_M2_Cell_Thermistor_Data_1: 8 Vector__XXX
   SG_ BMS_M2_Cell_1_Thermistor        :  0| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
@@ -315,10 +315,10 @@ BO_ 1667 BMS_M2_Cell_Thermistor_Data_2: 8 Vector__XXX
   SG_ BMS_M2_Cell_10_Thermistor       :  8| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
   SG_ BMS_M2_Cell_11_Thermistor       : 16| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
   SG_ BMS_M2_Cell_12_Thermistor       : 24| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
-  SG_ BMS_M2_Pressure                 : 32| 8@1+ (0.0001,0) [0|6.5535]"PSI" Vector__XXX
-  SG_ BMS_M2_Atmosphere_Temp          : 40| 8@1+ (1,0)      [0|65535]  "C" Vector__XXX
-  SG_ BMS_M2_Humidity                 : 48| 8@1+ (1,0)      [0|65535]  "%" Vector__XXX
-  SG_ BMS_M2_Dew_Point                : 56| 8@1+ (1,0)      [0|65535]  "C" Vector__XXX
+  SG_ BMS_M2_Pressure                 : 32| 8@1+ (0.01,0)   [0|2.55] "PSI" Vector__XXX
+  SG_ BMS_M2_Atmosphere_Temp          : 40| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
+  SG_ BMS_M2_Humidity                 : 48| 8@1+ (1,0)      [0|255]    "%" Vector__XXX
+  SG_ BMS_M2_Dew_Point                : 56| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
 
 BO_ 1668 BMS_M3_Cell_Thermistor_Data_1: 8 Vector__XXX
   SG_ BMS_M3_Cell_1_Thermistor        :  0| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
@@ -335,10 +335,10 @@ BO_ 1669 BMS_M3_Cell_Thermistor_Data_2: 8 Vector__XXX
   SG_ BMS_M3_Cell_10_Thermistor       :  8| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
   SG_ BMS_M3_Cell_11_Thermistor       : 16| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
   SG_ BMS_M3_Cell_12_Thermistor       : 24| 8@1+ (1,0)      [0|255]    "C" Vector__XXX 
-  SG_ BMS_M3_Pressure                 : 32| 8@1+ (0.0001,0) [0|6.5535]"PSI" Vector__XXX
-  SG_ BMS_M3_Atmosphere_Temp          : 40| 8@1+ (1,0)      [0|65535]  "C" Vector__XXX
-  SG_ BMS_M3_Humidity                 : 48| 8@1+ (1,0)      [0|65535]  "%" Vector__XXX
-  SG_ BMS_M3_Dew_Point                : 56| 8@1+ (1,0)      [0|65535]  "C" Vector__XXX
+  SG_ BMS_M3_Pressure                 : 32| 8@1+ (0.01,0)   [0|2.55] "PSI" Vector__XXX
+  SG_ BMS_M3_Atmosphere_Temp          : 40| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
+  SG_ BMS_M3_Humidity                 : 48| 8@1+ (1,0)      [0|255]    "%" Vector__XXX
+  SG_ BMS_M3_Dew_Point                : 56| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
  
 BO_ 1670 BMS_M4_Cell_Thermistor_Data_1: 8 Vector__XXX
   SG_ BMS_M4_Cell_1_Thermistor        :  0| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
@@ -355,10 +355,10 @@ BO_ 1671 BMS_M4_Cell_Thermistor_Data_2: 8 Vector__XXX
   SG_ BMS_M4_Cell_10_Thermistor       :  8| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
   SG_ BMS_M4_Cell_11_Thermistor       : 16| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
   SG_ BMS_M4_Cell_12_Thermistor       : 24| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
-  SG_ BMS_M4_Pressure                 : 32| 8@1+ (0.0001,0) [0|6.5535]"PSI" Vector__XXX
-  SG_ BMS_M4_Atmosphere_Temp          : 40| 8@1+ (1,0)      [0|65535]  "C" Vector__XXX
-  SG_ BMS_M4_Humidity                 : 48| 8@1+ (1,0)      [0|65535]  "%" Vector__XXX
-  SG_ BMS_M4_Dew_Point                : 56| 8@1+ (1,0)      [0|65535]  "C" Vector__XXX
+  SG_ BMS_M4_Pressure                 : 32| 8@1+ (0.01,0)   [0|2.55] "PSI" Vector__XXX
+  SG_ BMS_M4_Atmosphere_Temp          : 40| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
+  SG_ BMS_M4_Humidity                 : 48| 8@1+ (1,0)      [0|255]    "%" Vector__XXX
+  SG_ BMS_M4_Dew_Point                : 56| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
  
 BO_ 1672 BMS_M5_Cell_Thermistor_Data_1: 8 Vector__XXX
   SG_ BMS_M5_Cell_1_Thermistor        :  0| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
@@ -375,10 +375,10 @@ BO_ 1673 BMS_M5_Cell_Thermistor_Data_2: 8 Vector__XXX
   SG_ BMS_M5_Cell_10_Thermistor       :  8| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
   SG_ BMS_M5_Cell_11_Thermistor       : 16| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
   SG_ BMS_M5_Cell_12_Thermistor       : 24| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
-  SG_ BMS_M5_Pressure                 : 32| 8@1+ (0.0001,0) [0|6.5535]"PSI" Vector__XXX
-  SG_ BMS_M5_Atmosphere_Temp          : 40| 8@1+ (1,0)      [0|65535]  "C" Vector__XXX
-  SG_ BMS_M5_Humidity                 : 48| 8@1+ (1,0)      [0|65535]  "%" Vector__XXX
-  SG_ BMS_M5_Dew_Point                : 56| 8@1+ (1,0)      [0|65535]  "C" Vector__XXX
+  SG_ BMS_M5_Pressure                 : 32| 8@1+ (0.01,0)   [0|2.55] "PSI" Vector__XXX
+  SG_ BMS_M5_Atmosphere_Temp          : 40| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
+  SG_ BMS_M5_Humidity                 : 48| 8@1+ (1,0)      [0|255]    "%" Vector__XXX
+  SG_ BMS_M5_Dew_Point                : 56| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
 
 BO_ 1674 BMS_M6_Cell_Thermistor_Data_1: 8 Vector__XXX
   SG_ BMS_M6_Cell_1_Thermistor        :  0| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
@@ -395,10 +395,10 @@ BO_ 1675 BMS_M6_Cell_Thermistor_Data_2: 8 Vector__XXX
   SG_ BMS_M6_Cell_10_Thermistor       :  8| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
   SG_ BMS_M6_Cell_11_Thermistor       : 16| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
   SG_ BMS_M6_Cell_12_Thermistor       : 24| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
-  SG_ BMS_M6_Pressure                 : 32| 8@1+ (0.0001,0) [0|6.5535]"PSI" Vector__XXX
-  SG_ BMS_M6_Atmosphere_Temp          : 40| 8@1+ (1,0)      [0|65535]  "C" Vector__XXX
-  SG_ BMS_M6_Humidity                 : 48| 8@1+ (1,0)      [0|65535]  "%" Vector__XXX
-  SG_ BMS_M6_Dew_Point                : 56| 8@1+ (1,0)      [0|65535]  "C" Vector__XXX
+  SG_ BMS_M6_Pressure                 : 32| 8@1+ (0.01,0)   [0|2.55] "PSI" Vector__XXX
+  SG_ BMS_M6_Atmosphere_Temp          : 40| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
+  SG_ BMS_M6_Humidity                 : 48| 8@1+ (1,0)      [0|255]    "%" Vector__XXX
+  SG_ BMS_M6_Dew_Point                : 56| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
 
 BO_ 1676 BMS_M7_Cell_Thermistor_Data_1: 8 Vector__XXX
   SG_ BMS_M7_Cell_1_Thermistor        :  0| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
@@ -415,10 +415,10 @@ BO_ 1677 BMS_M7_Cell_Thermistor_Data_2: 8 Vector__XXX
   SG_ BMS_M7_Cell_10_Thermistor       :  8| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
   SG_ BMS_M7_Cell_11_Thermistor       : 16| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
   SG_ BMS_M7_Cell_12_Thermistor       : 24| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
-  SG_ BMS_M7_Pressure                 : 32| 8@1+ (0.0001,0) [0|6.5535]"PSI" Vector__XXX
-  SG_ BMS_M7_Atmosphere_Temp          : 40| 8@1+ (1,0)      [0|65535]  "C" Vector__XXX
-  SG_ BMS_M7_Humidity                 : 48| 8@1+ (1,0)      [0|65535]  "%" Vector__XXX
-  SG_ BMS_M7_Dew_Point                : 56| 8@1+ (1,0)      [0|65535]  "C" Vector__XXX
+  SG_ BMS_M7_Pressure                 : 32| 8@1+ (0.01,0)   [0|2.55] "PSI" Vector__XXX
+  SG_ BMS_M7_Atmosphere_Temp          : 40| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
+  SG_ BMS_M7_Humidity                 : 48| 8@1+ (1,0)      [0|255]    "%" Vector__XXX
+  SG_ BMS_M7_Dew_Point                : 56| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
 
 BO_ 1678 BMS_M8_Cell_Thermistor_Data_1: 8 Vector__XXX
   SG_ BMS_M8_Cell_1_Thermistor        :  0| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
@@ -435,8 +435,8 @@ BO_ 1679 BMS_M8_Cell_Thermistor_Data_2: 8 Vector__XXX
   SG_ BMS_M8_Cell_10_Thermistor       :  8| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
   SG_ BMS_M8_Cell_11_Thermistor       : 16| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
   SG_ BMS_M8_Cell_12_Thermistor       : 24| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
-  SG_ BMS_M8_Pressure                 : 32| 8@1+ (0.01,0)   [0|6.5535]"PSI" Vector__XXX
-  SG_ BMS_M8_Atmosphere_Temp          : 40| 8@1+ (1,0)      [0|65535]  "C" Vector__XXX
-  SG_ BMS_M8_Humidity                 : 48| 8@1+ (1,0)      [0|65535]  "%" Vector__XXX
-  SG_ BMS_M8_Dew_Point                : 56| 8@1+ (1,0)      [0|65535]  "C" Vector__XXX
+  SG_ BMS_M8_Pressure                 : 32| 8@1+ (0.01,0)   [0|2.55 ]"PSI" Vector__XXX
+  SG_ BMS_M8_Atmosphere_Temp          : 40| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
+  SG_ BMS_M8_Humidity                 : 48| 8@1+ (1,0)      [0|255]    "%" Vector__XXX
+  SG_ BMS_M8_Dew_Point                : 56| 8@1+ (1,0)      [0|255]    "C" Vector__XXX
 
