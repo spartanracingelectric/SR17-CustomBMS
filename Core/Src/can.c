@@ -183,13 +183,13 @@ void Set_CAN_Id(CANMessage *ptr, uint32_t id) { ptr->TxHeader.StdId = id; }
 void CAN_Send_Voltage(CANMessage *ptr, uint16_t *read_volt) {
 	uint32_t CAN_ID = (uint32_t)CAN_ID_VOLTAGE;
     for (int i = 0; i < NUM_CELLS; i += 4) {  //pack every 4 cell group in 1 CAN message
-        ptr->data[0] = read_volt[i] & 0xFF; 			//To ensure the data type is uint8_t, use & 0xFF
-        ptr->data[1] = (read_volt[i] >> 8) & 0xFF;
-        ptr->data[2] = read_volt[i + 1] & 0xFF;
+        ptr->data[0] =  read_volt[  i  ]       & 0xFF; 			//To ensure the data type is uint8_t, use & 0xFF
+        ptr->data[1] = (read_volt[  i  ] >> 8) & 0xFF;
+        ptr->data[2] =  read_volt[i + 1]       & 0xFF;
         ptr->data[3] = (read_volt[i + 1] >> 8) & 0xFF;
-        ptr->data[4] = read_volt[i + 2] & 0xFF;
+        ptr->data[4] =  read_volt[i + 2]       & 0xFF;
         ptr->data[5] = (read_volt[i + 2] >> 8) & 0xFF;
-        ptr->data[6] = read_volt[i + 3] & 0xFF;
+        ptr->data[6] =  read_volt[i + 3]       & 0xFF;
         ptr->data[7] = (read_volt[i + 3] >> 8) & 0xFF;
 
         Set_CAN_Id(ptr, CAN_ID);
@@ -213,14 +213,14 @@ void CAN_Send_Temperature(CANMessage *ptr, uint16_t *read_temp, uint16_t *pressu
         ptr->data[6] = (uint8_t)(read_temp[i + 6] & 0xFF);
         ptr->data[7] = (uint8_t)(read_temp[i + 7] & 0xFF);
 
-		printf("temp1 in 8 bits:%d\n", ptr->data[0]);
-		printf("temp2 in 8 bits:%d\n", ptr->data[1]);
-		printf("temp3 in 8 bits:%d\n", ptr->data[2]);
-		printf("temp4 in 8 bits:%d\n", ptr->data[3]);
-		printf("temp5 in 8 bits:%d\n", ptr->data[4]);
-		printf("temp6 in 8 bits:%d\n", ptr->data[5]);
-		printf("temp7 in 8 bits:%d\n", ptr->data[6]);
-		printf("temp8 in 8 bits:%d\n", ptr->data[7]);
+//		printf("temp1 in 8 bits:%d\n", ptr->data[0]);
+//		printf("temp2 in 8 bits:%d\n", ptr->data[1]);
+//		printf("temp3 in 8 bits:%d\n", ptr->data[2]);
+//		printf("temp4 in 8 bits:%d\n", ptr->data[3]);
+//		printf("temp5 in 8 bits:%d\n", ptr->data[4]);
+//		printf("temp6 in 8 bits:%d\n", ptr->data[5]);
+//		printf("temp7 in 8 bits:%d\n", ptr->data[6]);
+//		printf("temp8 in 8 bits:%d\n", ptr->data[7]);
 
 		CAN_Send(ptr);
 		CAN_ID++;
@@ -236,10 +236,10 @@ void CAN_Send_Temperature(CANMessage *ptr, uint16_t *read_temp, uint16_t *pressu
 		ptr->data[6] = (uint8_t)(humidity  [  i  ] & 0xFF);
 		ptr->data[7] = (uint8_t)(dew_point [  i  ] & 0xFF);
 
-		printf("temp9 in 8 bits:%d\n", ptr->data[0]);
-		printf("temp10 in 8 bits:%d\n", ptr->data[1]);
-		printf("temp11 in 8 bits:%d\n", ptr->data[2]);
-		printf("temp12 in 8 bits:%d\n", ptr->data[3]);
+//		printf("temp9 in 8 bits:%d\n", ptr->data[0]);
+//		printf("temp10 in 8 bits:%d\n", ptr->data[1]);
+//		printf("temp11 in 8 bits:%d\n", ptr->data[2]);
+//		printf("temp12 in 8 bits:%d\n", ptr->data[3]);
 
 		CAN_Send(ptr);
 		CAN_ID++;
@@ -272,8 +272,8 @@ void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_
 	batt->cell_difference = batt->cell_volt_highest - batt->cell_volt_lowest;
 	uint32_t CAN_ID = (uint32_t)CAN_ID_SAFETY;
 	Set_CAN_Id(ptr, CAN_ID);
-	ptr->data[0] = *faults;
-	ptr->data[1] = *warnings;
+	ptr->data[0] = *warnings;
+	ptr->data[1] = *faults;
 	ptr->data[2] = batt->cell_difference & 0xFF;
 	ptr->data[3] = (batt->cell_difference >> 8) & 0xFF;
 	ptr->data[4] = batt->pack_voltage & 0xFF;
