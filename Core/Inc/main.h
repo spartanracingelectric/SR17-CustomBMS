@@ -84,10 +84,15 @@ typedef struct batteryModule {
     uint16_t dew_point[NUM_DEVICES];
 } batteryModule;
 
-typedef struct CANMessage {
-	CAN_TxHeaderTypeDef TxHeader;
-	uint32_t TxMailbox;
-	uint8_t data[8];
+typedef struct CANMessage{
+    CAN_TxHeaderTypeDef TxHeader;
+    uint32_t TxMailbox;
+    uint8_t voltageBuffer[8];
+    uint8_t thermistorBuffer[8];
+    uint8_t summaryBuffer[8];
+    uint8_t safetyBuffer[8];
+    uint8_t socBuffer[8];
+    uint8_t balanceStatus[8];
 } CANMessage;
 
 /* USER CODE END ET */

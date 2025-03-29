@@ -208,7 +208,7 @@ int main(void)
 //				printf("Temp[%d]: %d\n",i, modPackInfo.cell_temp[i]);
 //			}
 //			printf("pack volt start\n");
-//			ReadHVInput(&modPackInfo);
+			ReadHVInput(&modPackInfo);
 //			printf("pack volt end\n");
 
 			SOC_updateCharge(&modPackInfo,(HAL_GetTick() - prev_soc_time));
@@ -240,7 +240,7 @@ int main(void)
 			CAN_Send_Cell_Summary(&msg, &modPackInfo);
 			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp, modPackInfo.pressure, modPackInfo.atmos_temp, modPackInfo.humidity, modPackInfo.dew_point);
-			CAN_Send_Sensor(&msg, &modPackInfo);
+//			CAN_Send_Sensor(&msg, &modPackInfo);
 			CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
             CAN_Send_Balance_Status(&msg, modPackInfo.balance_status);
 		}

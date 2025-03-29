@@ -86,7 +86,7 @@ void Cell_Temperature_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t 
 		if (batt->cell_temp_highest < batt->cell_temp[i]) {
 			batt->cell_temp_highest = batt->cell_temp[i];
 		}
-		if (batt->cell_temp_lowest < batt->cell_temp[i]) {
+		if (batt->cell_temp_lowest > batt->cell_temp[i]) {
 			batt->cell_temp_lowest = batt->cell_temp[i];
 		}
 	}
