@@ -227,14 +227,14 @@ void CAN_Send_Temperature(CANMessage *ptr, uint16_t *read_temp, uint16_t *pressu
 
 		Set_CAN_Id(ptr, CAN_ID);
 
-		ptr->data[0] = (uint8_t)(read_temp[i + 8] & 0xFF);
-		ptr->data[1] = (uint8_t)(read_temp[i + 9] & 0xFF);
-		ptr->data[2] = (uint8_t)(read_temp[i + 10] & 0xFF);
-		ptr->data[3] = (uint8_t)(read_temp[i + 11] & 0xFF);
-		ptr->data[4] = (uint8_t)(pressure  [  i / 16  ] & 0xFF);
-		ptr->data[5] = (uint8_t)(atmos_temp[  i / 16 ] & 0xFF);
-		ptr->data[6] = (uint8_t)(humidity  [  i / 16 ] & 0xFF);
-		ptr->data[7] = (uint8_t)(dew_point [  i / 16 ] & 0xFF);
+		ptr->data[0] = (uint8_t)(read_temp [i +  8] & 0xFF);
+		ptr->data[1] = (uint8_t)(read_temp [i +  9] & 0xFF);
+		ptr->data[2] = (uint8_t)(read_temp [i + 10] & 0xFF);
+		ptr->data[3] = (uint8_t)(read_temp [i + 11] & 0xFF);
+		ptr->data[4] = (uint8_t)(pressure  [i / 16] & 0xFF);
+		ptr->data[5] = (uint8_t)(atmos_temp[i / 16] & 0xFF);
+		ptr->data[6] = (uint8_t)(humidity  [i / 16] & 0xFF);
+		ptr->data[7] = (uint8_t)(dew_point [i / 16] & 0xFF);
 
 //		printf("temp9 in 8 bits:%d\n", ptr->data[0]);
 //		printf("temp10 in 8 bits:%d\n", ptr->data[1]);
@@ -256,12 +256,12 @@ void CAN_Send_Temperature(CANMessage *ptr, uint16_t *read_temp, uint16_t *pressu
 void CAN_Send_Cell_Summary(CANMessage *ptr, struct batteryModule *batt) {
 	uint32_t CAN_ID = (uint32_t)CAN_ID_SUMMARY;
 	Set_CAN_Id(ptr, CAN_ID);
-	ptr->data[0] = batt->cell_volt_highest & 0xFF;
+	ptr->data[0] =  batt->cell_volt_highest       & 0xFF;
 	ptr->data[1] = (batt->cell_volt_highest >> 8) & 0xFF;
-	ptr->data[2] = batt->cell_volt_lowest & 0xFF;
-	ptr->data[3] = (batt->cell_volt_lowest >> 8) & 0xFF;
+	ptr->data[2] =  batt->cell_volt_lowest        & 0xFF;
+	ptr->data[3] = (batt->cell_volt_lowest  >> 8) & 0xFF;
 	ptr->data[4] = (uint8_t)(batt->cell_temp_highest & 0xFF);
-	ptr->data[5] = (uint8_t)(batt->cell_temp_lowest & 0xFF);
+	ptr->data[5] = (uint8_t)(batt->cell_temp_lowest  & 0xFF);
 //	ptr->data[6] =
 //	ptr->data[7] =
 	CAN_Send(ptr);
@@ -274,10 +274,10 @@ void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_
 	Set_CAN_Id(ptr, CAN_ID);
 	ptr->data[0] = *warnings;
 	ptr->data[1] = *faults;
-	ptr->data[2] = batt->cell_difference & 0xFF;
+	ptr->data[2] =  batt->cell_difference       & 0xFF;
 	ptr->data[3] = (batt->cell_difference >> 8) & 0xFF;
-	ptr->data[4] = batt->pack_voltage & 0xFF;
-	ptr->data[5] = (batt->pack_voltage >> 8) & 0xFF;
+	ptr->data[4] =  batt->pack_voltage          & 0xFF;
+	ptr->data[5] = (batt->pack_voltage    >> 8) & 0xFF;
 	CAN_Send(ptr);
 //	printf("Faults\n");
 }
@@ -302,25 +302,25 @@ void CAN_Send_Balance_Status(struct CANMessage *ptr, uint16_t *balance_status){
 	uint32_t CAN_ID = (uint32_t)CAN_ID_Balance_status;
 	Set_CAN_Id(ptr, CAN_ID);
 
-	ptr->data[0] = balance_status[0] & 0xFF;
+	ptr->data[0] =  balance_status[0]       & 0xFF;
 	ptr->data[1] = (balance_status[0] >> 8) & 0xFF;
-	ptr->data[2] = balance_status[1] & 0xFF;
+	ptr->data[2] =  balance_status[1]       & 0xFF;
 	ptr->data[3] = (balance_status[1] >> 8) & 0xFF;
-	ptr->data[4] = balance_status[2] & 0xFF;
+	ptr->data[4] =  balance_status[2]       & 0xFF;
 	ptr->data[5] = (balance_status[2] >> 8) & 0xFF;
-	ptr->data[6] = balance_status[3] & 0xFF;
+	ptr->data[6] =  balance_status[3]       & 0xFF;
 	ptr->data[7] = (balance_status[3] >> 8) & 0xFF;
 	CAN_Send(ptr);
 	CAN_ID++;
 
 	Set_CAN_Id(ptr, CAN_ID);
-	ptr->data[0] = balance_status[4] & 0xFF;
+	ptr->data[0] =  balance_status[4]       & 0xFF;
 	ptr->data[1] = (balance_status[4] >> 8) & 0xFF;
-	ptr->data[2] = balance_status[5] & 0xFF;
+	ptr->data[2] =  balance_status[5]       & 0xFF;
 	ptr->data[3] = (balance_status[5] >> 8) & 0xFF;
-	ptr->data[4] = balance_status[6] & 0xFF;
+	ptr->data[4] =  balance_status[6]       & 0xFF;
 	ptr->data[5] = (balance_status[6] >> 8) & 0xFF;
-	ptr->data[6] = balance_status[7] & 0xFF;
+	ptr->data[6] =  balance_status[7]       & 0xFF;
 	ptr->data[7] = (balance_status[7] >> 8) & 0xFF;
 	CAN_Send(ptr);
 }
@@ -330,14 +330,14 @@ void CAN_Send_Sensor(struct CANMessage *ptr, batteryModule *batt) {
 	Set_CAN_Id(ptr, CAN_ID);
 
 	for (int i = 0; i < NUM_DEVICES; ++i) {
-		ptr->data[0] = batt->pressure[i];
-		ptr->data[1] = batt->pressure[i] >> 8;
+		ptr->data[0] = batt->pressure  [i];
+		ptr->data[1] = batt->pressure  [i] >> 8;
 		ptr->data[2] = batt->atmos_temp[i];
 		ptr->data[3] = batt->atmos_temp[i] >> 8;
-		ptr->data[4] = batt->humidity[i];
-		ptr->data[5] = batt->humidity[i] >> 8;
-		ptr->data[6] = batt->dew_point[i];
-		ptr->data[7] = batt->dew_point[i] >> 8;
+		ptr->data[4] = batt->humidity  [i];
+		ptr->data[5] = batt->humidity  [i] >> 8;
+		ptr->data[6] = batt->dew_point [i];
+		ptr->data[7] = batt->dew_point [i] >> 8;
 		CAN_Send(ptr);
 
 		CAN_ID++;
