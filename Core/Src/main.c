@@ -208,7 +208,7 @@ int main(void)
 //				printf("Temp[%d]: %d\n",i, modPackInfo.cell_temp[i]);
 //			}
 //			printf("pack volt start\n");
-			ReadHVInput(&modPackInfo);
+//			ReadHVInput(&modPackInfo);
 //			printf("pack volt end\n");
 
 			SOC_updateCharge(&modPackInfo,(HAL_GetTick() - prev_soc_time));

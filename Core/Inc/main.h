@@ -76,7 +76,7 @@ typedef struct batteryModule {
 	uint16_t cell_difference;
 	uint16_t cell_temp_lowest;
 	uint16_t cell_temp_highest;
-	uint32_t pack_voltage;
+	uint16_t pack_voltage;
 	uint16_t read_auxreg[NUM_AUXES];
 	uint16_t balance_status[NUM_DEVICES];
     uint16_t soc;
@@ -110,6 +110,42 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define Shunt_PIN_FOR_2A_Pin GPIO_PIN_2
+#define Shunt_PIN_FOR_2A_GPIO_Port GPIOC
+#define LTC_nCS_Pin GPIO_PIN_4
+#define LTC_nCS_GPIO_Port GPIOA
+#define MCU_ADC_VSENSE_Pin GPIO_PIN_5
+#define MCU_ADC_VSENSE_GPIO_Port GPIOC
+#define MCU_SHUTDOWN_SIGNAL_Pin GPIO_PIN_1
+#define MCU_SHUTDOWN_SIGNAL_GPIO_Port GPIOB
+#define MCU_HEARTBEAT_LED_Pin GPIO_PIN_6
+#define MCU_HEARTBEAT_LED_GPIO_Port GPIOC
+
+/* USER CODE BEGIN Private defines */
+#define NUM_DEVICES				8	//1 slave board
+#define NUM_CELL_SERIES_GROUP	12	//1 slave board
+#define NUM_CELLS				NUM_DEVICES*NUM_CELL_SERIES_GROUP	//multiple slave board
+#define NUM_THERM_PER_MOD		12
+#define NUM_THERM_TOTAL			NUM_DEVICES*NUM_THERM_PER_MOD
+#define NUM_AUX_GROUP			6
+#define NUM_AUXES				NUM_DEVICES*NUM_AUX_GROUP
+#define CYCLETIME_CAP			100 //100ms update delay
+#define LED_HEARTBEAT_DELAY_MS	50  //10ms update delay
+#define BALANCE 				0 	//FALSE
+#define MAX_CELL_CAPACITY 		3000
+#define MAX_BATTERY_CAPACITY 	NUM_DEVICES* MAX_CELL_CAPACITY
+
+#define SHUNT_SIGNAL_Pin GPIO_PIN_3
+#define SHUNT_SIGNAL_GPIO_Port GPIOC
+#define LTC_nCS_Pin GPIO_PIN_4
+#define LTC_nCS_GPIO_Port GPIOA
+#define MCU_ADC_VSENSE_Pin GPIO_PIN_5
+#define MCU_ADC_VSENSE_GPIO_Port GPIOC
+#define MCU_SHUTDOWN_SIGNAL_Pin GPIO_PIN_1
+#define MCU_SHUTDOWN_SIGNAL_GPIO_Port GPIOB
+#define MCU_HEARTBEAT_LED_Pin GPIO_PIN_6
+#define MCU_HEARTBEAT_LED_GPIO_Port GPIOC
+/* USER CODE END Private defines */
 
 #ifdef __cplusplus
 }
