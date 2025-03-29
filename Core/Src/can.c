@@ -231,10 +231,10 @@ void CAN_Send_Temperature(CANMessage *ptr, uint16_t *read_temp, uint16_t *pressu
 		ptr->data[1] = (uint8_t)(read_temp[i + 9] & 0xFF);
 		ptr->data[2] = (uint8_t)(read_temp[i + 10] & 0xFF);
 		ptr->data[3] = (uint8_t)(read_temp[i + 11] & 0xFF);
-		ptr->data[4] = (uint8_t)(pressure  [  i  ] & 0xFF);
-		ptr->data[5] = (uint8_t)(atmos_temp[  i  ] & 0xFF);
-		ptr->data[6] = (uint8_t)(humidity  [  i  ] & 0xFF);
-		ptr->data[7] = (uint8_t)(dew_point [  i  ] & 0xFF);
+		ptr->data[4] = (uint8_t)(pressure  [  i / 16  ] & 0xFF);
+		ptr->data[5] = (uint8_t)(atmos_temp[  i / 16 ] & 0xFF);
+		ptr->data[6] = (uint8_t)(humidity  [  i / 16 ] & 0xFF);
+		ptr->data[7] = (uint8_t)(dew_point [  i / 16 ] & 0xFF);
 
 //		printf("temp9 in 8 bits:%d\n", ptr->data[0]);
 //		printf("temp10 in 8 bits:%d\n", ptr->data[1]);
