@@ -158,27 +158,23 @@ HAL_StatusTypeDef CAN_Send(CANMessage *ptr) {
 
     uint8_t *dataPtr = NULL;
 
+
          if(ptr->TxHeader.StdId >= CAN_ID_VOLTAGE &&  ptr->TxHeader.StdId < CAN_ID_VOLTAGE + (NUM_CELLS * 2 / CAN_BYTE_NUM)) {//(NUM_CELLS * 2 / CAN_BYTE_NUM is just a number of can message
       	   dataPtr = (uint8_t *)ptr->voltageBuffer;
          }
-         if(ptr->TxHeader.StdId >= CAN_ID_THERMISTOR &&  ptr->TxHeader.StdId < CAN_ID_THERMISTOR + (NUM_THERM_TOTAL / CAN_BYTE_NUM + 3)) {//(NUM_THERM_TOTAL / CAN_BYTE_NUM + 3) is a number of the message, 3 is number of sensors
+         else if(ptr->TxHeader.StdId >= CAN_ID_THERMISTOR &&  ptr->TxHeader.StdId < CAN_ID_THERMISTOR + (NUM_THERM_TOTAL / CAN_BYTE_NUM + 3)) {//(NUM_THERM_TOTAL / CAN_BYTE_NUM + 3) is a number of the message, 3 is number of sensors
       	   dataPtr = (uint8_t *)ptr->thermistorBuffer;
          }
-         if(ptr->TxHeader.StdId == CAN_ID_SUMMARY) {
-      	   dataPtr = (uint8_t *)ptr->summaryBuffer;
-         }
-         if(ptr->TxHeader.StdId == CAN_ID_SAFETY) {
-      	   dataPtr = (uint8_t *)ptr->safetyBuffer;
-         }
-         if(ptr->TxHeader.StdId == CAN_ID_SOC) {
-      	   dataPtr = (uint8_t *)ptr->socBuffer;
-         }
-         if(ptr->TxHeader.StdId == CAN_ID_SOC) {
-		   dataPtr = (uint8_t *)ptr->balanceStatus;
-		 }
-         if(ptr->TxHeader.StdId == CAN_ID_SOC) {
-		   dataPtr = (uint8_t *)ptr->socBuffer;
-		 }
+         else if (ptr->TxHeader.StdId == CAN_ID_SUMMARY) {
+        	    dataPtr = (uint8_t *)ptr->summaryBuffer;
+        	} else if (ptr->TxHeader.StdId == CAN_ID_SAFETY) {
+        	    dataPtr = (uint8_t *)ptr->safetyBuffer;
+        	} else if (ptr->TxHeader.StdId == CAN_ID_SOC) {
+        	    dataPtr = (uint8_t *)ptr->socBuffer;
+        	} else if (ptr->TxHeader.StdId == CAN_ID_Balance_status || ptr->TxHeader.StdId == CAN_ID_Balance_status + 1) {
+        	    dataPtr = (uint8_t *)ptr->balanceStatus;
+        	}
+
 
       return HAL_CAN_AddTxMessage(&hcan1, &ptr->TxHeader, dataPtr, &ptr->TxMailbox);
 }

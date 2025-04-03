@@ -29,7 +29,9 @@ static uint8_t defaultConfig[8][6] = {{ 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 
 
 void Balance_init(uint16_t *balanceStatus){
 	balance = 0;
-	memset(balanceStatus, 0, 8 * sizeof(uint16_t));
+	for (int i = 0; i < NUM_DEVICES; ++i) {
+		balanceStatus[i] = 0;
+	}
 }
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
