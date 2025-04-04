@@ -41,7 +41,7 @@ extern CAN_HandleTypeDef hcan1;
 #define CAN_ID_SUMMARY				0x622
 #define CAN_ID_SAFETY 				0x600
 #define CAN_ID_SOC 					0x621
-#define CAN_ID_Balance_status		0x623
+#define CAN_ID_BALANCE_STATUS		0x623
 #define CAN_BYTE_NUM				8
 #define CAN_MESSAGE_NUM_VOLTAGE 	NUM_CELLS * 2 / CAN_BYTE_NUM
 #define CAN_MESSAGE_NUM_THERMISTOR 	NUM_THERM_TOTAL / CAN_BYTE_NUM

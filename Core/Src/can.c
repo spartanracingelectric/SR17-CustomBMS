@@ -171,7 +171,7 @@ HAL_StatusTypeDef CAN_Send(CANMessage *ptr) {
         	    dataPtr = (uint8_t *)ptr->safetyBuffer;
         	} else if (ptr->TxHeader.StdId == CAN_ID_SOC) {
         	    dataPtr = (uint8_t *)ptr->socBuffer;
-        	} else if (ptr->TxHeader.StdId == CAN_ID_Balance_status || ptr->TxHeader.StdId == CAN_ID_Balance_status + 1) {
+        	} else if (ptr->TxHeader.StdId == CAN_ID_BALANCE_STATUS || ptr->TxHeader.StdId == CAN_ID_BALANCE_STATUS + 1) {
         	    dataPtr = (uint8_t *)ptr->balanceStatus;
         	}
 
@@ -324,7 +324,7 @@ void CAN_Send_SOC(struct CANMessage *buffer, batteryModule *batt,
 }
 
 void CAN_Send_Balance_Status(struct CANMessage *buffer, uint16_t *balance_status){
-	uint32_t CAN_ID = (uint32_t)CAN_ID_Balance_status;
+	uint32_t CAN_ID = (uint32_t)CAN_ID_BALANCE_STATUS;
 	Set_CAN_Id(buffer, CAN_ID);
 
 	buffer->balanceStatus[0] =  balance_status[0]       & 0xFF;
