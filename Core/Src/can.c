@@ -296,10 +296,12 @@ void CAN_Send_Safety_Checker(CANMessage *buffer, struct batteryModule *batt, uin
 	Set_CAN_Id(buffer, CAN_ID);
 	buffer->safetyBuffer[0] = *warnings;
 	buffer->safetyBuffer[1] = *faults;
-	buffer->safetyBuffer[2] =  batt->cell_difference       & 0xFF;
-	buffer->safetyBuffer[3] = (batt->cell_difference >> 8) & 0xFF;
-	buffer->safetyBuffer[4] =  batt->pack_voltage          & 0xFF;
-	buffer->safetyBuffer[5] = (batt->pack_voltage    >> 8) & 0xFF;
+	buffer->safetyBuffer[2] =  batt->cell_difference           & 0xFF;
+	buffer->safetyBuffer[3] = (batt->cell_difference     >> 8) & 0xFF;
+	buffer->safetyBuffer[4] =  batt->hvsens_pack_voltage       & 0xFF;
+	buffer->safetyBuffer[5] = (batt->hvsens_pack_voltage >> 8) & 0xFF;
+	buffer->safetyBuffer[6] =  batt->sum_pack_voltage          & 0xFF;
+	buffer->safetyBuffer[7] = (batt->sum_pack_voltage    >> 8) & 0xFF;
 //	printf("can id for safety: %d\n", CAN_ID);
 	CAN_Send(buffer);
 //	printf("Faults\n");
