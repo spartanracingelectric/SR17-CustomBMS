@@ -209,6 +209,7 @@ int main(void)
 //			}
 //			printf("pack volt start\n");
 			ReadHVInput(&modPackInfo);
+			getSumPackVoltage(&modPackInfo);
 //			printf("pack volt end\n");
 
 			SOC_updateCharge(&modPackInfo,(HAL_GetTick() - prev_soc_time));
