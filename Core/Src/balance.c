@@ -28,11 +28,14 @@ static uint8_t defaultConfig[8][6] = {{ 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 
 									  { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 } };
 
 void Balance_init(uint16_t *balanceStatus){
-	memset(balanceStatus, 0, 8 * sizeof(uint16_t));
+	balance = 0;
+	for (int i = 0; i < NUM_DEVICES; ++i) {
+		balanceStatus[i] = 0;
+	}
 }
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
-    printf("fifo 0 callback\n");
+//    printf("fifo 0 callback\n");
     if (HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &rxHeader, rxData) == HAL_OK) {
         if (rxHeader.StdId == 0x604) {  // CAN message from charger
             uint8_t balanceCommand = rxData[0]; // see the data bit on CAN
@@ -100,7 +103,7 @@ void Balance_reset(uint16_t *balanceStatus) {
 	uint8_t DCC[12] = {0};  //reset all DCC to 0
 	for (uint8_t dev_idx = 0; dev_idx < NUM_DEVICES; dev_idx++) {
 		balanceStatus[dev_idx] = 0;
-		printf("balanceStaus[%d]: %d\n", dev_idx, balanceStatus[dev_idx]);
+//		printf("balanceStaus[%d]: %d\n", dev_idx, balanceStatus[dev_idx]);
 
 		Set_Cfg(dev_idx, (uint8_t*) DCC);
 	}

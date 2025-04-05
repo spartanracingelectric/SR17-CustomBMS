@@ -24,20 +24,20 @@
 #define FAULT_LOCK_MARGIN_IMBALANCE 1000		//100 mV
 #define FAULT_LOCK_MARGIN_HIGH_TEMP 10			//10 ℃
 
-#define WARNING_BIT_HIGH_PACK_VOLT 	(1 << 7)	// 0b10000000 (Bit position 7)
-#define WARNING_BIT_LOW_PACK_VOLT  	(1 << 6)	// 0b01000000 (Bit position 6)
-#define WARNING_BIT_HIGH_VOLT    	(1 << 5)  	// 0b00010000 (Bit position 5)
-#define WARNING_BIT_LOW_VOLT     	(1 << 4)  	// 0b00001000 (Bit position 4)
-#define WARNING_BIT_IMBALANCE       (1 << 3)  	// 0b00000100 (Bit position 3)
+//#define WARNING_BIT_SLAVE_VOLT 		(1 << 1) 	// 0b00000001 (Bit position 1)
 #define WARNING_BIT_HIGH_TEMP 		(1 << 2) 	// 0b00000010 (Bit position 2)
-#define WARNING_BIT_SLAVE_VOLT 		(1 << 1) 	// 0b00000001 (Bit position 1)
+#define WARNING_BIT_IMBALANCE       (1 << 3)  	// 0b00000100 (Bit position 3)
+#define WARNING_BIT_LOW_VOLT     	(1 << 4)  	// 0b00001000 (Bit position 4)
+#define WARNING_BIT_HIGH_VOLT    	(1 << 5)  	// 0b00010000 (Bit position 5)
+#define WARNING_BIT_LOW_PACK_VOLT  	(1 << 6)	// 0b01000000 (Bit position 6)
+#define WARNING_BIT_HIGH_PACK_VOLT 	(1 << 7)	// 0b10000000 (Bit position 7)
 
-#define FAULT_BIT_HIGH_PACK_VOLT 	(1 << 7)	// 0b10000000 (Bit position 7)
-#define FAULT_BIT_LOW_PACK_VOLT  	(1 << 6)	// 0b01000000 (Bit position 6)
-#define FAULT_BIT_HIGH_VOLT    		(1 << 5)  	// 0b00010000 (Bit position 5)
-#define FAULT_BIT_LOW_VOLT     		(1 << 4)  	// 0b00001000 (Bit position 4)
-#define FAULT_BIT_IMBALANCE       	(1 << 3)  	// 0b00000100 (Bit position 3)
 #define FAULT_BIT_HIGH_TEMP 		(1 << 2) 	// 0b00000010 (Bit position 2)
+#define FAULT_BIT_IMBALANCE       	(1 << 3)  	// 0b00000100 (Bit position 3)
+#define FAULT_BIT_LOW_VOLT     		(1 << 4)  	// 0b00001000 (Bit position 4)
+#define FAULT_BIT_HIGH_VOLT    		(1 << 5)  	// 0b00010000 (Bit position 5)
+#define FAULT_BIT_LOW_PACK_VOLT  	(1 << 6)	// 0b01000000 (Bit position 6)
+#define FAULT_BIT_HIGH_PACK_VOLT 	(1 << 7)	// 0b10000000 (Bit position 7)
 
 #define SLAVE_VOLT_WARNING_MARGIN 	100			//10 mV
 

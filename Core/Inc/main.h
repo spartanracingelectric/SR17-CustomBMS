@@ -45,7 +45,7 @@ extern "C" {
 #define NUM_THERM_TOTAL			NUM_DEVICES*NUM_THERM_PER_MOD
 #define NUM_AUX_GROUP			6
 #define NUM_AUXES				NUM_DEVICES*NUM_AUX_GROUP
-#define CYCLETIME_CAP			100 //100ms update delay
+#define CYCLETIME_CAP			1000 //100ms update delay
 #define LED_HEARTBEAT_DELAY_MS	50  //10ms update delay
 #define BALANCE 				0 	//FALSE
 #define MAX_CELL_CAPACITY 		3000
@@ -66,11 +66,9 @@ extern "C" {
 typedef struct batteryModule {
 	uint16_t cell_volt[NUM_CELLS];
 	uint16_t cell_temp[NUM_THERM_TOTAL];
-	uint16_t cell_temp_8bits[NUM_THERM_TOTAL];
 	uint16_t average_volt[NUM_DEVICES];
 	uint16_t average_temp[NUM_DEVICES];
-	uint16_t standerd_diviation;
-	uint8_t pressure[NUM_DEVICES];
+	uint16_t pressure[NUM_DEVICES];
 	uint16_t humidity[NUM_DEVICES];
 	uint16_t atmos_temp[NUM_DEVICES];
 	uint16_t cell_volt_lowest;
@@ -78,7 +76,8 @@ typedef struct batteryModule {
 	uint16_t cell_difference;
 	uint16_t cell_temp_lowest;
 	uint16_t cell_temp_highest;
-	uint32_t pack_voltage;
+	uint16_t sum_pack_voltage;
+	uint16_t hvsens_pack_voltage;
 	uint16_t read_auxreg[NUM_AUXES];
 	uint16_t balance_status[NUM_DEVICES];
     uint16_t soc;
@@ -86,10 +85,15 @@ typedef struct batteryModule {
     uint16_t dew_point[NUM_DEVICES];
 } batteryModule;
 
-typedef struct CANMessage {
-	CAN_TxHeaderTypeDef TxHeader;
-	uint32_t TxMailbox;
-	uint8_t data[8];
+typedef struct CANMessage{
+    CAN_TxHeaderTypeDef TxHeader;
+    uint32_t TxMailbox;
+    uint8_t voltageBuffer[8];
+    uint8_t thermistorBuffer[8];
+    uint8_t summaryBuffer[8];
+    uint8_t safetyBuffer[8];
+    uint8_t socBuffer[8];
+    uint8_t balanceStatus[8];
 } CANMessage;
 
 /* USER CODE END ET */
@@ -112,6 +116,9 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+
+
+/* USER CODE END Private defines */
 
 #ifdef __cplusplus
 }

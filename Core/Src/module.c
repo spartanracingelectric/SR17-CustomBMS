@@ -33,7 +33,7 @@ void Atmos_Temp_To_Celsius(uint8_t dev_idx, uint16_t *read_atmos_temp, uint16_t 
 
     float temperature_value = -66.875 + 218.75 * voltage_ratio;  //Calculate pressure
 
-    read_atmos_temp[dev_idx] = (uint16_t)temperature_value;  // 圧力値を整数に変換
+    read_atmos_temp[dev_idx] = (uint16_t)temperature_value;
 }
 
 void ADC_To_Humidity(uint8_t dev_idx, uint16_t *humidity, uint16_t adcValue) {
@@ -41,7 +41,7 @@ void ADC_To_Humidity(uint8_t dev_idx, uint16_t *humidity, uint16_t adcValue) {
 
     float humidity_value = (-12.5 + 125.0 * voltage_ratio);  //Calculate pressure
 
-    humidity[dev_idx] = (uint16_t)(humidity_value);  // 圧力値を整数に変換
+    humidity[dev_idx] = (uint16_t)(humidity_value);
 }
 
 void Get_Actual_Temps(uint8_t dev_idx, uint8_t tempindex, uint16_t *actual_temp, uint16_t data) {

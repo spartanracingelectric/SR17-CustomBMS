@@ -60,7 +60,7 @@ void SOC_updateCurrent(batteryModule *batt) {
     if (HAL_ADC_PollForConversion(&hadc2, HAL_MAX_DELAY) == HAL_OK) {
         adcValue = HAL_ADC_GetValue(&hadc2);
     }
-    printf("ADC VALUE %u/4096\n", adcValue);
+//    printf("ADC VALUE %lu/4096\n", adcValue);
     HAL_ADC_Stop(&hadc2);
     float voltage = ((float)adcValue / ADC_RESOLUTION) * V_REF;
     batt->current = (voltage / (MAX_SHUNT_VOLTAGE * SHUNT_OPAMP_RATIO)) * MAX_SHUNT_AMPAGE + SHUNT_OFFSET;

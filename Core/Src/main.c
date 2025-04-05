@@ -104,7 +104,6 @@ int main(void)
 	uint8_t safetyFaults = 0;
 	uint8_t safetyWarnings = 0;
 //	uint8_t moduleCounts = 0;
-	uint8_t safetyStates = 0;
 
   /* USER CODE END 1 */
 
@@ -149,11 +148,6 @@ int main(void)
 	//initializing variables
 	uint8_t tempindex = 0;
 	uint8_t indexpause = 8;
-	uint8_t high_volt_fault_lock = 0;
-	uint8_t low_volt_hysteresis = 0;
-	uint8_t low_volt_fault_lock = 0;
-	uint8_t cell_imbalance_hysteresis = 0;
-	uint8_t high_temp_hysteresis = 0;
 
 	Wakeup_Sleep();
 
@@ -215,6 +209,7 @@ int main(void)
 //			}
 //			printf("pack volt start\n");
 			ReadHVInput(&modPackInfo);
+			getSumPackVoltage(&modPackInfo);
 //			printf("pack volt end\n");
 
 			SOC_updateCharge(&modPackInfo,(HAL_GetTick() - prev_soc_time));
@@ -245,8 +240,8 @@ int main(void)
             CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults, &safetyWarnings);
 			CAN_Send_Cell_Summary(&msg, &modPackInfo);
 			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
-			CAN_Send_Temperature(&msg, modPackInfo.cell_temp);
-			CAN_Send_Sensor(&msg, &modPackInfo);
+			CAN_Send_Temperature(&msg, modPackInfo.cell_temp, modPackInfo.pressure, modPackInfo.atmos_temp, modPackInfo.humidity, modPackInfo.dew_point);
+//			CAN_Send_Sensor(&msg, &modPackInfo);
 			CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
             CAN_Send_Balance_Status(&msg, modPackInfo.balance_status);
 		}

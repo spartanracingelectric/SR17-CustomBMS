@@ -11,4 +11,6 @@
 
 void ReadHVInput(batteryModule *batt);
 
+void getSumPackVoltage(batteryModule *batt);
+
 #endif /* INC_HV_SENSE_H_ */
