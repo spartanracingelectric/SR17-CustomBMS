@@ -7,7 +7,7 @@
 [BUSMASTER_VERSION] [3.2.2]
 [NUMBER_OF_MESSAGES] 46
 
-[START_MSG] BMS_Safety_Checker,1536,8,14,1,S,Custom_BMS
+[START_MSG] BMS_Safety_Checker,1536,8,15,1,S,Custom_BMS
 [START_SIGNALS] BMS_Cell_High_Temp_Warning,1,1,2,B,1,0,1,0,1, ,,Custom_BMS
 [START_SIGNALS] BMS_Cell_Volt_Imbalance_Warning,1,1,3,B,1,0,1,0,1, ,,Custom_BMS
 [START_SIGNALS] BMS_Cell_Low_Volt_Warning,1,1,4,B,1,0,1,0,1, ,,Custom_BMS
@@ -21,14 +21,15 @@
 [START_SIGNALS] BMS_Pack_Low_Volt_Fault,1,2,6,B,1,0,1,0,1, ,,Custom_BMS
 [START_SIGNALS] BMS_Pack_High_Volt_Fault,1,2,7,B,1,0,1,0,1, ,,Custom_BMS
 [START_SIGNALS] BMS_Cell_Max_Min_Difference,16,3,0,U,65535,0,1,0,0.0001,V,,Custom_BMS
-[START_SIGNALS] BMS_Pack_Voltage,16,5,0,U,65535,0,1,0,0.01,V,,Custom_BMS
+[START_SIGNALS] BMS_HVsens_Pack_Voltage,16,5,0,U,65535,0,1,0,0.01,V,,Custom_BMS
+[START_SIGNALS] BMS_Sum_Pack_Voltage,16,7,0,U,65535,0,1,0,0.01,V,,Custom_BMS
 [END_MSG]
 
 [START_MSG] BMS_Balance_Enable,1540,1,1,1,S,Custom_BMS
 [START_SIGNALS] BMS_Balance_Enable,1,1,0,B,1,0,1,0,1, ,,Custom_BMS
 [END_MSG]
 
-[START_MSG] BMS_State_of_Charge,1569,8,3,1,S,Custom_BMS
+[START_MSG] BMS_State_of_Charge,1569,7,3,1,S,Custom_BMS
 [START_SIGNALS] BMS_Capacity,16,1,0,U,65535,0,1,0,1,mAh,,Custom_BMS
 [START_SIGNALS] BMS_Percent,8,3,0,U,255,0,1,0,1,Percent,,Custom_BMS
 [START_SIGNALS] BMS_Current,32,4,0,U,2704,0,1,0,1,mA,,Custom_BMS

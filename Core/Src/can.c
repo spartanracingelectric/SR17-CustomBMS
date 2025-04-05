@@ -153,9 +153,10 @@ HAL_StatusTypeDef CAN_Activate() {
 }
 
 HAL_StatusTypeDef CAN_Send(CANMessage *ptr) {
-    while (HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) == 0) {
-    }
+//    while (HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) == 0) {
+//    }
 
+	HAL_Delay(1);
     uint8_t *dataPtr = NULL;
 
 

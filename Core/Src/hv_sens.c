@@ -15,7 +15,7 @@
 
 		//calculate voltage based on  resolution and gain on opamp, voltage divider ratio
 		float adcVoltage = ((float)adcValue / ADC_RESOLUTION) * 3.28;
-		printf("adcVoltage for hv is: %f\n", adcVoltage);
+//		printf("adcVoltage for hv is: %f\n", adcVoltage);
 		float amcOutput = adcVoltage / GAIN_TLV9001;
 		float hvInput = (amcOutput) * (DIVIDER_RATIO) + .9;
 

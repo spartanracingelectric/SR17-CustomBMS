@@ -16,6 +16,7 @@
 CAN_RxHeaderTypeDef rxHeader;
 uint8_t rxData[8];
 uint8_t balance = 0;			//FALSE
+uint8_t balance_finish = 0;
 
 static uint8_t config[8][6] = { { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 },
 								{ 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 },
@@ -29,9 +30,10 @@ static uint8_t defaultConfig[8][6] = {{ 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 
 
 void Balance_init(uint16_t *balanceStatus){
 	balance = 0;
-	for (int i = 0; i < NUM_DEVICES; ++i) {
-		balanceStatus[i] = 0;
-	}
+	balance_finish = 0;
+	Balance_reset(balanceStatus);
+	Wakeup_Sleep();
+	LTC_writeCFG(NUM_DEVICES, defaultConfig);
 }
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
@@ -46,6 +48,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
 //                printf("BALANCE enabled by CAN message.\n");
             } else if (balanceCommand == 0) {
             	balance = 0;  // disable balance
+            	balance_finish = 1;
 //                printf("BALANCE disabled by CAN message.\n");
             }
         }
@@ -65,7 +68,7 @@ void Start_Balance(uint16_t *read_volt, uint16_t lowest, uint16_t *balanceStatus
 }
 
 void End_Balance(uint16_t *balanceStatus) {
-	if(balance == 0){
+	if(balance_finish == 1){
 		Balance_reset(balanceStatus);
 		Wakeup_Sleep();
 		LTC_writeCFG(NUM_DEVICES, defaultConfig);
