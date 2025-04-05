@@ -72,6 +72,7 @@ void End_Balance(uint16_t *balanceStatus) {
 		Balance_reset(balanceStatus);
 		Wakeup_Sleep();
 		LTC_writeCFG(NUM_DEVICES, defaultConfig);
+		balance_finish = 0;
 	}
 	else{
 		return;

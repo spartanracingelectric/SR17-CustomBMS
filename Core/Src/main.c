@@ -168,7 +168,7 @@ int main(void)
 		if (TimerPacket_FixedPulse(&cycleTimeCap)) {
 			 HAL_ADCEx_Calibration_Start(&hadc1);
 			 HAL_ADCEx_Calibration_Start(&hadc2);
-		printf("hello\n");
+//		printf("hello\n");
 			//reading cell voltages
 //			printf("volt start\n");
 			Read_Volt(modPackInfo.cell_volt);
@@ -234,16 +234,15 @@ int main(void)
 			End_Balance(modPackInfo.balance_status);//end the balance if CAN RX recieve 0
 
 
-//			if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
 			//calling all CAN realated methods
-//			printf("CAN start\n");
-            CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults, &safetyWarnings);
+	//			printf("CAN start\n");
+			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults, &safetyWarnings);
 			CAN_Send_Cell_Summary(&msg, &modPackInfo);
 			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp, modPackInfo.pressure, modPackInfo.atmos_temp, modPackInfo.humidity, modPackInfo.dew_point);
-//			CAN_Send_Sensor(&msg, &modPackInfo);
+	//			CAN_Send_Sensor(&msg, &modPackInfo);
 			CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
-            CAN_Send_Balance_Status(&msg, modPackInfo.balance_status);
+			CAN_Send_Balance_Status(&msg, modPackInfo.balance_status);
 		}
     }
   /* USER CODE END 3 */

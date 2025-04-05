@@ -155,29 +155,31 @@ HAL_StatusTypeDef CAN_Activate() {
 HAL_StatusTypeDef CAN_Send(CANMessage *ptr) {
 //    while (HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) == 0) {
 //    }
-
 	HAL_Delay(1);
     uint8_t *dataPtr = NULL;
 
+	 if(ptr->TxHeader.StdId >= CAN_ID_VOLTAGE &&  ptr->TxHeader.StdId < CAN_ID_VOLTAGE + (NUM_CELLS * 2 / CAN_BYTE_NUM)) {//(NUM_CELLS * 2 / CAN_BYTE_NUM is just a number of can message
+	   dataPtr = (uint8_t *)ptr->voltageBuffer;
+	 }
+	 else if(ptr->TxHeader.StdId >= CAN_ID_THERMISTOR &&  ptr->TxHeader.StdId < CAN_ID_THERMISTOR + (NUM_THERM_TOTAL / CAN_BYTE_NUM + 3)) {//(NUM_THERM_TOTAL / CAN_BYTE_NUM + 3) is a number of the message, 3 is number of sensors
+	   dataPtr = (uint8_t *)ptr->thermistorBuffer;
+	 }
+	 else if (ptr->TxHeader.StdId == CAN_ID_SUMMARY) {
+			dataPtr = (uint8_t *)ptr->summaryBuffer;
+	 }
+	 else if (ptr->TxHeader.StdId == CAN_ID_SAFETY) {
+		dataPtr = (uint8_t *)ptr->safetyBuffer;
+	 }
+	 else if (ptr->TxHeader.StdId == CAN_ID_SOC) {
+		dataPtr = (uint8_t *)ptr->socBuffer;
+	 }
+	 else if (ptr->TxHeader.StdId == CAN_ID_BALANCE_STATUS || ptr->TxHeader.StdId == CAN_ID_BALANCE_STATUS + 1) {
+		dataPtr = (uint8_t *)ptr->balanceStatus;
+	}
 
-         if(ptr->TxHeader.StdId >= CAN_ID_VOLTAGE &&  ptr->TxHeader.StdId < CAN_ID_VOLTAGE + (NUM_CELLS * 2 / CAN_BYTE_NUM)) {//(NUM_CELLS * 2 / CAN_BYTE_NUM is just a number of can message
-      	   dataPtr = (uint8_t *)ptr->voltageBuffer;
-         }
-         else if(ptr->TxHeader.StdId >= CAN_ID_THERMISTOR &&  ptr->TxHeader.StdId < CAN_ID_THERMISTOR + (NUM_THERM_TOTAL / CAN_BYTE_NUM + 3)) {//(NUM_THERM_TOTAL / CAN_BYTE_NUM + 3) is a number of the message, 3 is number of sensors
-      	   dataPtr = (uint8_t *)ptr->thermistorBuffer;
-         }
-         else if (ptr->TxHeader.StdId == CAN_ID_SUMMARY) {
-        	    dataPtr = (uint8_t *)ptr->summaryBuffer;
-        	} else if (ptr->TxHeader.StdId == CAN_ID_SAFETY) {
-        	    dataPtr = (uint8_t *)ptr->safetyBuffer;
-        	} else if (ptr->TxHeader.StdId == CAN_ID_SOC) {
-        	    dataPtr = (uint8_t *)ptr->socBuffer;
-        	} else if (ptr->TxHeader.StdId == CAN_ID_BALANCE_STATUS || ptr->TxHeader.StdId == CAN_ID_BALANCE_STATUS + 1) {
-        	    dataPtr = (uint8_t *)ptr->balanceStatus;
-        	}
+	return HAL_CAN_AddTxMessage(&hcan1, &ptr->TxHeader, dataPtr, &ptr->TxMailbox);
 
 
-      return HAL_CAN_AddTxMessage(&hcan1, &ptr->TxHeader, dataPtr, &ptr->TxMailbox);
 }
 
 // void HAL_CAN_TxMailbox0CompleteCallback(CAN_HandleTypeDef *hcan) {
@@ -275,7 +277,7 @@ void CAN_Send_Temperature(CANMessage *buffer, uint16_t *read_temp, uint16_t *pre
 //	}
 }
 
-void CAN_Send_Cell_Summary(CANMessage *buffer, struct batteryModule *batt) {
+void CAN_Send_Cell_Summary(CANMessage *buffer, batteryModule *batt) {
 	uint32_t CAN_ID = (uint32_t)CAN_ID_SUMMARY;
 	Set_CAN_Id(buffer, CAN_ID);
 	buffer->summaryBuffer[0] =  batt->cell_volt_highest         & 0xFF;
@@ -291,7 +293,7 @@ void CAN_Send_Cell_Summary(CANMessage *buffer, struct batteryModule *batt) {
 //	printf("Summary\n");
 }
 
-void CAN_Send_Safety_Checker(CANMessage *buffer, struct batteryModule *batt, uint8_t *faults, uint8_t *warnings) {
+void CAN_Send_Safety_Checker(CANMessage *buffer, batteryModule *batt, uint8_t *faults, uint8_t *warnings) {
 	batt->cell_difference = batt->cell_volt_highest - batt->cell_volt_lowest;
 	uint32_t CAN_ID = (uint32_t)CAN_ID_SAFETY;
 	Set_CAN_Id(buffer, CAN_ID);
@@ -308,7 +310,7 @@ void CAN_Send_Safety_Checker(CANMessage *buffer, struct batteryModule *batt, uin
 //	printf("Faults\n");
 }
 
-void CAN_Send_SOC(struct CANMessage *buffer, batteryModule *batt,
+void CAN_Send_SOC(CANMessage *buffer, batteryModule *batt,
                   uint16_t max_capacity) {
 	uint32_t CAN_ID = (uint32_t)CAN_ID_SOC;
     uint8_t percent = (uint8_t)((float) batt->soc * 100 / (float) max_capacity);
@@ -324,7 +326,7 @@ void CAN_Send_SOC(struct CANMessage *buffer, batteryModule *batt,
     CAN_Send(buffer);
 }
 
-void CAN_Send_Balance_Status(struct CANMessage *buffer, uint16_t *balance_status){
+void CAN_Send_Balance_Status(CANMessage *buffer, uint16_t *balance_status){
 	uint32_t CAN_ID = (uint32_t)CAN_ID_BALANCE_STATUS;
 	Set_CAN_Id(buffer, CAN_ID);
 
