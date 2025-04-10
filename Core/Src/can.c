@@ -157,14 +157,15 @@ HAL_StatusTypeDef CAN_Send(CANMessage *ptr) {
     uint32_t can_erraps_time = HAL_GetTick();
     while (HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) == 0) {
     	if(can_skip_flag == 1){
+
     		return HAL_TIMEOUT;
     	}
     	else if(HAL_GetTick() - can_erraps_time > 10){
     		can_skip_flag = 1;
     		return HAL_TIMEOUT;
     	}
+
     }
-//	HAL_Delay(1);
     uint8_t *dataPtr = NULL;
 
 	 if(ptr->TxHeader.StdId >= CAN_ID_VOLTAGE &&  ptr->TxHeader.StdId < CAN_ID_VOLTAGE + (NUM_CELLS * 2 / CAN_BYTE_NUM)) {//(NUM_CELLS * 2 / CAN_BYTE_NUM is just a number of can message

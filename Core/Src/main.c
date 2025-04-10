@@ -168,7 +168,7 @@ int main(void)
 		if (TimerPacket_FixedPulse(&cycleTimeCap)) {
 			 HAL_ADCEx_Calibration_Start(&hadc1);
 			 HAL_ADCEx_Calibration_Start(&hadc2);
-//		printf("hello\n");
+		printf("hello\n");
 			//reading cell voltages
 //			printf("volt start\n");
 			Read_Volt(modPackInfo.cell_volt);
