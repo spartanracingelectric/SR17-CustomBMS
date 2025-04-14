@@ -98,6 +98,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
     GpioTimePacket tp_led_heartbeat;
     TimerPacket cycleTimeCap;
+    TimerPacket canReconnection;
 
     batteryModule modPackInfo;
 	CANMessage msg;
@@ -137,6 +138,8 @@ int main(void)
     GpioTimePacket_Init(&tp_led_heartbeat, MCU_HEARTBEAT_LED_GPIO_Port,
                         MCU_HEARTBEAT_LED_Pin);
     TimerPacket_Init(&cycleTimeCap, CYCLETIME_CAP);
+    TimerPacket_Init(&canReconnection, CAN_RECONNECTION_CHECK);
+
     // Pull SPI1 nCS HIGH (deselect)
     LTC_nCS_High();
 
@@ -235,12 +238,14 @@ int main(void)
 
 
 			//calling all CAN realated methods
-	//			printf("CAN start\n");
+//			printf("CAN start\n");
+			if(TimerPacket_FixedPulse(&canReconnection)){
+				can_skip_flag = 0;
+			}
 			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults, &safetyWarnings);
 			CAN_Send_Cell_Summary(&msg, &modPackInfo);
 			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp, modPackInfo.pressure, modPackInfo.atmos_temp, modPackInfo.humidity, modPackInfo.dew_point);
-	//			CAN_Send_Sensor(&msg, &modPackInfo);
 			CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
 			CAN_Send_Balance_Status(&msg, modPackInfo.balance_status);
 		}
