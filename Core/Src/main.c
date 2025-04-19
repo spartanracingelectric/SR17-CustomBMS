@@ -144,9 +144,9 @@ int main(void)
     LTC_nCS_High();
 
 //	//Sending a fault signal and reseting it
-//	HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
-//	HAL_Delay(1000);
-//	HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_RESET);	//those are for debug the charger and mobo
+	HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_SET);
+	HAL_Delay(1000);
+	HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_RESET);	//those are for debug the charger and mobo
 
 	//initializing variables
 	uint8_t tempindex = 0;
