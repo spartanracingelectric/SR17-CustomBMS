@@ -5,24 +5,25 @@
 // ! Fault Thresholds
 
 uint8_t high_volt_fault_lock = 0;
+uint8_t high_volt_hysteresis = 0;
 uint8_t low_volt_hysteresis = 0;
 uint8_t low_volt_fault_lock = 0;
 uint8_t cell_imbalance_hysteresis = 0;
 uint8_t high_temp_hysteresis = 0;
 
 void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *warnings){
-
+//finding highest and lowest cell voltage
 	batt->cell_volt_highest = batt->cell_volt[0];
 	batt->cell_volt_lowest = batt->cell_volt[0];
 
 	for (int i = 0; i < NUM_CELLS; i++) {
-		//find highest volt
+//find highest volt
 		if (batt->cell_volt[i] > batt->cell_volt_highest) {
 			batt->cell_volt_highest = batt->cell_volt[i];
 //			printf("high voltage fault: %d\n", batt->cell_volt_highest);
 		}
 
-		//find lowest volt
+//find lowest volt
 		if (batt->cell_volt[i] < batt->cell_volt_lowest) {
 			batt->cell_volt_lowest = batt->cell_volt[i];
 		}
@@ -31,35 +32,44 @@ void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 		if (batt->cell_volt_highest >= CELL_HIGH_VOLT_WARNING) {
 			*warnings |= WARNING_BIT_HIGH_VOLT;
 		}
-		//high cell volt fault
-		if ((batt->cell_volt_highest >= CELL_HIGH_VOLT_FAULT) /*&& ((*high_volt_hysteresis) > 0)*/) {
-			*warnings &= ~WARNING_BIT_HIGH_VOLT;
-			high_volt_fault_lock = 1;
-			*fault |= FAULT_BIT_HIGH_VOLT;
-			SendFaultSignal();
+//high cell volt fault
+		if ((batt->cell_volt_highest >= CELL_HIGH_VOLT_FAULT)) {
+			if (high_volt_hysteresis >= 1) {
+				high_volt_fault_lock = 1;
+				*warnings &= ~WARNING_BIT_HIGH_VOLT;
+				*fault |= FAULT_BIT_HIGH_VOLT;
+				SendFaultSignal();
+			} else {
+				high_volt_hysteresis++;
+			}
 //			printf("high voltage fault signal on\n");
 		}
-		//reset high cell volt fault
+//reset high cell volt fault
 		else if (batt->cell_volt_highest < (CELL_HIGH_VOLT_FAULT - FAULT_LOCK_MARGIN_HIGH_VOLT) && high_volt_fault_lock == 1){
-			high_volt_fault_lock = 0;
-			*warnings &= ~WARNING_BIT_HIGH_VOLT;
-			*fault &= ~FAULT_BIT_HIGH_VOLT;
-			ClearFaultSignal();
+			if (high_volt_hysteresis > 0){
+				high_volt_hysteresis = 0;
+				high_volt_fault_lock = 0;
+				*warnings &= ~WARNING_BIT_HIGH_VOLT;
+				*fault &= ~FAULT_BIT_HIGH_VOLT;
+				ClearFaultSignal();
+			}
 		}
 
 //low cell volt warning
 		if (batt->cell_volt_lowest <= CELL_LOW_VOLT_WARNING) {
 			*warnings |= WARNING_BIT_LOW_VOLT;
 		}
-		//low cell volt fault
+//low cell volt fault
 		if (batt->cell_volt_lowest <= CELL_LOW_VOLT_FAULT){
-			if (low_volt_hysteresis > 3) {
+			if (low_volt_hysteresis > 1) {
+				low_volt_fault_lock = 1;
 				*warnings &= ~WARNING_BIT_LOW_VOLT;
 				*fault |= FAULT_BIT_LOW_VOLT;
 				SendFaultSignal();
 			} else {
 				low_volt_hysteresis++;
 			}
+//reset low cell volt fault
 		} else if (batt->cell_volt_lowest > (CELL_LOW_VOLT_FAULT + FAULT_LOCK_MARGIN_LOW_VOLT)) {
 			if (low_volt_hysteresis > 0) {
 				low_volt_hysteresis = 0;
@@ -98,7 +108,7 @@ void Cell_Temperature_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t 
 	//highest cell temp fault
 
 	if (batt->cell_temp_highest >= CELL_HIGH_TEMP_FAULT) {
-		if (high_temp_hysteresis > 3) {
+		if (high_temp_hysteresis > 1) {
 			*warnings &= ~WARNING_BIT_HIGH_TEMP;
 			*fault |= FAULT_BIT_HIGH_TEMP;
 			SendFaultSignal();
