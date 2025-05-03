@@ -34,7 +34,7 @@ void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 		}
 //high cell volt fault
 		if ((batt->cell_volt_highest >= CELL_HIGH_VOLT_FAULT)) {
-			if (high_volt_hysteresis >= 1) {
+			if (high_volt_hysteresis > 2) {
 				high_volt_fault_lock = 1;
 				*warnings &= ~WARNING_BIT_HIGH_VOLT;
 				*fault |= FAULT_BIT_HIGH_VOLT;
@@ -61,7 +61,7 @@ void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 		}
 //low cell volt fault
 		if (batt->cell_volt_lowest <= CELL_LOW_VOLT_FAULT){
-			if (low_volt_hysteresis > 1) {
+			if (low_volt_hysteresis > 2) {
 				low_volt_fault_lock = 1;
 				*warnings &= ~WARNING_BIT_LOW_VOLT;
 				*fault |= FAULT_BIT_LOW_VOLT;
@@ -108,7 +108,7 @@ void Cell_Temperature_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t 
 	//highest cell temp fault
 
 	if (batt->cell_temp_highest >= CELL_HIGH_TEMP_FAULT) {
-		if (high_temp_hysteresis > 1) {
+		if (high_temp_hysteresis > 2) {
 			*warnings &= ~WARNING_BIT_HIGH_TEMP;
 			*fault |= FAULT_BIT_HIGH_TEMP;
 			SendFaultSignal();
