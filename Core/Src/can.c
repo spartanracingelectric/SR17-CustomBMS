@@ -13,18 +13,19 @@
  * This software is licensed under terms that can be found in the LICENSE file
  * in the root directory of this software component.
  * If no LICENSE file comes with this software, it is provided AS-IS.
- *
- ******************************************************************************
+ *	 ******************************************************************************
  */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "can.h"
+#include "usart.h"
+#include "stdio.h"
 
 /* USER CODE BEGIN 0 */
 /* USER CODE END 0 */
 
 CAN_HandleTypeDef hcan1;
-
+uint8_t can_skip_flag = 0;
 /* CAN1 init function */
 void MX_CAN1_Init(void)
 {
