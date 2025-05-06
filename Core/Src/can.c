@@ -19,14 +19,11 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "can.h"
-#include "usart.h"
-#include "stdio.h"
 
 /* USER CODE BEGIN 0 */
 /* USER CODE END 0 */
 
 CAN_HandleTypeDef hcan1;
-uint8_t can_skip_flag = 0;
 
 /* CAN1 init function */
 void MX_CAN1_Init(void)
