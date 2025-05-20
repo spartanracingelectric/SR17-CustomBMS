@@ -43,13 +43,13 @@ void SOC_getInitialCharge(batteryModule *batt) {
 
     switch (selectTemp) {
         case 0:
-            batt->soc = SOC_getChargeData0C((uint16_t) voltage) * NUM_DEVICES;
+            batt->soc = SOC_getChargeData0C((uint16_t) voltage) * NUM_DEVICES * 1000;
             break;
         case 25:
-            batt->soc = SOC_getChargeData25C((uint16_t) voltage) * NUM_DEVICES;
+            batt->soc = SOC_getChargeData25C((uint16_t) voltage) * NUM_DEVICES * 1000;
             break;
         default:
-            batt->soc = SOC_getChargeData40C((uint16_t) voltage) * NUM_DEVICES;
+            batt->soc = SOC_getChargeData40C((uint16_t) voltage) * NUM_DEVICES * 1000;
             break;
     }
 }
@@ -69,8 +69,9 @@ void SOC_updateCurrent(batteryModule *batt) {
 void SOC_updateCharge(batteryModule *batt, uint32_t elapsed_time) {
 
 	HAL_ADCEx_Calibration_Start(&hadc2);
-    SOC_updateCurrent(batt);
-    batt->soc -= (uint16_t)(batt->current * (float)(elapsed_time / 3600000.0f));
+	SOC_updateCurrent(batt);
+    batt->soc -= (1000 * batt->current * (float)(elapsed_time / 3600000.0f));
+    printf("%d", batt->soc);
 }
 
 uint16_t SOC_searchCapacity(uint16_t data[][2], uint16_t target, uint16_t size) {
