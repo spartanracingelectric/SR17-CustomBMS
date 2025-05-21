@@ -12,7 +12,7 @@
 		vRef = getVref();
 
 		//calculate voltage based on  resolution and gain on opamp, voltage divider ratio
-		float adcVoltage = ((float)adcValue / ADC_RESOLUTION) * 3.257; //3.258 is the vref
+		float adcVoltage = ((float)adcValue / ADC_RESOLUTION) * vRef; //3.258 is the vref
 //		printf("adcVoltage for hv is: %f\n", adcVoltage);
 		float amcOutput = adcVoltage / GAIN_TLV9001;
 		float hvInput = (amcOutput) * (DIVIDER_RATIO) + 0.215; //- .6840 is offset

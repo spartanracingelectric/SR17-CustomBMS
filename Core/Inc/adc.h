@@ -39,6 +39,7 @@ extern ADC_HandleTypeDef hadc2;
 /* USER CODE BEGIN Private defines */
 #define VREFINT_CAL_mV 1200.0f
 #define ADC_RESOLUTION 4095.0f
+#define V_REF 3.28f
 
 /* USER CODE END Private defines */
 
@@ -46,7 +47,8 @@ void MX_ADC1_Init(void);
 void MX_ADC2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+uint32_t readADCChannel(uint32_t channel);
+float getVref();
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

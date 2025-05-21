@@ -154,8 +154,6 @@ int main(void)
 
 	Wakeup_Sleep();
 
-	HAL_ADCEx_EnableVREFINT();
-
     Balance_init(modPackInfo.balance_status);
 
 	SOC_getInitialCharge(&modPackInfo);
