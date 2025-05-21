@@ -20,6 +20,8 @@
 #include "can.h"
 
 /* USER CODE BEGIN 0 */
+#include "usart.h"
+#include "stdio.h"
 /* USER CODE END 0 */
 
 CAN_HandleTypeDef hcan1;
@@ -141,7 +143,7 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
 
 /* USER CODE BEGIN 1 */
 
-// uint8_t CAN_TX_HALT = 1; //halt frag to send it to mailbox
+uint8_t can_skip_flag = 0;
 
 HAL_StatusTypeDef CAN_Start() { return HAL_CAN_Start(&hcan1); }
 
