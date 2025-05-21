@@ -37,9 +37,8 @@ extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc2;
 
 /* USER CODE BEGIN Private defines */
-
-#define V_REF 3.28f
-#define ADC_RESOLUTION 4096.0f
+#define VREFINT_CAL_mV 1200.0f
+#define ADC_RESOLUTION 4095.0f
 
 /* USER CODE END Private defines */
 
