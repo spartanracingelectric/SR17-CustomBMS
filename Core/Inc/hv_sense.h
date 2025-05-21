@@ -5,8 +5,8 @@
 
 #define GAIN_TLV9001 1.58f 		//TLV9001 gain
 //Resistor values for the voltage divider
-#define R1 1409560.0f  			//1.4 MΩ
-#define R2 6863.f     			//6 863kΩ
+#define R1 1400000.0f  			//1.4 MΩ
+#define R2 6810.f     			//6 863kΩ
 #define DIVIDER_RATIO R1 / R2
 
 void ReadHVInput(batteryModule *batt);
