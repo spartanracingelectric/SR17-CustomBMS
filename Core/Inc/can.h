@@ -46,7 +46,7 @@ extern CAN_HandleTypeDef hcan1;
 #define CAN_MESSAGE_NUM_VOLTAGE 	NUM_CELLS * 2 / CAN_BYTE_NUM
 #define CAN_MESSAGE_NUM_THERMISTOR 	NUM_THERM_TOTAL / CAN_BYTE_NUM
 
-extern uint8_t can_skip_flag;
+extern uint8_t canSkipFlag;
 /* USER CODE END Private defines */
 
 void MX_CAN1_Init(void);
@@ -59,12 +59,12 @@ HAL_StatusTypeDef CAN_Send(CANMessage *ptr);
 void CAN_SettingsInit(CANMessage *ptr);
 void Set_CAN_Id(CANMessage *ptr, uint32_t id);
 
-void CAN_Send_Voltage(CANMessage *ptr, uint16_t *read_volt);
-void CAN_Send_Temperature(CANMessage *ptr, uint16_t *read_temp, uint16_t *pressure, uint16_t *atmos_temp, uint16_t *humidity, uint16_t *dew_point);
+void CAN_Send_Voltage(CANMessage *ptr, uint16_t *readVolt);
+void CAN_Send_Temperature(CANMessage *ptr, uint16_t *readTemp, uint16_t *pressure, uint16_t *atmosTemp, uint16_t *humidity, uint16_t *dewPoint);
 void CAN_Send_Cell_Summary(CANMessage *ptr, struct batteryModule *batt);
 void CAN_Send_Safety_Checker(CANMessage *ptr, struct batteryModule *batt, uint8_t* faults, uint8_t* warnings);
-void CAN_Send_SOC(CANMessage *ptr, batteryModule *batt, uint16_t max_capacity);
-void CAN_Send_Balance_Status(struct CANMessage *ptr, uint16_t *balance_status);
+void CAN_Send_SOC(CANMessage *ptr, batteryModule *batt, uint16_t maxCapacity);
+void CAN_Send_Balance_Status(struct CANMessage *ptr, uint16_t *balanceStatus);
 //void CAN_Send_Sensor(struct CANMessage *ptr, batteryModule *batt);
 /* USER CODE END Prototypes */
 

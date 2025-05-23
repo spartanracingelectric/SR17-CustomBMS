@@ -20,17 +20,17 @@
 #define LTC6811_Vdd 51450.0f
 
 
-void Read_Volt(uint16_t *read_volt);
-void Get_Actual_Temps(uint8_t dev_idx, uint8_t tempindex, uint16_t *actual_temp,
+void Read_Volt(uint16_t *readVolt);
+void Get_Actual_Temps(uint8_t devIdx, uint8_t tempindex, uint16_t *actualTemp,
 		uint16_t data);
 
-void Read_Temp(uint8_t tempindex, uint16_t *read_temp, uint16_t *read_auxreg);
+void Read_Temp(uint8_t tempindex, uint16_t *readTemp, uint16_t *readAuxreg);
 
-void Convert_Analog_To_Pressure(uint8_t dev_idx, uint16_t *pressure, uint16_t adc_data);
+void Convert_Analog_To_Pressure(uint8_t devIdx, uint16_t *pressure, uint16_t adcData);
 
-void Atmos_Temp_To_Celsius(uint8_t dev_idx, uint16_t *pressure, uint16_t adc_data);
+void Atmos_Temp_To_Celsius(uint8_t devIdx, uint16_t *pressure, uint16_t adcData);
 
-void ADC_To_Humidity(uint8_t dev_idx, uint16_t *humidity, uint16_t adc_data);
+void ADC_To_Humidity(uint8_t devIdx, uint16_t *humidity, uint16_t adcData);
 
 void Read_Pressure(batteryModule *batt);
 

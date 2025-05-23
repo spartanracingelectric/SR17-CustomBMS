@@ -25,7 +25,7 @@
 /* USER CODE END 0 */
 
 CAN_HandleTypeDef hcan1;
-uint8_t can_skip_flag = 0;
+uint8_t canSkipFlag = 0;
 /* CAN1 init function */
 void MX_CAN1_Init(void)
 {
@@ -120,7 +120,7 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
   if(canHandle->Instance==CAN1)
   {
   /* USER CODE BEGIN CAN1_MspDeInit 0 */
-	  can_skip_flag = 0;
+	  canSkipFlag = 0;
   /* USER CODE END CAN1_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_CAN1_CLK_DISABLE();
@@ -152,13 +152,13 @@ HAL_StatusTypeDef CAN_Activate() {
 }
 
 HAL_StatusTypeDef CAN_Send(CANMessage *ptr) {
-    uint32_t can_erraps_time = HAL_GetTick();
+    uint32_t canErrapsTime = HAL_GetTick();
     while (HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) == 0) {
-    	if(can_skip_flag == 1){
+    	if(canSkipFlag == 1){
     		return HAL_TIMEOUT;
     	}
-    	else if(HAL_GetTick() - can_erraps_time > 10){
-    		can_skip_flag = 1;
+    	else if(HAL_GetTick() - canErrapsTime > 10){
+    		canSkipFlag = 1;
     		return HAL_TIMEOUT;
     	}
     }
@@ -197,17 +197,17 @@ void CAN_SettingsInit(CANMessage *ptr) {
 
 void Set_CAN_Id(CANMessage *ptr, uint32_t id) { ptr->TxHeader.StdId = id; }
 
-void CAN_Send_Voltage(CANMessage *buffer, uint16_t *read_volt) {
+void CAN_Send_Voltage(CANMessage *buffer, uint16_t *readVolt) {
 	uint32_t CAN_ID = (uint32_t)CAN_ID_VOLTAGE;
     for (int i = 0; i < NUM_CELLS; i += 4) {  //pack every 4 cell group in 1 CAN message
-        buffer->voltageBuffer[0] =  read_volt[  i  ]       & 0xFF; 			//To ensure the data type is uint8_t, use & 0xFF
-		buffer->voltageBuffer[1] = (read_volt[  i  ] >> 8) & 0xFF;
-		buffer->voltageBuffer[2] =  read_volt[i + 1]       & 0xFF;
-		buffer->voltageBuffer[3] = (read_volt[i + 1] >> 8) & 0xFF;
-		buffer->voltageBuffer[4] =  read_volt[i + 2]       & 0xFF;
-		buffer->voltageBuffer[5] = (read_volt[i + 2] >> 8) & 0xFF;
-		buffer->voltageBuffer[6] =  read_volt[i + 3]       & 0xFF;
-		buffer->voltageBuffer[7] = (read_volt[i + 3] >> 8) & 0xFF;
+        buffer->voltageBuffer[0] =  readVolt[  i  ]       & 0xFF; 			//To ensure the data type is uint8_t, use & 0xFF
+		buffer->voltageBuffer[1] = (readVolt[  i  ] >> 8) & 0xFF;
+		buffer->voltageBuffer[2] =  readVolt[i + 1]       & 0xFF;
+		buffer->voltageBuffer[3] = (readVolt[i + 1] >> 8) & 0xFF;
+		buffer->voltageBuffer[4] =  readVolt[i + 2]       & 0xFF;
+		buffer->voltageBuffer[5] = (readVolt[i + 2] >> 8) & 0xFF;
+		buffer->voltageBuffer[6] =  readVolt[i + 3]       & 0xFF;
+		buffer->voltageBuffer[7] = (readVolt[i + 3] >> 8) & 0xFF;
 //        printf("can id for voltage: %d\n", CAN_ID);
 
         Set_CAN_Id(buffer, CAN_ID);
@@ -216,19 +216,19 @@ void CAN_Send_Voltage(CANMessage *buffer, uint16_t *read_volt) {
     }
 }
 
-void CAN_Send_Temperature(CANMessage *buffer, uint16_t *read_temp, uint16_t *pressure, uint16_t *atmos_temp, uint16_t *humidity, uint16_t *dew_point) {
+void CAN_Send_Temperature(CANMessage *buffer, uint16_t *readTemp, uint16_t *pressure, uint16_t *atmosTemp, uint16_t *humidity, uint16_t *dewPoint) {
     uint32_t CAN_ID = (uint32_t)CAN_ID_THERMISTOR;
 
     for (int i = 0; i < NUM_THERM_TOTAL; i += 12) {
         Set_CAN_Id(buffer, CAN_ID);
-        buffer->thermistorBuffer[0] = (uint8_t)(read_temp[  i  ] & 0xFF);
-		buffer->thermistorBuffer[1] = (uint8_t)(read_temp[i + 1] & 0xFF);
-		buffer->thermistorBuffer[2] = (uint8_t)(read_temp[i + 2] & 0xFF);
-		buffer->thermistorBuffer[3] = (uint8_t)(read_temp[i + 3] & 0xFF);
-		buffer->thermistorBuffer[4] = (uint8_t)(read_temp[i + 4] & 0xFF);
-		buffer->thermistorBuffer[5] = (uint8_t)(read_temp[i + 5] & 0xFF);
-		buffer->thermistorBuffer[6] = (uint8_t)(read_temp[i + 6] & 0xFF);
-		buffer->thermistorBuffer[7] = (uint8_t)(read_temp[i + 7] & 0xFF);
+        buffer->thermistorBuffer[0] = (uint8_t)(readTemp[  i  ] & 0xFF);
+		buffer->thermistorBuffer[1] = (uint8_t)(readTemp[i + 1] & 0xFF);
+		buffer->thermistorBuffer[2] = (uint8_t)(readTemp[i + 2] & 0xFF);
+		buffer->thermistorBuffer[3] = (uint8_t)(readTemp[i + 3] & 0xFF);
+		buffer->thermistorBuffer[4] = (uint8_t)(readTemp[i + 4] & 0xFF);
+		buffer->thermistorBuffer[5] = (uint8_t)(readTemp[i + 5] & 0xFF);
+		buffer->thermistorBuffer[6] = (uint8_t)(readTemp[i + 6] & 0xFF);
+		buffer->thermistorBuffer[7] = (uint8_t)(readTemp[i + 7] & 0xFF);
 
 //		printf("temp1 in 8 bits:%d\n", ptr->data[0]);
 //		printf("temp2 in 8 bits:%d\n", ptr->data[1]);
@@ -244,14 +244,14 @@ void CAN_Send_Temperature(CANMessage *buffer, uint16_t *read_temp, uint16_t *pre
 
 		Set_CAN_Id(buffer, CAN_ID);
 
-		buffer->thermistorBuffer[0] = (uint8_t)(read_temp [i +  8] & 0xFF);
-		buffer->thermistorBuffer[1] = (uint8_t)(read_temp [i +  9] & 0xFF);
-		buffer->thermistorBuffer[2] = (uint8_t)(read_temp [i + 10] & 0xFF);
-		buffer->thermistorBuffer[3] = (uint8_t)(read_temp [i + 11] & 0xFF);
+		buffer->thermistorBuffer[0] = (uint8_t)(readTemp [i +  8] & 0xFF);
+		buffer->thermistorBuffer[1] = (uint8_t)(readTemp [i +  9] & 0xFF);
+		buffer->thermistorBuffer[2] = (uint8_t)(readTemp [i + 10] & 0xFF);
+		buffer->thermistorBuffer[3] = (uint8_t)(readTemp [i + 11] & 0xFF);
 		buffer->thermistorBuffer[4] = (uint8_t)(pressure  [i / 12] & 0xFF);
-		buffer->thermistorBuffer[5] = (uint8_t)(atmos_temp[i / 12] & 0xFF);
+		buffer->thermistorBuffer[5] = (uint8_t)(atmosTemp[i / 12] & 0xFF);
 		buffer->thermistorBuffer[6] = (uint8_t)(humidity  [i / 12] & 0xFF);
-		buffer->thermistorBuffer[7] = (uint8_t)(dew_point [i / 12] & 0xFF);
+		buffer->thermistorBuffer[7] = (uint8_t)(dewPoint [i / 12] & 0xFF);
 
 //		printf("temp9 in 8 bits:%d\n", ptr->data[0]);
 //		printf("temp10 in 8 bits:%d\n", ptr->data[1]);
@@ -263,8 +263,8 @@ void CAN_Send_Temperature(CANMessage *buffer, uint16_t *read_temp, uint16_t *pre
 //      printf("sending CAN");
 		}
 //	for(int i = 0; i < 96; i ++){
-//		uint8_t eightbit = (uint8_t)(read_temp[i]);
-//		uint16_t sixteenbit = read_temp[i];
+//		uint8_t eightbit = (uint8_t)(readTemp[i]);
+//		uint16_t sixteenbit = readTemp[i];
 //		printf("temp[%d] in 8 bits:%d\n", i, eightbit);
 //		printf("temp[%d] in 16 bits:%d\n", i, sixteenbit);
 //	}
@@ -273,12 +273,12 @@ void CAN_Send_Temperature(CANMessage *buffer, uint16_t *read_temp, uint16_t *pre
 void CAN_Send_Cell_Summary(CANMessage *buffer, batteryModule *batt) {
 	uint32_t CAN_ID = (uint32_t)CAN_ID_SUMMARY;
 	Set_CAN_Id(buffer, CAN_ID);
-	buffer->summaryBuffer[0] =  batt->cell_volt_highest         & 0xFF;
-	buffer->summaryBuffer[1] = (batt->cell_volt_highest >> 8)   & 0xFF;
-	buffer->summaryBuffer[2] =  batt->cell_volt_lowest          & 0xFF;
-	buffer->summaryBuffer[3] = (batt->cell_volt_lowest >> 8)    & 0xFF;
-	buffer->summaryBuffer[4] = (uint8_t)batt->cell_temp_highest & 0xFF;
-	buffer->summaryBuffer[5] = (uint8_t)batt->cell_temp_lowest  & 0xFF;
+	buffer->summaryBuffer[0] =  batt->cellVoltHighest         & 0xFF;
+	buffer->summaryBuffer[1] = (batt->cellVoltHighest >> 8)   & 0xFF;
+	buffer->summaryBuffer[2] =  batt->cellVoltLowest          & 0xFF;
+	buffer->summaryBuffer[3] = (batt->cellVoltLowest >> 8)    & 0xFF;
+	buffer->summaryBuffer[4] = (uint8_t)batt->cellTempHighest & 0xFF;
+	buffer->summaryBuffer[5] = (uint8_t)batt->cellTempLowest  & 0xFF;
 //	printf("can id for summary: %d\n", CAN_ID);
 //	ptr->data[6] =
 //	ptr->data[7] =
@@ -287,26 +287,26 @@ void CAN_Send_Cell_Summary(CANMessage *buffer, batteryModule *batt) {
 }
 
 void CAN_Send_Safety_Checker(CANMessage *buffer, batteryModule *batt, uint8_t *faults, uint8_t *warnings) {
-	batt->cell_difference = batt->cell_volt_highest - batt->cell_volt_lowest;
+	batt->cellDifference = batt->cellVoltHighest - batt->cellVoltLowest;
 	uint32_t CAN_ID = (uint32_t)CAN_ID_SAFETY;
 	Set_CAN_Id(buffer, CAN_ID);
 	buffer->safetyBuffer[0] = *warnings;
 	buffer->safetyBuffer[1] = *faults;
-	buffer->safetyBuffer[2] =  batt->cell_difference           & 0xFF;
-	buffer->safetyBuffer[3] = (batt->cell_difference     >> 8) & 0xFF;
-	buffer->safetyBuffer[4] =  batt->hvsens_pack_voltage       & 0xFF;
-	buffer->safetyBuffer[5] = (batt->hvsens_pack_voltage >> 8) & 0xFF;
-	buffer->safetyBuffer[6] =  batt->sum_pack_voltage          & 0xFF;
-	buffer->safetyBuffer[7] = (batt->sum_pack_voltage    >> 8) & 0xFF;
+	buffer->safetyBuffer[2] =  batt->cellDifference           & 0xFF;
+	buffer->safetyBuffer[3] = (batt->cellDifference     >> 8) & 0xFF;
+	buffer->safetyBuffer[4] =  batt->hvsensPackVoltage       & 0xFF;
+	buffer->safetyBuffer[5] = (batt->hvsensPackVoltage >> 8) & 0xFF;
+	buffer->safetyBuffer[6] =  batt->sumPackVoltage          & 0xFF;
+	buffer->safetyBuffer[7] = (batt->sumPackVoltage    >> 8) & 0xFF;
 //	printf("can id for safety: %d\n", CAN_ID);
 	CAN_Send(buffer);
 //	printf("Faults\n");
 }
 
 void CAN_Send_SOC(CANMessage *buffer, batteryModule *batt,
-                  uint16_t max_capacity) {
+                  uint16_t maxCapacity) {
 	uint32_t CAN_ID = (uint32_t)CAN_ID_SOC;
-    uint8_t percent = (uint8_t)((float) batt->soc * 100 / (float) max_capacity);
+    uint8_t percent = (uint8_t)((float) batt->soc * 100 / (float) maxCapacity);
     Set_CAN_Id(buffer, CAN_ID);
 	buffer->socBuffer[0] = batt->soc;
 	buffer->socBuffer[1] = batt->soc >> 8;
@@ -319,31 +319,31 @@ void CAN_Send_SOC(CANMessage *buffer, batteryModule *batt,
     CAN_Send(buffer);
 }
 
-void CAN_Send_Balance_Status(CANMessage *buffer, uint16_t *balance_status){
+void CAN_Send_Balance_Status(CANMessage *buffer, uint16_t *balanceStatus){
 	uint32_t CAN_ID = (uint32_t)CAN_ID_BALANCE_STATUS;
 	Set_CAN_Id(buffer, CAN_ID);
 
-	buffer->balanceStatus[0] =  balance_status[0]       & 0xFF;
-	buffer->balanceStatus[1] = (balance_status[0] >> 8) & 0xFF;
-	buffer->balanceStatus[2] =  balance_status[1]       & 0xFF;
-	buffer->balanceStatus[3] = (balance_status[1] >> 8) & 0xFF;
-	buffer->balanceStatus[4] =  balance_status[2]       & 0xFF;
-	buffer->balanceStatus[5] = (balance_status[2] >> 8) & 0xFF;
-	buffer->balanceStatus[6] =  balance_status[3]       & 0xFF;
-	buffer->balanceStatus[7] = (balance_status[3] >> 8) & 0xFF;
+	buffer->balanceStatus[0] =  balanceStatus[0]       & 0xFF;
+	buffer->balanceStatus[1] = (balanceStatus[0] >> 8) & 0xFF;
+	buffer->balanceStatus[2] =  balanceStatus[1]       & 0xFF;
+	buffer->balanceStatus[3] = (balanceStatus[1] >> 8) & 0xFF;
+	buffer->balanceStatus[4] =  balanceStatus[2]       & 0xFF;
+	buffer->balanceStatus[5] = (balanceStatus[2] >> 8) & 0xFF;
+	buffer->balanceStatus[6] =  balanceStatus[3]       & 0xFF;
+	buffer->balanceStatus[7] = (balanceStatus[3] >> 8) & 0xFF;
 //	printf("can id for balance1: %d\n", CAN_ID);
 	CAN_Send(buffer);
 	CAN_ID++;
 
 	Set_CAN_Id(buffer, CAN_ID);
-	buffer->balanceStatus[0] =  balance_status[4]       & 0xFF;
-	buffer->balanceStatus[1] = (balance_status[4] >> 8) & 0xFF;
-	buffer->balanceStatus[2] =  balance_status[5]       & 0xFF;
-	buffer->balanceStatus[3] = (balance_status[5] >> 8) & 0xFF;
-	buffer->balanceStatus[4] =  balance_status[6]       & 0xFF;
-	buffer->balanceStatus[5] = (balance_status[6] >> 8) & 0xFF;
-	buffer->balanceStatus[6] =  balance_status[7]       & 0xFF;
-	buffer->balanceStatus[7] = (balance_status[7] >> 8) & 0xFF;
+	buffer->balanceStatus[0] =  balanceStatus[4]       & 0xFF;
+	buffer->balanceStatus[1] = (balanceStatus[4] >> 8) & 0xFF;
+	buffer->balanceStatus[2] =  balanceStatus[5]       & 0xFF;
+	buffer->balanceStatus[3] = (balanceStatus[5] >> 8) & 0xFF;
+	buffer->balanceStatus[4] =  balanceStatus[6]       & 0xFF;
+	buffer->balanceStatus[5] = (balanceStatus[6] >> 8) & 0xFF;
+	buffer->balanceStatus[6] =  balanceStatus[7]       & 0xFF;
+	buffer->balanceStatus[7] = (balanceStatus[7] >> 8) & 0xFF;
 //	printf("can id for balance2: %d\n", CAN_ID);
 	CAN_Send(buffer);
 }
@@ -355,12 +355,12 @@ void CAN_Send_Balance_Status(CANMessage *buffer, uint16_t *balance_status){
 //	for (int i = 0; i < NUM_DEVICES; ++i) {
 //		ptr->data[0] = batt->pressure  [i];
 //		ptr->data[1] = batt->pressure  [i] >> 8;
-//		ptr->data[2] = batt->atmos_temp[i];
-//		ptr->data[3] = batt->atmos_temp[i] >> 8;
+//		ptr->data[2] = batt->atmosTemp[i];
+//		ptr->data[3] = batt->atmosTemp[i] >> 8;
 //		ptr->data[4] = batt->humidity  [i];
 //		ptr->data[5] = batt->humidity  [i] >> 8;
-//		ptr->data[6] = batt->dew_point [i];
-//		ptr->data[7] = batt->dew_point [i] >> 8;
+//		ptr->data[6] = batt->dewPoint [i];
+//		ptr->data[7] = batt->dewPoint [i] >> 8;
 //		CAN_Send(ptr);
 //
 //		CAN_ID++;

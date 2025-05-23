@@ -54,25 +54,25 @@ extern "C" {
 /* USER CODE END Private defines */
 
 typedef struct batteryModule {
-	uint16_t cell_volt[NUM_CELLS];
-	uint16_t cell_temp[NUM_THERM_TOTAL];
-	uint16_t average_volt[NUM_DEVICES];
-	uint16_t average_temp[NUM_DEVICES];
+	uint16_t cellVolt[NUM_CELLS];
+	uint16_t cellTemp[NUM_THERM_TOTAL];
+	uint16_t averageVolt[NUM_DEVICES];
+	uint16_t averageTemp[NUM_DEVICES];
 	uint16_t pressure[NUM_DEVICES];
 	uint16_t humidity[NUM_DEVICES];
-	uint16_t atmos_temp[NUM_DEVICES];
-	uint16_t cell_volt_lowest;
-	uint16_t cell_volt_highest;
-	uint16_t cell_difference;
-	uint16_t cell_temp_lowest;
-	uint16_t cell_temp_highest;
-	uint16_t sum_pack_voltage;
-	uint16_t hvsens_pack_voltage;
-	uint16_t read_auxreg[NUM_AUXES];
-	uint16_t balance_status[NUM_DEVICES];
+	uint16_t atmosTemp[NUM_DEVICES];
+	uint16_t cellVoltLowest;
+	uint16_t cellVoltHighest;
+	uint16_t cellDifference;
+	uint16_t cellTempLowest;
+	uint16_t cellTempHighest;
+	uint16_t sumPackVoltage;
+	uint16_t hvsensPackVoltage;
+	uint16_t readAuxreg[NUM_AUXES];
+	uint16_t balanceStatus[NUM_DEVICES];
     uint16_t soc;
     uint32_t current;
-    uint16_t dew_point[NUM_DEVICES];
+    uint16_t dewPoint[NUM_DEVICES];
 } batteryModule;
 
 typedef struct CANMessage{

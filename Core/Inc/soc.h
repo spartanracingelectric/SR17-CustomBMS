@@ -14,6 +14,6 @@
 #define SHUNT_OFFSET 500  // 500 mA
 
 void SOC_getInitialCharge(batteryModule *batt);
-void SOC_updateCharge(batteryModule *batt, uint32_t elapsed_time);
+void SOC_updateCharge(batteryModule *batt, uint32_t elapsedTime);
 
 #endif

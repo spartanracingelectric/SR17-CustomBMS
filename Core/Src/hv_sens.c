@@ -19,16 +19,16 @@
 		float amcOutput = adcVoltage / GAIN_TLV9001;
 		float hvInput = (amcOutput) * (DIVIDER_RATIO) + .9;
 
-		batt->hvsens_pack_voltage = hvInput * 100;
+		batt->hvsensPackVoltage = hvInput * 100;
 	}
 
 	void getSumPackVoltage(batteryModule *batt){
-		uint32_t sum_voltage = 0;
+		uint32_t sumVoltage = 0;
 
 		for (int i = 0; i < NUM_CELLS; i++) {
-			 sum_voltage += batt->cell_volt[i]; //get sum voltage
+			 sumVoltage += batt->cellVolt[i]; //get sum voltage
 		}
-		batt->sum_pack_voltage = (uint16_t)(sum_voltage / 100);
+		batt->sumPackVoltage = (uint16_t)(sumVoltage / 100);
 	}
 
 

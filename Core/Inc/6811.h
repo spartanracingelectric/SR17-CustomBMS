@@ -34,30 +34,30 @@ typedef enum {
 	LTC_SPI_RX_TIMEOUT = 0x80U	 //0b10000000
 } LTC_SPI_StatusTypeDef;
 
-extern uint8_t wrpwm_buffer[4 + (8 * NUM_DEVICES)];
-extern uint8_t wrcfg_buffer[4 + (8 * NUM_DEVICES)];
-extern uint8_t wrcomm_buffer[4 + (8 * NUM_DEVICES)];
+extern uint8_t wrpwmBuffer[4 + (8 * NUM_DEVICES)];
+extern uint8_t wrcfgBuffer[4 + (8 * NUM_DEVICES)];
+extern uint8_t wrcommBuffer[4 + (8 * NUM_DEVICES)];
 
 void Wakeup_Idle(void);
 
 void Wakeup_Sleep(void);
 
-LTC_SPI_StatusTypeDef LTC_getCellVoltages(uint16_t *read_voltages);
+LTC_SPI_StatusTypeDef LTC_getCellVoltages(uint16_t *readVoltages);
 
 /* write to PWM register to control balancing functionality */
-void LTC_writePWM(uint8_t total_ic, uint8_t pwm);
+void LTC_writePWM(uint8_t totalIc, uint8_t pwm);
 
-void LTC_writeCFG(uint8_t total_ic, //The number of ICs being written to
+void LTC_writeCFG(uint8_t totalIc, //The number of ICs being written to
 		uint8_t config[][6] //A two dimensional array of the configuration data that will be written
 		);
 
-void LTC_SPI_writeCommunicationSetting(uint8_t total_ic, //The number of ICs being written to
+void LTC_SPI_writeCommunicationSetting(uint8_t totalIc, //The number of ICs being written to
 		uint8_t comm[6] //A two dimensional array of the comm data that will be written
 		);
 
 void LTC_SPI_requestData(uint8_t len);
 
-LTC_SPI_StatusTypeDef LTC_readGPIOs(uint16_t *read_auxiliary);
+LTC_SPI_StatusTypeDef LTC_readGPIOs(uint16_t *readAuxiliary);
 
 void LTC_startADCVoltage(uint8_t MD, //ADC Mode
 		uint8_t DCP, //Discharge Permit
@@ -70,7 +70,7 @@ void LTC_startADC_GPIO(uint8_t MD, //ADC Mode
 
 int32_t LTC_POLLADC();
 
-int Calc_Pack_Voltage(uint16_t *read_voltages);
+int Calc_Pack_Voltage(uint16_t *readVoltages);
 
 uint16_t LTC_Pec15_Calc(uint8_t len, //Number of bytes that will be used to calculate a PEC
 		uint8_t *data //Array of data that will be used to calculate a PEC

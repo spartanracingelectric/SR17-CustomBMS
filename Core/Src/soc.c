@@ -20,13 +20,13 @@ uint16_t SOC_getChargeData40C(uint16_t voltage);
 void SOC_getInitialCharge(batteryModule *batt) {
     uint32_t voltage;
     for (int i = 0; i < NUM_CELLS; ++i) {
-        voltage += batt->cell_volt[i];
+        voltage += batt->cellVolt[i];
     }
     voltage /= (NUM_DEVICES * 10);
 
     uint16_t temperature;
     for (int i = 0; i < NUM_THERM_TOTAL; ++i) {
-        temperature += batt->cell_temp[i];
+        temperature += batt->cellTemp[i];
     }
     temperature /= NUM_DEVICES;
 
@@ -66,11 +66,11 @@ void SOC_updateCurrent(batteryModule *batt) {
     batt->current = (voltage / (MAX_SHUNT_VOLTAGE * SHUNT_OPAMP_RATIO)) * MAX_SHUNT_AMPAGE + SHUNT_OFFSET;
 }
 
-void SOC_updateCharge(batteryModule *batt, uint32_t elapsed_time) {
+void SOC_updateCharge(batteryModule *batt, uint32_t elapsedTime) {
 
 	HAL_ADCEx_Calibration_Start(&hadc2);
     SOC_updateCurrent(batt);
-    batt->soc -= (uint16_t)(batt->current * (float)(elapsed_time / 3600000.0f));
+    batt->soc -= (uint16_t)(batt->current * (float)(elapsedTime / 3600000.0f));
 }
 
 uint16_t SOC_searchCapacity(uint16_t data[][2], uint16_t target, uint16_t size) {

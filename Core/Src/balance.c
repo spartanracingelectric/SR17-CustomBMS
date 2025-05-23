@@ -16,7 +16,7 @@
 CAN_RxHeaderTypeDef rxHeader;
 uint8_t rxData[8];
 uint8_t balance = 0;			//FALSE
-uint8_t balance_finish = 0;
+uint8_t balanceFinish = 0;
 
 static uint8_t config[8][6] = { { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 },
 								{ 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 },
@@ -30,7 +30,7 @@ static uint8_t defaultConfig[8][6] = {{ 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 
 
 void Balance_init(uint16_t *balanceStatus){
 	balance = 0;
-	balance_finish = 0;
+	balanceFinish = 0;
 	Balance_reset(balanceStatus);
 	Wakeup_Sleep();
 	LTC_writeCFG(NUM_DEVICES, defaultConfig);
@@ -48,17 +48,17 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
 //                printf("BALANCE enabled by CAN message.\n");
             } else if (balanceCommand == 0) {
             	balance = 0;  // disable balance
-            	balance_finish = 1;
+            	balanceFinish = 1;
 //                printf("BALANCE disabled by CAN message.\n");
             }
         }
     }
 }
 
-void Start_Balance(uint16_t *read_volt, uint16_t lowest, uint16_t *balanceStatus) {
+void Start_Balance(uint16_t *readVolt, uint16_t lowest, uint16_t *balanceStatus) {
 //	printf("balance enable is %d\n", balance);
 	if(balance > 0){
-		Discharge_Algo(read_volt, lowest , balanceStatus);
+		Discharge_Algo(readVolt, lowest , balanceStatus);
 		Wakeup_Sleep();
 		LTC_writeCFG(NUM_DEVICES, config);
 	}
@@ -68,11 +68,11 @@ void Start_Balance(uint16_t *read_volt, uint16_t lowest, uint16_t *balanceStatus
 }
 
 void End_Balance(uint16_t *balanceStatus) {
-	if(balance_finish == 1){
+	if(balanceFinish == 1){
 		Balance_reset(balanceStatus);
 		Wakeup_Sleep();
 		LTC_writeCFG(NUM_DEVICES, defaultConfig);
-		balance_finish = 0;
+		balanceFinish = 0;
 	}
 	else{
 		return;
@@ -82,34 +82,34 @@ void End_Balance(uint16_t *balanceStatus) {
 /**
  * perform balance
  * 
- * @param read_volt array containing cells volts. 
+ * @param readVolt array containing cells volts.
  * @param length count of readings. 
- * @param lowest read_volt's lowest cell reading
+ * @param lowest readVolt's lowest cell reading
  */
-void Discharge_Algo(uint16_t *read_volt, uint16_t lowest, uint16_t *balanceStatus) {
-	for (uint8_t dev_idx = 0; dev_idx < NUM_DEVICES; dev_idx++) {
+void Discharge_Algo(uint16_t *readVolt, uint16_t lowest, uint16_t *balanceStatus) {
+	for (uint8_t devIdx = 0; devIdx < NUM_DEVICES; devIdx++) {
 		// check if each cell is close within 0.005V of the lowest cell.
 		uint8_t DCC[12];
-		for (uint8_t cell_idx = 0; cell_idx < NUM_CELL_SERIES_GROUP; cell_idx++) {
-			if (read_volt[dev_idx * NUM_CELL_SERIES_GROUP + cell_idx] - lowest > BALANCE_THRESHOLD) {
-				DCC[cell_idx] = 1;
-				balanceStatus[dev_idx] |= (1 << cell_idx);
+		for (uint8_t cellIdx = 0; cellIdx < NUM_CELL_SERIES_GROUP; cellIdx++) {
+			if (readVolt[devIdx * NUM_CELL_SERIES_GROUP + cellIdx] - lowest > BALANCE_THRESHOLD) {
+				DCC[cellIdx] = 1;
+				balanceStatus[devIdx] |= (1 << cellIdx);
 			} else {
-				DCC[cell_idx] = 0;
-				balanceStatus[dev_idx] &= ~(1 << cell_idx); //set the bit to 0
+				DCC[cellIdx] = 0;
+				balanceStatus[devIdx] &= ~(1 << cellIdx); //set the bit to 0
 			}
 		}
-		Set_Cfg(dev_idx, (uint8_t*) DCC);
+		Set_Cfg(devIdx, (uint8_t*) DCC);
 	}
 }
 
 void Balance_reset(uint16_t *balanceStatus) {
 	uint8_t DCC[12] = {0};  //reset all DCC to 0
-	for (uint8_t dev_idx = 0; dev_idx < NUM_DEVICES; dev_idx++) {
-		balanceStatus[dev_idx] = 0;
-//		printf("balanceStaus[%d]: %d\n", dev_idx, balanceStatus[dev_idx]);
+	for (uint8_t devIdx = 0; devIdx < NUM_DEVICES; devIdx++) {
+		balanceStatus[devIdx] = 0;
+//		printf("balanceStaus[%d]: %d\n", devIdx, balanceStatus[devIdx]);
 
-		Set_Cfg(dev_idx, (uint8_t*) DCC);
+		Set_Cfg(devIdx, (uint8_t*) DCC);
 	}
 }
 
@@ -119,19 +119,19 @@ void Balance_reset(uint16_t *balanceStatus) {
  * @param device index
  * @param array of DCC bits
  */
-void Set_Cfg(uint8_t dev_idx, uint8_t *DCC) {
-	for (uint8_t cell_idx = 0; cell_idx < NUM_CELL_SERIES_GROUP; cell_idx++) {
-		if (DCC[cell_idx]) {
-			if (cell_idx < 8) {
-				config[dev_idx][4] |= (1 << cell_idx);
-			} else if (cell_idx >= 8) {
-				config[dev_idx][5] |= (1 << (cell_idx - 8));
+void Set_Cfg(uint8_t devIdx, uint8_t *DCC) {
+	for (uint8_t cellIdx = 0; cellIdx < NUM_CELL_SERIES_GROUP; cellIdx++) {
+		if (DCC[cellIdx]) {
+			if (cellIdx < 8) {
+				config[devIdx][4] |= (1 << cellIdx);
+			} else if (cellIdx >= 8) {
+				config[devIdx][5] |= (1 << (cellIdx - 8));
 			}
 		} else {
-			if (cell_idx < 8) {
-				config[dev_idx][4] &= (~(1 << cell_idx));
+			if (cellIdx < 8) {
+				config[devIdx][4] &= (~(1 << cellIdx));
 			} else {
-				config[dev_idx][5] &= (~(1 << (cell_idx - 8)));
+				config[devIdx][5] &= (~(1 << (cellIdx - 8)));
 			}
 		}
 	}

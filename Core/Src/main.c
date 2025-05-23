@@ -59,14 +59,14 @@
 
 /* USER CODE BEGIN PV */
 typedef struct _GpioTimePacket {
-    GPIO_TypeDef *gpio_port;  // Port
-    uint16_t gpio_pin;        // Pin number
-    uint32_t ts_prev;         // Previous timestamp
-    uint32_t ts_curr;         // Current timestamp
+    GPIO_TypeDef *gpioPort;  // Port
+    uint16_t gpioPin;        // Pin number
+    uint32_t tsPrev;         // Previous timestamp
+    uint32_t tsCurr;         // Current timestamp
 } GpioTimePacket;
 typedef struct _TimerPacket {
-    uint32_t ts_prev;  // Previous timestamp
-    uint32_t ts_curr;  // Current timestamp
+    uint32_t tsPrev;  // Previous timestamp
+    uint32_t tsCurr;  // Current timestamp
     uint32_t delay;    // Amount to delay
 } TimerPacket;
 
@@ -77,7 +77,7 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 void GpioTimePacket_Init(GpioTimePacket *gtp, GPIO_TypeDef *port, uint16_t pin);
 void TimerPacket_Init(TimerPacket *tp, uint32_t delay);
-void GpioFixedToggle(GpioTimePacket *gtp, uint16_t update_ms);
+void GpioFixedToggle(GpioTimePacket *gtp, uint16_t updateMs);
 // Returns 1 at every tp->delay interval
 uint8_t TimerPacket_FixedPulse(TimerPacket *tp);
 /* USER CODE END PFP */
@@ -96,7 +96,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-    GpioTimePacket tp_led_heartbeat;
+    GpioTimePacket tpLedHeartbeat;
     TimerPacket cycleTimeCap;
     TimerPacket canReconnection;
 
@@ -135,7 +135,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   CAN_SettingsInit(&msg);  // Start CAN at 0x00
     // Start timer
-    GpioTimePacket_Init(&tp_led_heartbeat, MCU_HEARTBEAT_LED_GPIO_Port,
+    GpioTimePacket_Init(&tpLedHeartbeat, MCU_HEARTBEAT_LED_GPIO_Port,
                         MCU_HEARTBEAT_LED_Pin);
     TimerPacket_Init(&cycleTimeCap, CYCLETIME_CAP);
     TimerPacket_Init(&canReconnection, CAN_RECONNECTION_CHECK);
@@ -149,15 +149,15 @@ int main(void)
 	HAL_GPIO_WritePin(MCU_SHUTDOWN_SIGNAL_GPIO_Port, MCU_SHUTDOWN_SIGNAL_Pin, GPIO_PIN_RESET);	//those are for debug the charger and mobo
 
 	//initializing variables
-	uint8_t tempindex = 0;
-	uint8_t indexpause = 8;
+	uint8_t tempIndex = 0;
+	uint8_t indexPause = 8;
 
 	Wakeup_Sleep();
 
-    Balance_init(modPackInfo.balance_status);
+    Balance_init(modPackInfo.balanceStatus);
 
 	SOC_getInitialCharge(&modPackInfo);
-	uint32_t prev_soc_time = HAL_GetTick();
+	uint32_t prevSocTime = HAL_GetTick();
 
   /* USER CODE END 2 */
 
@@ -167,87 +167,87 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
+		GpioFixedToggle(&tpLedHeartbeat, LED_HEARTBEAT_DELAY_MS);
 		if (TimerPacket_FixedPulse(&cycleTimeCap)) {
 			 HAL_ADCEx_Calibration_Start(&hadc1);
 			 HAL_ADCEx_Calibration_Start(&hadc2);
 //		printf("hello\n");
 			//reading cell voltages
 //			printf("volt start\n");
-			Read_Volt(modPackInfo.cell_volt);
+			Read_Volt(modPackInfo.cellVolt);
 //			printf("volt end\n");
 //			printf("Cell voltages:\n");
 //			for (int i = 0; i < NUM_CELLS; i++) {
-//			    printf("Cell %d: %u mV\n", i + 1, modPackInfo.cell_volt[i]);
+//			    printf("Cell %d: %u mV\n", i + 1, modPackInfo.cellVolt[i]);
 //			}
 
 			//reading cell temperatures
-			for (uint8_t i = tempindex; i < indexpause; i++) {
+			for (uint8_t i = tempIndex; i < indexPause; i++) {
 //				HAL_Delay(300);
-				Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
+				Read_Temp(i, modPackInfo.cellTemp, modPackInfo.readAuxreg);
 
-//				printf(" Cell: %d, Temp: %d\n", i, modPackInfo.cell_temp[i]);
+//				printf(" Cell: %d, Temp: %d\n", i, modPackInfo.cellTemp[i]);
 			}
-			if (indexpause == 8) {
+			if (indexPause == 8) {
 				LTC_SPI_writeCommunicationSetting(NUM_DEVICES, BMS_MUX_PAUSE[0]);
 				LTC_SPI_requestData(2);
-				tempindex = 8;
-				indexpause = NUM_THERM_PER_MOD;
+				tempIndex = 8;
+				indexPause = NUM_THERM_PER_MOD;
 //				HAL_Delay(1); //this delay is for stablize mux
 			}
-			else if (indexpause == NUM_THERM_PER_MOD) {
+			else if (indexPause == NUM_THERM_PER_MOD) {
 				Read_Pressure(&modPackInfo);
 				Read_Humidity(&modPackInfo);
 				Read_Atmos_Temp(&modPackInfo);
 				Get_Dew_Point(&modPackInfo);
 				LTC_SPI_writeCommunicationSetting(NUM_DEVICES, BMS_MUX_PAUSE[1]);
 				LTC_SPI_requestData(2);
-				indexpause = 8;
-				tempindex = 0;
+				indexPause = 8;
+				tempIndex = 0;
 //				HAL_Delay(1); //this delay is for stablize mux
 			}
 
 //			for(int i = 0; i < NUM_THERM_TOTAL; i++){
-//				printf("Temp[%d]: %d\n",i, modPackInfo.cell_temp[i]);
+//				printf("Temp[%d]: %d\n",i, modPackInfo.cellTemp[i]);
 //			}
 //			printf("pack volt start\n");
 			ReadHVInput(&modPackInfo);
 			getSumPackVoltage(&modPackInfo);
 //			printf("pack volt end\n");
 
-			SOC_updateCharge(&modPackInfo,(HAL_GetTick() - prev_soc_time));
-			prev_soc_time = HAL_GetTick();
+			SOC_updateCharge(&modPackInfo,(HAL_GetTick() - prevSocTime));
+			prevSocTime = HAL_GetTick();
 			//getting the summary of all cells in the pack
             Cell_Voltage_Fault(	&modPackInfo, &safetyFaults, &safetyWarnings);
 			Cell_Temperature_Fault(&modPackInfo, &safetyFaults, &safetyWarnings);
 //			Passive balancing is called unless a fault has occurred
 //			if (safetyFaults == 0 && BALANCE
-//					&& ((modPackInfo.cell_volt_highest
-//							- modPackInfo.cell_volt_lowest) > 50)) {
-//				Start_Balance((uint16_t*) modPackInfo.cell_volt,
-//				NUM_DEVICES, modPackInfo.cell_volt_lowest);
+//					&& ((modPackInfo.cellVolt_highest
+//							- modPackInfo.cellVoltLowest) > 50)) {
+//				Start_Balance((uint16_t*) modPackInfo.cellVolt,
+//				NUM_DEVICES, modPackInfo.cellVoltLowest);
 
 //			} else if (BALANCE) {
 //				End_Balance(&safetyFaults);
 //			}
-            if(modPackInfo.cell_difference > BALANCE_THRESHOLD){
-				Start_Balance(modPackInfo.cell_volt, modPackInfo.cell_volt_lowest, modPackInfo.balance_status);
+            if(modPackInfo.cellDifference > BALANCE_THRESHOLD){
+				Start_Balance(modPackInfo.cellVolt, modPackInfo.cellVoltLowest, modPackInfo.balanceStatus);
 			}
 
-			End_Balance(modPackInfo.balance_status);//end the balance if CAN RX recieve 0
+			End_Balance(modPackInfo.balanceStatus);//end the balance if CAN RX recieve 0
 
 
 			//calling all CAN realated methods
 //			printf("CAN start\n");
 			if(TimerPacket_FixedPulse(&canReconnection)){
-				can_skip_flag = 0;
+				canSkipFlag = 0;
 			}
 			CAN_Send_Safety_Checker(&msg, &modPackInfo, &safetyFaults, &safetyWarnings);
 			CAN_Send_Cell_Summary(&msg, &modPackInfo);
-			CAN_Send_Voltage(&msg, modPackInfo.cell_volt);
-			CAN_Send_Temperature(&msg, modPackInfo.cell_temp, modPackInfo.pressure, modPackInfo.atmos_temp, modPackInfo.humidity, modPackInfo.dew_point);
+			CAN_Send_Voltage(&msg, modPackInfo.cellVolt);
+			CAN_Send_Temperature(&msg, modPackInfo.cellTemp, modPackInfo.pressure, modPackInfo.atmosTemp, modPackInfo.humidity, modPackInfo.dewPoint);
 			CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
-			CAN_Send_Balance_Status(&msg, modPackInfo.balance_status);
+			CAN_Send_Balance_Status(&msg, modPackInfo.balanceStatus);
 		}
     }
   /* USER CODE END 3 */
@@ -313,31 +313,31 @@ void SystemClock_Config(void)
 void GpioTimePacket_Init(GpioTimePacket *gtp, GPIO_TypeDef *port,
                          uint16_t pin) {
     HAL_GPIO_WritePin(port, pin, GPIO_PIN_RESET);  // Set GPIO LOW
-    gtp->gpio_port = port;
-    gtp->gpio_pin = pin;
-    gtp->ts_prev = 0;  // Init to 0
-    gtp->ts_curr = 0;  // Init to 0
+    gtp->gpioPort = port;
+    gtp->gpioPin = pin;
+    gtp->tsPrev = 0;  // Init to 0
+    gtp->tsCurr = 0;  // Init to 0
 }
-// update_ms = update after X ms
-void GpioFixedToggle(GpioTimePacket *gtp, uint16_t update_ms) {
-    gtp->ts_curr = HAL_GetTick();  // Record current timestamp
-    if (gtp->ts_curr - gtp->ts_prev > update_ms) {
-        HAL_GPIO_TogglePin(gtp->gpio_port, gtp->gpio_pin);  // Toggle GPIO
-        gtp->ts_prev = gtp->ts_curr;
+// updateMs = update after X ms
+void GpioFixedToggle(GpioTimePacket *gtp, uint16_t updateMs) {
+    gtp->tsCurr = HAL_GetTick();  // Record current timestamp
+    if (gtp->tsCurr - gtp->tsPrev > updateMs) {
+        HAL_GPIO_TogglePin(gtp->gpioPort, gtp->gpioPin);  // Toggle GPIO
+        gtp->tsPrev = gtp->tsCurr;
     }
 }
 // Initialize struct values
 // Will initialize GPIO to LOW!
 void TimerPacket_Init(TimerPacket *tp, uint32_t delay) {
-    tp->ts_prev = 0;    // Init to 0
-    tp->ts_curr = 0;    // Init to 0
+    tp->tsPrev = 0;    // Init to 0
+    tp->tsCurr = 0;    // Init to 0
     tp->delay = delay;  // Init to user value
 }
-// update_ms = update after X ms
+// updateMs = update after X ms
 uint8_t TimerPacket_FixedPulse(TimerPacket *tp) {
-    tp->ts_curr = HAL_GetTick();  // Record current timestamp
-    if (tp->ts_curr - tp->ts_prev > tp->delay) {
-        tp->ts_prev = tp->ts_curr;  // Update prev timestamp to current
+    tp->tsCurr = HAL_GetTick();  // Record current timestamp
+    if (tp->tsCurr - tp->tsPrev > tp->delay) {
+        tp->tsPrev = tp->tsCurr;  // Update prev timestamp to current
         return 1;                   // Enact event (time interval is a go)
     }
     return 0;  // Do not enact event

@@ -2,9 +2,9 @@
 #include "spi.h"
 #include "main.h"
 
-uint8_t wrpwm_buffer[4 + (8 * NUM_DEVICES)];
-uint8_t wrcfg_buffer[4 + (8 * NUM_DEVICES)];
-uint8_t wrcomm_buffer[4 + (8 * NUM_DEVICES)];
+uint8_t wrpwmBuffer[4 + (8 * NUM_DEVICES)];
+uint8_t wrcfgBuffer[4 + (8 * NUM_DEVICES)];
+uint8_t wrcommBuffer[4 + (8 * NUM_DEVICES)];
 
 static const uint16_t LTC_CMD_RDCV[4] = { LTC_CMD_RDCVA, LTC_CMD_RDCVB,
 LTC_CMD_RDCVC, LTC_CMD_RDCVD };
@@ -13,10 +13,10 @@ static const uint16_t LTC_CMD_AUXREG[2] = { LTC_CMD_RDAUXA, LTC_CMD_RDAUXB };
 
 /* Wake LTC up from IDLE state into READY state */
 void Wakeup_Idle(void) {
-	uint8_t hex_ff = 0xFF;
+	uint8_t hexFf = 0xFF;
 	for (int i = 0; i < NUM_DEVICES; i++) {
 		LTC_nCS_Low();							   // Pull CS low
-		HAL_SPI_Transmit(&hspi1, &hex_ff, 1, 100); // Send byte 0xFF to wake LTC up
+		HAL_SPI_Transmit(&hspi1, &hexFf, 1, 100); // Send byte 0xFF to wake LTC up
 		LTC_nCS_High();							   // Pull CS high
 	}
 }
@@ -33,48 +33,48 @@ void Wakeup_Sleep(void) {
 }
 
 /* Read and store raw cell voltages at uint8_t 2d pointer */
-LTC_SPI_StatusTypeDef LTC_getCellVoltages(uint16_t *read_voltages) {
+LTC_SPI_StatusTypeDef LTC_getCellVoltages(uint16_t *readVoltages) {
 	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
-	LTC_SPI_StatusTypeDef hal_ret;
+	LTC_SPI_StatusTypeDef halRet;
 	const uint8_t ARR_SIZE_REG = NUM_DEVICES * REG_LEN;
-	uint8_t read_voltages_reg[ARR_SIZE_REG]; // Increased in size to handle multiple devices
+	uint8_t readVoltagesReg[ARR_SIZE_REG]; // Increased in size to handle multiple devices
 
 	for (uint8_t i = 0; i < (NUM_CELL_SERIES_GROUP / LTC_SERIES_GROUPS_PER_RDCV);
 			i++) {
 		uint8_t cmd[4];
-		uint16_t cmd_pec;
+		uint16_t cmdPec;
 
 		cmd[0] = (0xFF & (LTC_CMD_RDCV[i] >> 8)); // RDCV Register
 		cmd[1] = (0xFF & (LTC_CMD_RDCV[i]));	  // RDCV Register
-		cmd_pec = LTC_Pec15_Calc(2, cmd);
-		cmd[2] = (uint8_t) (cmd_pec >> 8);
-		cmd[3] = (uint8_t) (cmd_pec);
+		cmdPec = LTC_Pec15_Calc(2, cmd);
+		cmd[2] = (uint8_t) (cmdPec >> 8);
+		cmd[3] = (uint8_t) (cmdPec);
 
 		Wakeup_Idle(); // Wake LTC up
 
 		LTC_nCS_Low(); // Pull CS low
 
-		hal_ret = HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
-		if (hal_ret) {									// Non-zero means error
-			ret |= (1 << (hal_ret + LTC_SPI_TX_BIT_OFFSET)); // TX error
+		halRet = HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
+		if (halRet) {									// Non-zero means error
+			ret |= (1 << (halRet + LTC_SPI_TX_BIT_OFFSET)); // TX error
 		}
 
-		hal_ret = HAL_SPI_Receive(&hspi1, (uint8_t*) read_voltages_reg,
+		halRet = HAL_SPI_Receive(&hspi1, (uint8_t*) readVoltagesReg,
 				ARR_SIZE_REG, 100);
-		if (hal_ret) {									// Non-zero means error
-			ret |= (1 << (hal_ret + LTC_SPI_RX_BIT_OFFSET)); // RX error
+		if (halRet) {									// Non-zero means error
+			ret |= (1 << (halRet + LTC_SPI_RX_BIT_OFFSET)); // RX error
 		}
 		LTC_nCS_High(); // Pull CS high
 
 		// Process the received data
-		for (uint8_t dev_idx = 0; dev_idx < NUM_DEVICES; dev_idx++) {
+		for (uint8_t devIdx = 0; devIdx < NUM_DEVICES; devIdx++) {
 			// Assuming data format is [cell voltage, cell voltage, ..., PEC, PEC]
 			// PEC for each device is the last two bytes of its data segment
-			uint8_t *data_ptr = &read_voltages_reg[dev_idx * REG_LEN];
+			uint8_t *dataPtr = &readVoltagesReg[devIdx * REG_LEN];
 			// If PEC matches, copy the voltage data, omitting the PEC bytes
 			memcpy(
-					&read_voltages[dev_idx * NUM_CELL_SERIES_GROUP
-							+ i * LTC_SERIES_GROUPS_PER_RDCV], data_ptr,
+					&readVoltages[devIdx * NUM_CELL_SERIES_GROUP
+							+ i * LTC_SERIES_GROUPS_PER_RDCV], dataPtr,
 					REG_LEN - 2);
 		}
 	}
@@ -84,135 +84,135 @@ LTC_SPI_StatusTypeDef LTC_getCellVoltages(uint16_t *read_voltages) {
 
 /**
  * 	write command to all pwm registers. This setup only allows to use 4b'1111 (HIGH) or 4b'0000 (LOW). 
- * @param total_ic		total count of ic (daisy chain)
+ * @param totalIc		total count of ic (daisy chain)
  * @param pwm			A two dimensional array of the configuration data that will be written
  */
-void LTC_writePWM(uint8_t total_ic, uint8_t pwm) {
+void LTC_writePWM(uint8_t totalIc, uint8_t pwm) {
 	// NOTE currently chaging this method to only assign a specific PWM to all registers
 
 	// TODO change it back to relying on @param pwm for duty cycle assignment. 
 
 	const uint8_t BYTES_IN_REG = 6;
-	const uint8_t CMD_LEN = 4 + (8 * total_ic);
-	uint16_t pwm_pec;
-	uint16_t cmd_pec;
-	uint8_t cmd_index; // command counter
+	const uint8_t CMD_LEN = 4 + (8 * totalIc);
+	uint16_t pwmPec;
+	uint16_t cmdPec;
+	uint8_t cmdIndex; // command counter
 
 	// init bits
-	wrpwm_buffer[0] = 0x00;
-	wrpwm_buffer[1] = 0x20;
-	cmd_pec = LTC_Pec15_Calc(2, wrpwm_buffer);
-	wrpwm_buffer[2] = (uint8_t) (cmd_pec >> 8);
-	wrpwm_buffer[3] = (uint8_t) (cmd_pec);
+	wrpwmBuffer[0] = 0x00;
+	wrpwmBuffer[1] = 0x20;
+	cmdPec = LTC_Pec15_Calc(2, wrpwmBuffer);
+	wrpwmBuffer[2] = (uint8_t) (cmdPec >> 8);
+	wrpwmBuffer[3] = (uint8_t) (cmdPec);
 
-	cmd_index = 4;				// Command bits
-	for (uint8_t current_ic = total_ic; current_ic > 0; current_ic--) // executes for each ltc6811 in daisy chain, this loops starts with
+	cmdIndex = 4;				// Command bits
+	for (uint8_t currentIc = totalIc; currentIc > 0; currentIc--) // executes for each ltc6811 in daisy chain, this loops starts with
 			{
 		// the last IC on the stack. The first configuration written is
 		// received by the last IC in the daisy chain
 
-		for (uint8_t current_byte = 0; current_byte < BYTES_IN_REG;
-				current_byte++) // executes for each of the 6 bytes in the CFGR register
+		for (uint8_t currentByte = 0; currentByte < BYTES_IN_REG;
+				currentByte++) // executes for each of the 6 bytes in the CFGR register
 				{
-			// current_byte is the byte counter
+			// currentByte is the byte counter
 
-			wrpwm_buffer[cmd_index] = pwm; //adding the pwm data to the array to be sent
-			cmd_index = cmd_index + 1;
+			wrpwmBuffer[cmdIndex] = pwm; //adding the pwm data to the array to be sent
+			cmdIndex = cmdIndex + 1;
 		}
 
-		pwm_pec = (uint16_t) LTC_Pec15_Calc(BYTES_IN_REG, &pwm); // calculating the PEC for each ICs configuration register data
-		wrpwm_buffer[cmd_index] = (uint8_t) (pwm_pec >> 8);
-		wrpwm_buffer[cmd_index + 1] = (uint8_t) pwm_pec;
-		cmd_index = cmd_index + 2;
+		pwmPec = (uint16_t) LTC_Pec15_Calc(BYTES_IN_REG, &pwm); // calculating the PEC for each ICs configuration register data
+		wrpwmBuffer[cmdIndex] = (uint8_t) (pwmPec >> 8);
+		wrpwmBuffer[cmdIndex + 1] = (uint8_t) pwmPec;
+		cmdIndex = cmdIndex + 2;
 	}
 
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake.This command can be removed.
 	LTC_nCS_Low();
-	HAL_SPI_Transmit(&hspi1, (uint8_t*) wrpwm_buffer, CMD_LEN, 100);
+	HAL_SPI_Transmit(&hspi1, (uint8_t*) wrpwmBuffer, CMD_LEN, 100);
 	LTC_nCS_High();
 }
 
-void LTC_writeCFG(uint8_t total_ic, //The number of ICs being written to
+void LTC_writeCFG(uint8_t totalIc, //The number of ICs being written to
 		uint8_t config[][6] //A two dimensional array of the configuration data that will be written
 		) {
 	const uint8_t BYTES_IN_REG = 6;
-	const uint8_t CMD_LEN = 4 + (8 * total_ic);
-	uint16_t cfg_pec;
-	uint8_t cmd_index; //command counter
+	const uint8_t CMD_LEN = 4 + (8 * totalIc);
+	uint16_t cfgPec;
+	uint8_t cmdIndex; //command counter
 
-	wrcfg_buffer[0] = 0x00;
-	wrcfg_buffer[1] = 0x01;
-	wrcfg_buffer[2] = 0x3d;
-	wrcfg_buffer[3] = 0x6e;
+	wrcfgBuffer[0] = 0x00;
+	wrcfgBuffer[1] = 0x01;
+	wrcfgBuffer[2] = 0x3d;
+	wrcfgBuffer[3] = 0x6e;
 
-	cmd_index = 4;
+	cmdIndex = 4;
 	// executes for each ltc6811 in daisy chain, this loops starts with
-	for (uint8_t current_ic = total_ic; current_ic > 0; current_ic--) {
+	for (uint8_t currentIc = totalIc; currentIc > 0; currentIc--) {
 		// the last IC on the stack. The first configuration written is
 		// received by the last IC in the daisy chain
 
 		// executes for each of the 6 bytes in the CFGR register
-		for (uint8_t current_byte = 0; current_byte < BYTES_IN_REG;
-				current_byte++) {
-			// current_byte is the byte counter
+		for (uint8_t currentByte = 0; currentByte < BYTES_IN_REG;
+				currentByte++) {
+			// currentByte is the byte counter
 
-			wrcfg_buffer[cmd_index] = config[current_ic - 1][current_byte]; //adding the config data to the array to be sent
-			cmd_index = cmd_index + 1;
+			wrcfgBuffer[cmdIndex] = config[currentIc - 1][currentByte]; //adding the config data to the array to be sent
+			cmdIndex = cmdIndex + 1;
 		}
 
-		cfg_pec = (uint16_t) LTC_Pec15_Calc(BYTES_IN_REG,
-				&config[current_ic - 1][0]); // calculating the PEC for each ICs configuration register data
-		wrcfg_buffer[cmd_index] = (uint8_t) (cfg_pec >> 8);
-		wrcfg_buffer[cmd_index + 1] = (uint8_t) cfg_pec;
-		cmd_index = cmd_index + 2;
+		cfgPec = (uint16_t) LTC_Pec15_Calc(BYTES_IN_REG,
+				&config[currentIc - 1][0]); // calculating the PEC for each ICs configuration register data
+		wrcfgBuffer[cmdIndex] = (uint8_t) (cfgPec >> 8);
+		wrcfgBuffer[cmdIndex + 1] = (uint8_t) cfgPec;
+		cmdIndex = cmdIndex + 2;
 	}
 
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake.This command can be removed.
 	LTC_nCS_Low();
-	HAL_SPI_Transmit(&hspi1, (uint8_t*) wrcfg_buffer, CMD_LEN, 100);
+	HAL_SPI_Transmit(&hspi1, (uint8_t*) wrcfgBuffer, CMD_LEN, 100);
 	LTC_nCS_High();
 }
 
 /**
  * 
- * @param total_ic	The number of ICs being written to
+ * @param totalIc	The number of ICs being written to
  * @param comm[6]	A two dimensional array of the comm data that will be written
  */
-void LTC_SPI_writeCommunicationSetting(uint8_t total_ic, uint8_t comm[6]) {
+void LTC_SPI_writeCommunicationSetting(uint8_t totalIc, uint8_t comm[6]) {
 	const uint8_t BYTES_IN_REG = 6;
-	const uint8_t CMD_LEN = 4 + (8 * total_ic);
-	uint16_t comm_pec;
-	uint16_t cmd_pec;
-	uint8_t cmd_index; // command counter
+	const uint8_t CMD_LEN = 4 + (8 * totalIc);
+	uint16_t commPec;
+	uint16_t cmdPec;
+	uint8_t cmdIndex; // command counter
 
-	wrcomm_buffer[0] = 0x07;
-	wrcomm_buffer[1] = 0x21;
-	cmd_pec = LTC_Pec15_Calc(2, wrcomm_buffer);
-	wrcomm_buffer[2] = (uint8_t) (cmd_pec >> 8);
-	wrcomm_buffer[3] = (uint8_t) (cmd_pec);
+	wrcommBuffer[0] = 0x07;
+	wrcommBuffer[1] = 0x21;
+	cmdPec = LTC_Pec15_Calc(2, wrcommBuffer);
+	wrcommBuffer[2] = (uint8_t) (cmdPec >> 8);
+	wrcommBuffer[3] = (uint8_t) (cmdPec);
 
-	cmd_index = 4;
-	for (uint8_t current_ic = total_ic; current_ic > 0; current_ic--) // executes for each ltc6811 in daisy chain, this loops starts with
+	cmdIndex = 4;
+	for (uint8_t currentIc = totalIc; currentIc > 0; currentIc--) // executes for each ltc6811 in daisy chain, this loops starts with
 			{
 		// the last IC on the stack. The first configuration written is
 		// received by the last IC in the daisy chain
 
-		for (uint8_t current_byte = 0; current_byte < BYTES_IN_REG;
-				current_byte++) // executes for each of the 6 bytes in the CFGR register
+		for (uint8_t currentByte = 0; currentByte < BYTES_IN_REG;
+				currentByte++) // executes for each of the 6 bytes in the CFGR register
 				{
-			// current_byte is the byte counter
-			wrcomm_buffer[cmd_index] = comm[current_byte]; // adding the config data to the array to be sent
-			cmd_index = cmd_index + 1;
+			// currentByte is the byte counter
+			wrcommBuffer[cmdIndex] = comm[currentByte]; // adding the config data to the array to be sent
+			cmdIndex = cmdIndex + 1;
 		}
-		comm_pec = (uint16_t) LTC_Pec15_Calc(BYTES_IN_REG, &comm[0]); // calculating the PEC for each ICs configuration register data
-		wrcomm_buffer[cmd_index] = (uint8_t) (comm_pec >> 8);
-		wrcomm_buffer[cmd_index + 1] = (uint8_t) comm_pec;
-		cmd_index = cmd_index + 2;
+		commPec = (uint16_t) LTC_Pec15_Calc(BYTES_IN_REG, &comm[0]); // calculating the PEC for each ICs configuration register data
+		wrcommBuffer[cmdIndex] = (uint8_t) (commPec >> 8);
+		wrcommBuffer[cmdIndex + 1] = (uint8_t) commPec;
+		cmdIndex = cmdIndex + 2;
 	}
 
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake.This command can be removed.
 	LTC_nCS_Low();
-	HAL_SPI_Transmit(&hspi1, (uint8_t*) wrcomm_buffer, CMD_LEN, 100);
+	HAL_SPI_Transmit(&hspi1, (uint8_t*) wrcommBuffer, CMD_LEN, 100);
 	LTC_nCS_High();
 }
 
@@ -222,13 +222,13 @@ void LTC_SPI_writeCommunicationSetting(uint8_t total_ic, uint8_t comm[6]) {
 void LTC_SPI_requestData(uint8_t len) {
 
 	uint8_t cmd[4];
-	uint16_t cmd_pec;
+	uint16_t cmdPec;
 
 	cmd[0] = 0x07;
 	cmd[1] = 0x23;
-	cmd_pec = LTC_Pec15_Calc(2, cmd);
-	cmd[2] = (uint8_t) (cmd_pec >> 8);
-	cmd[3] = (uint8_t) (cmd_pec);
+	cmdPec = LTC_Pec15_Calc(2, cmd);
+	cmd[2] = (uint8_t) (cmdPec >> 8);
+	cmd[3] = (uint8_t) (cmdPec);
 
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake. This command can be removed.
 	LTC_nCS_Low();
@@ -239,49 +239,49 @@ void LTC_SPI_requestData(uint8_t len) {
 	LTC_nCS_High();
 }
 
-LTC_SPI_StatusTypeDef LTC_readGPIOs(uint16_t *read_auxiliary) {
+LTC_SPI_StatusTypeDef LTC_readGPIOs(uint16_t *readAuxiliary) {
 	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
-	LTC_SPI_StatusTypeDef hal_ret;
+	LTC_SPI_StatusTypeDef halRet;
 	const uint8_t ARR_SIZE_REG = NUM_DEVICES * REG_LEN;
-	uint8_t read_auxiliary_reg[ARR_SIZE_REG]; // Increased in size to handle multiple devices
+	uint8_t readAuxiliaryReg[ARR_SIZE_REG]; // Increased in size to handle multiple devices
 
 	for (uint8_t i = 0;
 			i < (NUM_AUX_SERIES_GROUPS / LTC_SERIES_GROUPS_PER_RDAUX); i++) {
 		uint8_t cmd[4];
-		uint16_t cmd_pec;
+		uint16_t cmdPec;
 
 		cmd[0] = (0xFF & (LTC_CMD_AUXREG[i] >> 8)); // RDCV Register
 		cmd[1] = (0xFF & (LTC_CMD_AUXREG[i]));		// RDCV Register
-		cmd_pec = LTC_Pec15_Calc(2, cmd);
-		cmd[2] = (uint8_t) (cmd_pec >> 8);
-		cmd[3] = (uint8_t) (cmd_pec);
+		cmdPec = LTC_Pec15_Calc(2, cmd);
+		cmd[2] = (uint8_t) (cmdPec >> 8);
+		cmd[3] = (uint8_t) (cmdPec);
 
 		Wakeup_Idle(); // Wake LTC up
 
 		LTC_nCS_Low(); // Pull CS low
 
-		hal_ret = HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
-		if (hal_ret) {									// Non-zero means error
-			ret |= (1 << (hal_ret + LTC_SPI_TX_BIT_OFFSET)); // TX error
+		halRet = HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
+		if (halRet) {									// Non-zero means error
+			ret |= (1 << (halRet + LTC_SPI_TX_BIT_OFFSET)); // TX error
 		}
 
-		hal_ret = HAL_SPI_Receive(&hspi1, (uint8_t*) read_auxiliary_reg,
+		halRet = HAL_SPI_Receive(&hspi1, (uint8_t*) readAuxiliaryReg,
 				ARR_SIZE_REG, 100);
-		if (hal_ret) {									// Non-zero means error
-			ret |= (1 << (hal_ret + LTC_SPI_RX_BIT_OFFSET)); // RX error
+		if (halRet) {									// Non-zero means error
+			ret |= (1 << (halRet + LTC_SPI_RX_BIT_OFFSET)); // RX error
 		}
 
 		LTC_nCS_High(); // Pull CS high
 
 		// Process the received data
-		for (uint8_t dev_idx = 0; dev_idx < NUM_DEVICES; dev_idx++) {
+		for (uint8_t devIdx = 0; devIdx < NUM_DEVICES; devIdx++) {
 			// Assuming data format is [cell voltage, cell voltage, ..., PEC, PEC]
 			// PEC for each device is the last two bytes of its data segment
-			uint8_t *data_ptr = &read_auxiliary_reg[dev_idx * REG_LEN];
+			uint8_t *dataPtr = &readAuxiliaryReg[devIdx * REG_LEN];
 
 			memcpy(
-					&read_auxiliary[dev_idx * NUM_AUX_SERIES_GROUPS
-							+ i * LTC_SERIES_GROUPS_PER_RDAUX], data_ptr,
+					&readAuxiliary[devIdx * NUM_AUX_SERIES_GROUPS
+							+ i * LTC_SERIES_GROUPS_PER_RDAUX], dataPtr,
 					REG_LEN - 2);
 		}
 
@@ -298,16 +298,16 @@ void LTC_startADCVoltage(uint8_t MD,  // ADC Mode
 		uint8_t CH   // Cell Channels to be measured
 		) {
 	uint8_t cmd[4];
-	uint16_t cmd_pec;
-	uint8_t md_bits;
+	uint16_t cmdPec;
+	uint8_t mdBits;
 
-	md_bits = (MD & 0x02) >> 1;
-	cmd[0] = md_bits + 0x02;
-	md_bits = (MD & 0x01) << 7;
-	cmd[1] = md_bits + 0x60 + (DCP << 4) + CH;
-	cmd_pec = LTC_Pec15_Calc(2, cmd);
-	cmd[2] = (uint8_t) (cmd_pec >> 8);
-	cmd[3] = (uint8_t) (cmd_pec);
+	mdBits = (MD & 0x02) >> 1;
+	cmd[0] = mdBits + 0x02;
+	mdBits = (MD & 0x01) << 7;
+	cmd[1] = mdBits + 0x60 + (DCP << 4) + CH;
+	cmdPec = LTC_Pec15_Calc(2, cmd);
+	cmd[2] = (uint8_t) (cmdPec >> 8);
+	cmd[3] = (uint8_t) (cmdPec);
 
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake. This command can be removed.
 	LTC_nCS_Low();
@@ -319,16 +319,16 @@ void LTC_startADC_GPIO(uint8_t MD, // ADC Mode
 		uint8_t CHG // GPIO Channels to be measured)
 		) {
 	uint8_t cmd[4];
-	uint16_t cmd_pec;
-	uint8_t md_bits;
+	uint16_t cmdPec;
+	uint8_t mdBits;
 
-	md_bits = (MD & 0x02) >> 1;
-	cmd[0] = md_bits + 0x04;
-	md_bits = (MD & 0x01) << 7;
-	cmd[1] = md_bits + 0x60 + CHG;
-	cmd_pec = LTC_Pec15_Calc(2, cmd);
-	cmd[2] = (uint8_t) (cmd_pec >> 8);
-	cmd[3] = (uint8_t) (cmd_pec);
+	mdBits = (MD & 0x02) >> 1;
+	cmd[0] = mdBits + 0x04;
+	mdBits = (MD & 0x01) << 7;
+	cmd[1] = mdBits + 0x60 + CHG;
+	cmdPec = LTC_Pec15_Calc(2, cmd);
+	cmd[2] = (uint8_t) (cmdPec >> 8);
+	cmd[3] = (uint8_t) (cmdPec);
 
 	/*
 	 Wakeup_Idle (); //This will guarantee that the ltc6811 isoSPI port is awake. This command can be removed.
@@ -343,18 +343,18 @@ void LTC_startADC_GPIO(uint8_t MD, // ADC Mode
 }
 
 int32_t LTC_POLLADC() {
-	uint32_t start_time = HAL_GetTick();
+	uint32_t startTime = HAL_GetTick();
 	uint8_t finished = 0;
-	uint8_t adc_status = 0xFF;	//initialize adc status
-	uint8_t dummy_tx = 0x00;	//we need to send this to give clock LTC6811 so it can send data
+	uint8_t adcStatus = 0xFF;	//initialize adc status
+	uint8_t dummyTx = 0x00;	//we need to send this to give clock LTC6811 so it can send data
 	uint8_t cmd[4];
-	uint16_t cmd_pec;
+	uint16_t cmdPec;
 	//get ready for the PLADC command
 	cmd[0] = 0x07;
 	cmd[1] = 0x14;
-	cmd_pec = LTC_Pec15_Calc(2, cmd);
-	cmd[2] = (uint8_t) (cmd_pec >> 8);
-	cmd[3] = (uint8_t) (cmd_pec);
+	cmdPec = LTC_Pec15_Calc(2, cmd);
+	cmd[2] = (uint8_t) (cmdPec >> 8);
+	cmd[3] = (uint8_t) (cmdPec);
 
 	Wakeup_Idle(); // This will guarantee that the ltc6811 isoSPI port is awake. This command can be removed.
 	//Send PLADC command to LTC6811
@@ -362,12 +362,12 @@ int32_t LTC_POLLADC() {
 	HAL_SPI_Transmit(&hspi1, (uint8_t*) cmd, 4, 100);
 	LTC_nCS_High();
 	//Check if ADC is done
-	while (((HAL_GetTick() - start_time) < 210000)) {  // timeout at 210ms
+	while (((HAL_GetTick() - startTime) < 210000)) {  // timeout at 210ms
 		LTC_nCS_Low();
-		HAL_SPI_Transmit(&hspi1, &dummy_tx, 1, 100);  //Send dummy byte and get adc status
-		HAL_SPI_Receive(&hspi1, &adc_status, 1, 100);
+		HAL_SPI_Transmit(&hspi1, &dummyTx, 1, 100);  //Send dummy byte and get adc status
+		HAL_SPI_Receive(&hspi1, &adcStatus, 1, 100);
 		LTC_nCS_High();
-		if (adc_status != 0xFF) {  // if it's not 0xFF, finish adc
+		if (adcStatus != 0xFF) {  // if it's not 0xFF, finish adc
 			finished = 1;
 			break;
 		} else {
@@ -376,18 +376,18 @@ int32_t LTC_POLLADC() {
 	    }
 
 	LTC_nCS_High();
-	return (finished ? (HAL_GetTick() - start_time) : 0);
+	return (finished ? (HAL_GetTick() - startTime) : 0);
 }
 
 
 
 /* Read and store raw cell voltages at uint8_t 2d pointer */
-int Calc_Pack_Voltage(uint16_t *read_voltages) {
-	int packvoltage = 0;
+int Calc_Pack_Voltage(uint16_t *readVoltages) {
+	int packVoltage = 0;
 	for (int i = 0; i < NUM_DEVICES * NUM_CELL_SERIES_GROUP; i++) {
-		packvoltage += read_voltages[i];
+		packVoltage += readVoltages[i];
 	}
-	return packvoltage;
+	return packVoltage;
 }
 
 static const unsigned int crc15Table[256] = { 0x0, 0xc599, 0xceab, 0xb32,
