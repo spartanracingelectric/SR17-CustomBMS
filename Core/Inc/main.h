@@ -106,7 +106,7 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define Shunt_PIN_FOR_2A_Pin GPIO_PIN_2
+#define Shunt_PIN_FOR_2A_Pin GPIO_PIN_3
 #define Shunt_PIN_FOR_2A_GPIO_Port GPIOC
 #define LTC_nCS_Pin GPIO_PIN_4
 #define LTC_nCS_GPIO_Port GPIOA
