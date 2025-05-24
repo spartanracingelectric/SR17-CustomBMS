@@ -154,6 +154,26 @@ int main(void)
 
 	Wakeup_Sleep();
 
+    Read_Volt(modPackInfo.cell_volt);
+
+    for (uint8_t i = 0; i < 8; i++) {
+//				HAL_Delay(300);
+        Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
+
+//				printf(" Cell: %d, Temp: %d\n", i, modPackInfo.cell_temp[i]);
+    }
+    LTC_SPI_writeCommunicationSetting(NUM_DEVICES, BMS_MUX_PAUSE[0]);
+    LTC_SPI_requestData(2);
+//				HAL_Delay(1); //this delay is for stablize mux
+    for (uint8_t i = 8; i < NUM_THERM_PER_MOD; i++) {
+//				HAL_Delay(300);
+        Read_Temp(i, modPackInfo.cell_temp, modPackInfo.read_auxreg);
+
+//				printf(" Cell: %d, Temp: %d\n", i, modPackInfo.cell_temp[i]);
+    }
+    LTC_SPI_writeCommunicationSetting(NUM_DEVICES, BMS_MUX_PAUSE[1]);
+    LTC_SPI_requestData(2);
+//				HAL_Delay(1); //this delay is for stablize mux
     Balance_init(modPackInfo.balance_status);
 
 	SOC_getInitialCharge(&modPackInfo);
