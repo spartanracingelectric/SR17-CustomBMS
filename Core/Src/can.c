@@ -306,10 +306,11 @@ void CAN_Send_Safety_Checker(CANMessage *buffer, batteryModule *batt, uint8_t *f
 void CAN_Send_SOC(CANMessage *buffer, batteryModule *batt,
                   uint16_t max_capacity) {
 	uint32_t CAN_ID = (uint32_t)CAN_ID_SOC;
-    uint8_t percent = (uint8_t)((float) batt->soc * 100 / (float) max_capacity);
+    uint8_t percent = (uint8_t)((float) (batt->soc / 1000) * 100 / (float) max_capacity);  // 1000 for micro->milli
+    uint16_t soc = (uint16_t) (batt->soc / 1000);
     Set_CAN_Id(buffer, CAN_ID);
-	buffer->socBuffer[0] = batt->soc;
-	buffer->socBuffer[1] = batt->soc >> 8;
+	buffer->socBuffer[0] = soc & 0xFF;
+	buffer->socBuffer[1] = (soc >> 8) & 0xFF;
     buffer->socBuffer[2] = percent;
     buffer->socBuffer[3] = batt->current & 0xFF;
     buffer->socBuffer[4] = (batt->current >> 8) & 0xFF;
