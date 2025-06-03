@@ -10,12 +10,13 @@
 
 		adcValue = readADCChannel(ADC_CHANNEL_15);
 		vRef = getVref();
+//		printf("adcValue:%d\n", adcValue);
 
 		//calculate voltage based on  resolution and gain on opamp, voltage divider ratio
-		float adcVoltage = ((float)adcValue / ADC_RESOLUTION) * vRef; //3.258 is the vref
+		float adcVoltage = ((float)adcValue / ADC_RESOLUTION) * vRef;
 //		printf("adcVoltage for hv is: %f\n", adcVoltage);
 		float amcOutput = adcVoltage / GAIN_TLV9001;
-		float hvInput = (amcOutput) * (DIVIDER_RATIO) + 0.215; //- .6840 is offset
+		float hvInput = (amcOutput) * (DIVIDER_RATIO);
 
 		batt->hvsens_pack_voltage = hvInput * 100;
 	}
