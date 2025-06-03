@@ -9,7 +9,7 @@
 #define CELL_HIGH_VOLT_FAULT	    42000
 #define CELL_LOW_VOLT_FAULT		    25000
 #define CELL_VOLT_IMBALANCE_FAULT   2000 //0.1 V
-#define CELL_HIGH_TEMP_FAULT		60
+#define CELL_HIGH_TEMP_FAULT		70
 
 // ! Warnings Thresholds
 #define PACK_HIGH_VOLT_WARNING	    4085000
