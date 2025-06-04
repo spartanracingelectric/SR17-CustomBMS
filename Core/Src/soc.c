@@ -6,6 +6,7 @@
 
 #include "adc.h"
 #include "main.h"
+#include "usart.h"
 
 void SOC_updateCurrent(batteryModule *batt);
 
@@ -19,10 +20,11 @@ uint16_t SOC_getChargeData40C(uint16_t voltage);
 
 void SOC_getInitialCharge(batteryModule *batt) {
     uint32_t voltage = 0;
-    for (int i = 0; i < NUM_CELLS; ++i) {
-        voltage += batt->cell_volt[i];
-    }
-    voltage /= (NUM_DEVICES * 10);
+    uint32_t pack_voltage = batt->sum_pack_voltage;
+    voltage = pack_voltage * 10 / NUM_CELLS;
+    printf("initial avg Voltage: %d\n", voltage);
+    printf("initial pack Voltage: %d\n", pack_voltage);
+
 
     uint16_t temperature = 0;
     for (int i = 0; i < NUM_THERM_TOTAL; ++i) {
