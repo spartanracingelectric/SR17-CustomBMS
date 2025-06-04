@@ -18,13 +18,13 @@ uint16_t SOC_getChargeData25C(uint16_t voltage);
 uint16_t SOC_getChargeData40C(uint16_t voltage);
 
 void SOC_getInitialCharge(batteryModule *batt) {
-    uint32_t voltage;
+    uint32_t voltage = 0;
     for (int i = 0; i < NUM_CELLS; ++i) {
         voltage += batt->cell_volt[i];
     }
     voltage /= (NUM_DEVICES * 10);
 
-    uint16_t temperature;
+    uint16_t temperature = 0;
     for (int i = 0; i < NUM_THERM_TOTAL; ++i) {
         temperature += batt->cell_temp[i];
     }
@@ -56,22 +56,21 @@ void SOC_getInitialCharge(batteryModule *batt) {
 
 void SOC_updateCurrent(batteryModule *batt) {
     uint32_t adcValue = 0;
-    HAL_ADC_Start(&hadc2);
-    if (HAL_ADC_PollForConversion(&hadc2, HAL_MAX_DELAY) == HAL_OK) {
-        adcValue = HAL_ADC_GetValue(&hadc2);
-    }
-//    printf("ADC VALUE %lu/4096\n", adcValue);
-    HAL_ADC_Stop(&hadc2);
-    float voltage = ((float)adcValue / ADC_RESOLUTION) * V_REF;
+	float vRef = getVref();
+
+	adcValue = readADCChannel(ADC_CHANNEL_13);
+    float voltage = ((float)adcValue / ADC_RESOLUTION) * vRef;
     batt->current = (voltage / (MAX_SHUNT_VOLTAGE * SHUNT_OPAMP_RATIO)) * MAX_SHUNT_AMPAGE + SHUNT_OFFSET;
 }
 
 void SOC_updateCharge(batteryModule *batt, uint32_t elapsed_time) {
+	if (batt->hvsens_pack_voltage <= 10000) { // 100.00 V
+		batt->current = 0;
+	} else {
+		SOC_updateCurrent(batt);
+	}
 
-	HAL_ADCEx_Calibration_Start(&hadc2);
-	SOC_updateCurrent(batt);
-    batt->soc -= (1000 * batt->current * (float)(elapsed_time / 3600000.0f));
-//    printf("%d", batt->soc);
+	batt->soc -= (1000 * batt->current * (float)(elapsed_time / 3600000.0f));
 }
 
 uint16_t SOC_searchCapacity(uint16_t data[][2], uint16_t target, uint16_t size) {
