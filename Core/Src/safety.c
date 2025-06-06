@@ -34,7 +34,7 @@ void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 		}
 //high cell volt fault
 		if ((batt->cell_volt_highest >= CELL_HIGH_VOLT_FAULT)) {
-			if (high_volt_hysteresis > 49) {  //takes 50 cycle to fault
+			if (high_volt_hysteresis > 16) {  //takes 50 cycle to fault
 				high_volt_fault_lock = 1;
 				*warnings &= ~WARNING_BIT_HIGH_VOLT;
 				*fault |= FAULT_BIT_HIGH_VOLT;
@@ -62,7 +62,7 @@ void Cell_Voltage_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t *war
 		}
 //low cell volt fault
 		if (batt->cell_volt_lowest <= CELL_LOW_VOLT_FAULT){
-			if (low_volt_hysteresis > 2) {
+			if (low_volt_hysteresis > 16) {
 				low_volt_fault_lock = 1;
 				*warnings &= ~WARNING_BIT_LOW_VOLT;
 				*fault |= FAULT_BIT_LOW_VOLT;
