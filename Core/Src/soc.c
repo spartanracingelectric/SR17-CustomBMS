@@ -22,8 +22,8 @@ void SOC_getInitialCharge(batteryModule *batt) {
     uint32_t voltage = 0;
     uint32_t pack_voltage = batt->sum_pack_voltage;
     voltage = pack_voltage * 10 / NUM_CELLS;
-    printf("initial avg Voltage: %d\n", voltage);
-    printf("initial pack Voltage: %d\n", pack_voltage);
+//    printf("initial avg Voltage: %d\n", voltage);
+//    printf("initial pack Voltage: %d\n", pack_voltage);
 
 
     uint16_t temperature = 0;
