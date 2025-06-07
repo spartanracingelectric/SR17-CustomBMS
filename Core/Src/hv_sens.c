@@ -17,8 +17,13 @@
 //		printf("adcVoltage for hv is: %f\n", adcVoltage);
 		float amcOutput = adcVoltage / GAIN_TLV9001;
 		float hvInput = (amcOutput) * (DIVIDER_RATIO);
+		if(hvInput > 10){//if hvsens is greater than 10V(connected)
+			batt->hvsens_pack_voltage = hvInput * 100;
+		}
+		else{
+			batt->hvsens_pack_voltage = 0;
+		}
 
-		batt->hvsens_pack_voltage = hvInput * 100;
 	}
 
 	void getSumPackVoltage(batteryModule *batt){
