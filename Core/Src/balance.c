@@ -3,6 +3,7 @@
 #include "can.h"
 #include <stdio.h>
 #include "usart.h"
+#include "soc.h"
 
 //DEFAULT VALUES THAT ARE SET IN CONFIG REGISTERS
 //static int GPIO[5] = { 1, 1, 1, 1, 1 };
@@ -40,17 +41,17 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
 //    printf("fifo 0 callback\n");
     if (HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &rxHeader, rxData) == HAL_OK) {
         if (rxHeader.StdId == 0x604) {  // CAN message from charger
-            uint8_t balanceCommand = rxData[0]; // see the data bit on CAN
-
+            uint8_t command = rxData[0];
             // change the BALANCE flag to enable balance
-            if (balanceCommand == 1) {
+            if (command & 1 == 1) {
             	balance = 1;  // enable balance
 //                printf("BALANCE enabled by CAN message.\n");
-            } else if (balanceCommand == 0) {
+            } else if (command & 1 == 0) {
             	balance = 0;  // disable balance
             	balance_finish = 1;
 //                printf("BALANCE disabled by CAN message.\n");
             }
+            SOC_setCharging((command >> 1) & 1);
         }
     }
 }

@@ -8,6 +8,8 @@
 #include "main.h"
 #include "usart.h"
 
+uint8_t charging = 0;
+
 void SOC_updateCurrent(batteryModule *batt);
 
 uint16_t SOC_offsetFilter(uint16_t measuredX, uint16_t lowerX, uint16_t upperX,
@@ -17,6 +19,10 @@ uint16_t SOC_searchCapacity(uint16_t data[][2], uint16_t voltage, uint16_t size)
 uint16_t SOC_getChargeData0C(uint16_t voltage);
 uint16_t SOC_getChargeData25C(uint16_t voltage);
 uint16_t SOC_getChargeData40C(uint16_t voltage);
+
+void SOC_setChargin(uint8_t setCharging) {
+    charging = setCharging;
+}
 
 void SOC_getInitialCharge(batteryModule *batt) {
     uint32_t voltage = 0;
@@ -72,7 +78,14 @@ void SOC_updateCharge(batteryModule *batt, uint32_t elapsed_time) {
 		SOC_updateCurrent(batt);
 	}
 
-	batt->soc -= (1000 * batt->current * (float)(elapsed_time / 3600000.0f));
+    
+    uint32_t change = (1000 * batt->current * (float)(elapsed_time / 3600000.0f));
+    
+    if (charging) {
+        batt->soc += change;
+    } else {
+        batt->soc -= change;
+    }
 }
 
 uint16_t SOC_searchCapacity(uint16_t data[][2], uint16_t target, uint16_t size) {
