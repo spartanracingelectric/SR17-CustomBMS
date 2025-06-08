@@ -54,6 +54,7 @@ void SOC_getInitialCharge(batteryModule *batt) {
             batt->soc = SOC_getChargeData40C((uint16_t) voltage) * NUM_DEVICES * 1000;
             break;
     }
+    printf("this is running");
 }
 
 void SOC_updateCurrent(batteryModule *batt) {

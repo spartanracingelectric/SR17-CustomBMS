@@ -176,6 +176,9 @@ int main(void)
 //				HAL_Delay(1); //this delay is for stablize mux
     Balance_init(modPackInfo.balance_status);
 
+    ReadHVInput(&modPackInfo);
+    getSumPackVoltage(&modPackInfo);
+
 	SOC_getInitialCharge(&modPackInfo);
 	uint32_t prev_soc_time = HAL_GetTick();
 
