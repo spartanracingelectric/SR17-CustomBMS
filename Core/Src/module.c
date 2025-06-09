@@ -60,7 +60,7 @@ void Get_Actual_Temps(uint8_t dev_idx, uint8_t tempindex, uint16_t *actual_temp,
     steinhart = 1.0f / steinhart;
     steinhart -= 273.15f;
 
-    actual_temp[dev_idx * NUM_THERM_PER_MOD + tempindex] = steinhart;
+    actual_temp[dev_idx * NUM_THERM_PER_MOD + tempindex] = steinhart - 5;
 }
 
 void Read_Volt(uint16_t *read_volt) {
