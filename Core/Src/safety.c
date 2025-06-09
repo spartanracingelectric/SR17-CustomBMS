@@ -102,8 +102,6 @@ void Cell_Temperature_Fault(struct batteryModule *batt, uint8_t *fault, uint8_t 
 		}
 	}
 
-	batt->cell_temp_highest =- 5;
-	batt->cell_temp_lowest =- 5;
 //	//highest cell temp warning
 //	if (batt->cell_temp_highest >= CELL_HIGH_TEMP_WARNING && batt->cell_temp_highest < CELL_HIGH_TEMP_FAULT) {
 //		*warnings |= WARNING_BIT_HIGH_TEMP;
