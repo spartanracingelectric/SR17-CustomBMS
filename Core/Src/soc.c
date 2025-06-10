@@ -30,7 +30,8 @@ void SOC_getInitialCharge(batteryModule *batt) {
     for (int i = 0; i < NUM_THERM_TOTAL; ++i) {
         temperature += batt->cell_temp[i];
     }
-    temperature /= NUM_DEVICES;
+    temperature /= NUM_THERM_TOTAL;
+//    printf("temp:%d", temperature);
 
     int tempCharts[] = {0, 25, 40};
 
@@ -54,7 +55,7 @@ void SOC_getInitialCharge(batteryModule *batt) {
             batt->soc = SOC_getChargeData40C((uint16_t) voltage) * NUM_DEVICES * 1000;
             break;
     }
-    printf("this is running");
+//    printf("this is running");
 }
 
 void SOC_updateCurrent(batteryModule *batt) {
