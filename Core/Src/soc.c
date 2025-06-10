@@ -31,6 +31,7 @@ void SOC_getInitialCharge(batteryModule *batt) {
         temperature += batt->cell_temp[i];
     }
     temperature /= NUM_THERM_TOTAL;
+    printf("temp:%d", temperature);
 
     int tempCharts[] = {0, 25, 40};
 
