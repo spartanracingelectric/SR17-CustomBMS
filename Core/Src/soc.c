@@ -30,7 +30,7 @@ void SOC_getInitialCharge(batteryModule *batt) {
     for (int i = 0; i < NUM_THERM_TOTAL; ++i) {
         temperature += batt->cell_temp[i];
     }
-    temperature /= NUM_DEVICES;
+    temperature /= NUM_THERM_TOTAL;
 
     int tempCharts[] = {0, 25, 40};
 
