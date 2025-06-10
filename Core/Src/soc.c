@@ -28,7 +28,7 @@ void SOC_getInitialCharge(batteryModule *batt) {
 
     uint16_t temperature = 0;
     for (int i = 0; i < NUM_THERM_TOTAL; ++i) {
-        temperature += batt->cell_temp[i];
+        temperature += (batt->cell_temp[i] + 5);
     }
     temperature /= NUM_THERM_TOTAL;
 //    printf("temp:%d", temperature);
