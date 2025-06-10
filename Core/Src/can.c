@@ -167,7 +167,7 @@ HAL_StatusTypeDef CAN_Send(CANMessage *ptr) {
 	 if(ptr->TxHeader.StdId >= CAN_ID_VOLTAGE &&  ptr->TxHeader.StdId < CAN_ID_VOLTAGE + (NUM_CELLS * 2 / CAN_BYTE_NUM)) {//(NUM_CELLS * 2 / CAN_BYTE_NUM is just a number of can message
 	   dataPtr = (uint8_t *)ptr->voltageBuffer;
 	 }
-	 else if(ptr->TxHeader.StdId >= CAN_ID_THERMISTOR &&  ptr->TxHeader.StdId < CAN_ID_THERMISTOR + (NUM_THERM_TOTAL / CAN_BYTE_NUM + 3)) {//(NUM_THERM_TOTAL / CAN_BYTE_NUM + 3) is a number of the message, 3 is number of sensors
+	 else if(ptr->TxHeader.StdId >= CAN_ID_THERMISTOR &&  ptr->TxHeader.StdId < CAN_ID_THERMISTOR + ((NUM_THERM_TOTAL + (4 * NUM_DEVICES)) / CAN_BYTE_NUM)) {//(NUM_THERM_TOTAL + (4 * NUM_DEVICES)) is a total num of thermistor + sensor, (4 * NUM_DEVICES) is number of sensors
 	   dataPtr = (uint8_t *)ptr->thermistorBuffer;
 	 }
 	 else if (ptr->TxHeader.StdId == CAN_ID_SUMMARY) {
