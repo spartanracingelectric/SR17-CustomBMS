@@ -50,6 +50,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
             } else if (balanceCommand == 0) {
             	balance = 0;  // disable balance
             	balance_finish = 1;
+            	ClearFaultSignal();
 //                printf("BALANCE disabled by CAN message.\n");
             }
             if (balanceCommand == 2){
