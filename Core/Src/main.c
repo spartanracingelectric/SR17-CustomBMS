@@ -271,6 +271,7 @@ int main(void)
 			CAN_Send_Temperature(&msg, modPackInfo.cell_temp, modPackInfo.pressure, modPackInfo.atmos_temp, modPackInfo.humidity, modPackInfo.dew_point);
 			CAN_Send_SOC(&msg, &modPackInfo, MAX_BATTERY_CAPACITY);
 			CAN_Send_Balance_Status(&msg, modPackInfo.balance_status);
+			Fault_Signal_CAN();
 		}
     }
   /* USER CODE END 3 */

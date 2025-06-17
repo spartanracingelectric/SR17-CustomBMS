@@ -18,6 +18,7 @@ CAN_RxHeaderTypeDef rxHeader;
 uint8_t rxData[8];
 uint8_t balance = 0;			//FALSE
 uint8_t balance_finish = 0;
+uint8_t chargeFault = 0;
 
 static uint8_t config[8][6] = { { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 },
 								{ 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 }, { 0xF8, 0x00, 0x00, 0x00, 0x00, 0x20 },
@@ -50,16 +51,28 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
             } else if (balanceCommand == 0) {
             	balance = 0;  // disable balance
             	balance_finish = 1;
-            	ClearFaultSignal();
+            	chargeFault = 0;
 //                printf("BALANCE disabled by CAN message.\n");
             }
             if (balanceCommand == 2){
-            	SendFaultSignal();
-            	HAL_Delay(1000);
-            	ClearFaultSignal();
+            	chargeFault = 1;
             }
         }
     }
+}
+
+void Fault_Signal_CAN() {
+//	printf("balance enable is %d\n", balance);
+	if(chargeFault > 0){
+		SendFaultSignal();
+		HAL_Delay(100);
+		ClearFaultSignal();
+		chargeFault = 0;
+	}
+	else{
+		ClearFaultSignal();
+		chargeFault = 0;
+	}
 }
 
 void Start_Balance(uint16_t *read_volt, uint16_t lowest, uint16_t *balanceStatus) {

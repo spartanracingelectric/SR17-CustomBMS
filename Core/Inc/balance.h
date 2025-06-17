@@ -6,6 +6,7 @@
 #define BALANCE_THRESHOLD 50
 
 void Balance_init(uint16_t *balanceStatus);
+void Fault_Signal_CAN();
 void Start_Balance(uint16_t *read_volt, uint16_t lowest, uint16_t *balanceStatus);
 void End_Balance(uint16_t *balanceStatus);
 void Discharge_Algo(uint16_t *read_volt, uint16_t lowest, uint16_t *balanceStatus);
