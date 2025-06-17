@@ -3,6 +3,7 @@
 #include "can.h"
 #include <stdio.h>
 #include "usart.h"
+#include "gpio.h"
 
 //DEFAULT VALUES THAT ARE SET IN CONFIG REGISTERS
 //static int GPIO[5] = { 1, 1, 1, 1, 1 };
@@ -50,6 +51,11 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
             	balance = 0;  // disable balance
             	balance_finish = 1;
 //                printf("BALANCE disabled by CAN message.\n");
+            }
+            if (balanceCommand == 2){
+            	SendFaultSignal();
+            	HAL_Delay(1000);
+            	ClearFaultSignal();
             }
         }
     }
