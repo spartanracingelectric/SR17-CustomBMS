@@ -15,6 +15,7 @@ static const uint16_t LTC_CMD_AUXREG[2] = { LTC_CMD_RDAUXA, LTC_CMD_RDAUXB };
 void Wakeup_Idle(void) {
 	uint8_t hex_ff = 0xFF;
 	for (int i = 0; i < NUM_DEVICES; i++) {
+		//Terence is here
 		LTC_nCS_Low();							   // Pull CS low
 		HAL_SPI_Transmit(&hspi1, &hex_ff, 1, 100); // Send byte 0xFF to wake LTC up
 		LTC_nCS_High();							   // Pull CS high
