@@ -1,4 +1,4 @@
-# SR-16 Custom BMS
+# SR-17 Custom BMS
 
 ## Environment Setup / Tools Needed
 
