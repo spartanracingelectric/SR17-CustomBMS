@@ -18,7 +18,6 @@ Ensure all tools are properly set up before contributing.
 1. [Slave Battery Moniter IC LTC6811](https://www.analog.com/media/en/technical-documentation/data-sheets/ltc6811-1-6811-2.pdf)
 2. [Master Chip STM32F105](https://www.st.com/resource/en/datasheet/stm32f105r8.pdf)
 3. [Git Cheat Sheet](https://education.github.com/git-cheat-sheet-education.pdf)
-4. [Eclipse Terminal](https://marketplace.eclipse.org/free-tagging/terminal#:~:text=by%20Martin%20Oberhuber-,A%20fully%20working%20command%2Dline%20Terminal%20inside%20Eclipse.,Previous%20sessions%20are...)
 
 ## Notes
 
